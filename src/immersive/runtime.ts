@@ -1,4 +1,5 @@
 import * as T from 'three';
+import { AnimeScene, AnimePortrait, type Presentation } from './anime';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { disposeGroup } from '../effects';
 import { buildEnvironment, DESTINATIONS, type Environment } from './environments';
@@ -10,6 +11,10 @@ const $ = <E extends HTMLElement = HTMLElement>(selector: string) => document.qu
 
 export class ImmersiveWorld {
   private environment: Environment;
+  private anime: AnimeScene;
+  private portrait: AnimePortrait;
+  presentation: Presentation = 'anime';
+  readonly ready: Promise<boolean>;
   private gallery = new T.Group();
   private sculpture = new T.Group();
   private orbit: OrbitControls;
@@ -33,7 +38,9 @@ export class ImmersiveWorld {
 
   constructor(readonly world: number, private scene: T.Scene, private camera: T.PerspectiveCamera, private canvas: HTMLCanvasElement, private reducedMotion: () => boolean, private invalidateShadows: () => void) {
     this.environment = buildEnvironment(world);
-    this.root.add(this.environment.root, this.gallery);
+    this.anime = new AnimeScene(world); this.portrait = new AnimePortrait();
+    this.root.add(this.environment.root, this.gallery, this.anime.root);
+    this.environment.root.visible = false;
     this.gallery.visible = false;
     this.previousFog = new T.FogExp2(this.environment.fog, this.environment.density);
     scene.background = new T.Color(this.environment.fog); scene.fog = this.previousFog;
@@ -42,14 +49,16 @@ export class ImmersiveWorld {
     this.orbit = new OrbitControls(camera, canvas); this.orbit.enabled = false; this.orbit.enablePan = false; this.orbit.enableDamping = false;
     this.orbit.minDistance = 1.9; this.orbit.maxDistance = 8.5; this.orbit.minPolarAngle = .2; this.orbit.maxPolarAngle = Math.PI * .87;
     this.orbit.target.set(0, 1.18, 0);
-    this.buildGallery(); this.bind(); this.jump(0);
+    this.buildGallery(); this.bind();
     $('#immersive-hud').hidden = false;
     $('#scene-list').replaceChildren(...DESTINATIONS[world].map((d, index) => {
       const b = document.createElement('button'); b.type = 'button'; b.className = 'scene-choice'; b.dataset.scene = String(index);
       b.innerHTML = `<span>0${index + 1}</span><strong></strong>`; b.querySelector('strong')!.textContent = d.name;
       b.setAttribute('aria-pressed', String(index === 0)); b.addEventListener('click', () => { this.jump(index); this.canvas.focus({ preventScroll: true }); }); return b;
     }));
-    this.jump(0);
+    this.jump(0, false);
+    this.ready = this.anime.load(0);
+    this.setPresentationUI();
     $('#character-list').replaceChildren(...CAST[world].map((c, index) => {
       const b = document.createElement('button'); b.type = 'button'; b.dataset.character = String(index); b.textContent = c.thai;
       b.addEventListener('click', () => this.selectCharacter(index)); return b;
@@ -62,6 +71,15 @@ export class ImmersiveWorld {
       if (document.querySelector('dialog[open]') || document.hidden || $('#app').getAttribute('aria-busy') === 'true') return;
       if ((event.target as HTMLElement).closest('input,select,textarea') || event.ctrlKey || event.metaKey || event.altKey) return;
       if (this.galleryOpen) {
+        if (this.presentation === 'anime') {
+          if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','=','-','Home'].includes(event.key)) {
+            event.preventDefault();
+            if (event.key === 'Home') this.portrait.reset();
+            else if (['+','=','-'].includes(event.key)) this.portrait.zoomBy(event.key === '-' ? .9 : 1.1);
+            else this.portrait.move(event.key==='ArrowLeft'?-16:event.key==='ArrowRight'?16:0,event.key==='ArrowUp'?-16:event.key==='ArrowDown'?16:0);
+          }
+          return;
+        }
         if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', '+', '=', '-', 'Home'].includes(event.key)) {
           event.preventDefault();
           if (event.key === 'Home') this.resetModel();
@@ -93,7 +111,8 @@ export class ImmersiveWorld {
     }, { signal });
     this.canvas.addEventListener('pointermove', e => {
       if (!this.drag || this.galleryOpen || e.pointerId !== this.drag.id) return;
-      this.yaw -= (e.clientX - this.drag.x) * .004; this.pitch = T.MathUtils.clamp(this.pitch - (e.clientY - this.drag.y) * .003, -1.25, 1.25);
+      if (this.presentation === 'anime') this.anime.move(-(e.clientX-this.drag.x)/innerWidth*3,(e.clientY-this.drag.y)/innerHeight*3);
+      else { this.yaw -= (e.clientX - this.drag.x) * .004; this.pitch = T.MathUtils.clamp(this.pitch - (e.clientY - this.drag.y) * .003, -1.25, 1.25); }
       this.drag.x = e.clientX; this.drag.y = e.clientY; this.look();
     }, { signal });
     this.canvas.addEventListener('pointerup', () => { this.drag = null; }, { signal });
@@ -103,6 +122,9 @@ export class ImmersiveWorld {
       const release = () => { this.keys.delete(button.dataset.key!); button.classList.remove('held'); };
       button.addEventListener('pointerup', release, { signal }); button.addEventListener('pointercancel', release, { signal }); button.addEventListener('lostpointercapture', release, { signal });
     });
+    this.canvas.addEventListener('wheel',e=>{if(this.presentation==='anime'&&!this.galleryOpen){e.preventDefault();this.anime.zoomBy(e.deltaY>0?.94:1.06);}},{signal,passive:false});
+    window.addEventListener('resize',()=>this.anime.fit(),{signal});
+    document.querySelectorAll<HTMLButtonElement>('[data-presentation]').forEach(b=>b.addEventListener('click',()=>{this.setPresentation(b.dataset.presentation as Presentation);if(!this.galleryOpen)this.canvas.focus({preventScroll:true});},{signal}));
     $('#gallery-open').addEventListener('click', () => this.openGallery(), { signal });
     $('#gallery-close').addEventListener('click', () => this.closeGallery(), { signal });
     $('#model-reset').addEventListener('click', () => this.resetModel(), { signal });
@@ -111,15 +133,49 @@ export class ImmersiveWorld {
     $('#model-spin').addEventListener('click', () => { this.rotating = !this.rotating; $('#model-spin').setAttribute('aria-pressed', String(this.rotating)); }, { signal });
   }
   private look() { this.camera.quaternion.setFromEuler(new T.Euler(this.pitch, this.yaw, 0, 'YXZ')); }
-  jump(index: number) {
+  jump(index: number, load = true) {
     if (this.galleryOpen) this.closeGallery();
-    this.destination = index; this.keys.clear();
+    this.destination = index; this.keys.clear(); this.anime.reset();
+    if (load && this.presentation === 'anime') void this.anime.load(index);
     const d = DESTINATIONS[this.world][index]; this.camera.position.set(...d.position); this.ground = d.position[1] - 1.7;
     this.camera.lookAt(new T.Vector3(...d.look));
     const e = new T.Euler().setFromQuaternion(this.camera.quaternion, 'YXZ'); this.yaw = e.y; this.pitch = e.x;
     $('#location-name').textContent = d.name; $('#location-index').textContent = d.english;
     document.querySelectorAll<HTMLElement>('.scene-choice').forEach((b, i) => b.setAttribute('aria-pressed', String(i === index)));
     $('#app').dataset.scene = String(index); this.reportPosition();
+  }
+  private setPresentation(mode: Presentation) {
+    if (mode === this.presentation) return;
+    this.keys.clear(); this.drag=null; this.rotating=false; $('#model-spin').setAttribute('aria-pressed','false');
+    this.presentation=mode;
+    if (this.galleryOpen) {
+      this.gallery.visible=mode==='3d'; this.orbit.enabled=mode==='3d'; this.portrait.show(mode==='anime'); this.selectCharacter(this.castIndex);
+    } else {
+      this.environment.root.visible=mode==='3d'; this.anime.root.visible=mode==='anime';
+      if(mode==='anime') void this.anime.load(this.destination);
+      this.camera.fov=65;this.camera.updateProjectionMatrix();
+    }
+    this.setPresentationUI();this.reportPosition();this.invalidateShadows();
+  }
+  private setPresentationUI() {
+    const anime=this.presentation==='anime'; $('#app').dataset.presentation=this.presentation;
+    document.querySelectorAll<HTMLButtonElement>('[data-presentation]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.presentation===this.presentation)));
+    $('#gallery-eyebrow').textContent=anime?'CHARACTER ARCHIVE / ANIME ART':'CHARACTER ARCHIVE / 3D FAN SCULPTURES';
+    $('#model-spin').textContent=anime?'เคลื่อนไหวเบา ๆ':'หมุนอัตโนมัติ';
+    $('#gallery-help').textContent=anime?'ลากเลื่อน · เลื่อน / จีบเพื่อซูม · + − ซูม · Home คืนมุม · Esc กลับ':'ลากเพื่อหมุน · เลื่อน / จีบเพื่อซูม · ปุ่มลูกศรหมุน · + − ซูม · Home คืนมุม · Esc กลับ';
+    $('#model-credit').textContent=anime?'ภาพตัวละครแฟนอาร์ตที่สร้างสำหรับโปรเจกต์นี้':'โมเดลแฟนอาร์ต stylized สร้างขึ้นสำหรับโปรเจกต์นี้';
+    $('#world-tip-text').textContent=anime?'ลากสำรวจภาพ · W/S ซูม · เลือกสถานที่เพื่อเดินทาง':'WASD เดิน · ลากมองรอบตัว · G ชมตัวละคร';
+    $('.look-hint').textContent=anime?'ลากเลื่อนภาพ · ↑ ↓ ซูม · ← → เลื่อน':'ลากจอเพื่อมองรอบตัว · กดลูกศรค้างเพื่อเดิน';
+    $('.footer-controls').innerHTML=anime?'<kbd>W/S</kbd> ZOOM · <kbd>A/D</kbd> PAN · <kbd>G</kbd> CAST':'<kbd>WASD</kbd> WALK · DRAG LOOK · <kbd>G</kbd> CAST';
+    this.reportPosition();
+  }
+  private projectAnimeMarkers() {
+    const points=this.destination===0?[[[.72,.39],[.29,.56]],[[.73,.36],[.48,.42]],[[.64,.55],[.74,.18]]][this.world]:[[.68,.55],[.43,.46]];
+    document.querySelectorAll<HTMLButtonElement>('.landmark-marker').forEach((marker,i)=>{
+      const [x,y]=this.anime.project(points[i][0],points[i][1]);
+      marker.hidden=this.anime.scene!==this.destination||x<250&&innerWidth>650||x<25||x>innerWidth-25||y<150||y>innerHeight-180;
+      marker.style.left=`${x}px`;marker.style.top=`${y}px`;
+    });
   }
   private buildGallery() {
     lights(this.gallery, 0);
@@ -133,43 +189,51 @@ export class ImmersiveWorld {
     if (this.galleryOpen || $('#app').classList.contains('is-cinematic')) return;
     this.keys.clear(); this.drag = null; this.galleryOpen = true;
     this.savedPosition.copy(this.camera.position); this.savedQuaternion.copy(this.camera.quaternion);
-    this.environment.root.visible = false; this.gallery.visible = true;
+    this.environment.root.visible = false; this.gallery.visible = this.presentation === '3d'; this.anime.root.visible = false; this.portrait.show(this.presentation === 'anime');
     this.scene.background = new T.Color('#0d1220'); this.scene.fog = new T.FogExp2('#0d1220', .05);
-    this.camera.fov = 38; this.camera.updateProjectionMatrix(); this.orbit.enabled = true;
+    this.camera.fov = 38; this.camera.updateProjectionMatrix(); this.orbit.enabled = this.presentation === '3d';
     $('#app').classList.add('is-gallery'); $('#character-gallery').hidden = false;
     $('#world-panel').inert = $('#immersive-hud').inert = $('#world-toolbar').inert = true;
     this.invalidateShadows();
+    this.setPresentationUI();
     this.selectCharacter(this.castIndex); $('#gallery-close').focus({ preventScroll: true });
   }
   closeGallery() {
     if (!this.galleryOpen) return;
     this.invalidateShadows();
     this.galleryOpen = false; this.rotating = false; $('#model-spin').setAttribute('aria-pressed', 'false'); this.orbit.enabled = false;
-    this.environment.root.visible = true; this.gallery.visible = false;
+    this.environment.root.visible = this.presentation === '3d'; this.gallery.visible = false; this.anime.root.visible = this.presentation === 'anime'; this.portrait.show(false);
     this.scene.background = new T.Color(this.environment.fog); this.scene.fog = this.previousFog;
     this.camera.fov = 65; this.camera.updateProjectionMatrix(); this.camera.position.copy(this.savedPosition); this.camera.quaternion.copy(this.savedQuaternion);
     const e = new T.Euler().setFromQuaternion(this.camera.quaternion, 'YXZ'); this.yaw = e.y; this.pitch = e.x;
     $('#app').classList.remove('is-gallery'); $('#character-gallery').hidden = true;
     $('#world-panel').inert = $('#immersive-hud').inert = $('#world-toolbar').inert = false;
+    this.setPresentationUI();
     $('#gallery-open').focus({ preventScroll: true });
   }
   private selectCharacter(index: number) {
     this.invalidateShadows();
     this.castIndex = index; disposeGroup(this.sculpture);
-    const info = CAST[this.world][index]; const model = character(info.id); this.sculpture.add(model); this.sculpture.rotation.y = 0;
+    const info = CAST[this.world][index];
+    if (this.presentation === '3d') this.sculpture.add(character(info.id));
+    else void this.portrait.load(info.id);
+    this.sculpture.rotation.y = 0;
     $('#character-name').textContent = info.name; $('#character-thai').textContent = info.thai; $('#character-detail').textContent = info.detail;
     $('#app').dataset.character = info.id;
     document.querySelectorAll<HTMLElement>('[data-character]').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.character) === index)));
     this.resetModel();
   }
-  private resetModel() { this.camera.position.set(innerWidth <= 650 ? 3.6 : 3.0, 2.0, innerWidth <= 650 ? 6.9 : 4.8); this.orbit.target.set(0, innerWidth <= 650 ? 1.3 : 1.18, 0); this.sculpture.rotation.y = 0; this.orbit.update(); }
+  private resetModel() {
+    if (this.presentation === 'anime') { this.portrait.reset(); return; }
+    this.camera.position.set(innerWidth <= 650 ? 3.6 : 3.0, 2.0, innerWidth <= 650 ? 6.9 : 4.8); this.orbit.target.set(0, innerWidth <= 650 ? 1.3 : 1.18, 0); this.sculpture.rotation.y = 0; this.orbit.update(); }
   private zoomModel(scale: number) {
+    if (this.presentation === 'anime') { this.portrait.zoomBy(1/scale); return; }
     const offset = this.camera.position.clone().sub(this.orbit.target); offset.setLength(T.MathUtils.clamp(offset.length() * scale, this.orbit.minDistance, this.orbit.maxDistance));
     this.camera.position.copy(this.orbit.target).add(offset); this.orbit.update();
   }
   private reportPosition() {
     const position = this.camera.position;
-    $('#position-readout').textContent = `${position.x.toFixed(1)} / ${this.ground.toFixed(1)} / ${position.z.toFixed(1)} M`;
+    $('#position-readout').textContent = this.presentation === 'anime' ? 'ลากเลื่อนมุมมอง · W/S ซูม · A/D เลื่อน' : `${position.x.toFixed(1)} / ${this.ground.toFixed(1)} / ${position.z.toFixed(1)} M`;
     this.canvas.dataset.position = [position.x, position.y, position.z].map(v => v.toFixed(3)).join(',');
     this.canvas.dataset.heading = this.yaw.toFixed(3);
   }
@@ -188,11 +252,20 @@ export class ImmersiveWorld {
   update(delta: number, elapsed: number, paused: boolean) {
     if (paused || document.querySelector('dialog[open]')) { this.keys.clear(); this.drag = null; return; }
     if (this.galleryOpen) {
+      if (this.presentation === 'anime') { this.portrait.update(elapsed,this.rotating&&!this.reducedMotion()); return; }
       if (this.rotating && !this.reducedMotion()) { this.sculpture.rotation.y += delta * .4; this.invalidateShadows(); }
       this.orbit.update();
       this.canvas.dataset.modelView = this.camera.position.toArray().map(v => v.toFixed(3)).join(',');
       this.canvas.dataset.modelRotation = this.sculpture.rotation.y.toFixed(3);
       return;
+    }
+    if (this.presentation === 'anime') {
+      const horizontal = Number(this.keys.has('KeyD'))-Number(this.keys.has('KeyA'))+Number(this.keys.has('ArrowRight'))-Number(this.keys.has('ArrowLeft'));
+      const vertical = Number(this.keys.has('ArrowUp'))-Number(this.keys.has('ArrowDown'));
+      const zoom = Number(this.keys.has('KeyW'))-Number(this.keys.has('KeyS'));
+      this.anime.move(horizontal*delta*.8,vertical*delta*.8);
+      if (zoom) this.anime.zoomBy(Math.exp(zoom*delta*.5));
+      this.anime.update(delta,this.reducedMotion()); this.drawMap(); this.projectAnimeMarkers(); return;
     }
     if (!this.reducedMotion()) {
       if (this.environment.water) this.environment.water.uniforms.time.value = elapsed;
@@ -225,9 +298,9 @@ export class ImmersiveWorld {
     });
   }
   dispose() {
-    this.closeGallery(); this.abort.abort(); this.orbit.dispose(); this.keys.clear();
+    this.closeGallery(); this.anime.dispose(); this.portrait.dispose(); this.abort.abort(); this.orbit.dispose(); this.keys.clear();
     $('#immersive-hud').hidden = true; $('#character-gallery').hidden = true;
-    delete $('#app').dataset.scene; delete $('#app').dataset.character; delete this.canvas.dataset.position; delete this.canvas.dataset.heading; delete this.canvas.dataset.modelView; delete this.canvas.dataset.modelRotation;
+    delete $('#app').dataset.scene; delete $('#app').dataset.character; delete $('#app').dataset.presentation; delete this.canvas.dataset.position; delete this.canvas.dataset.heading; delete this.canvas.dataset.modelView; delete this.canvas.dataset.modelRotation;
     const textures = new Set<T.Texture>(); const shadows: T.LightShadow[] = [];
     this.root.traverse(o => {
       if (o instanceof T.Mesh) for (const mat of Array.isArray(o.material) ? o.material : [o.material]) for (const v of Object.values(mat)) if (v instanceof T.Texture) textures.add(v);

@@ -1,0 +1,114 @@
+{
+  "generated": "2026-10-23",
+  "official": false,
+  "assets": [
+    {
+      "file": "/artwork/scenes/one-piece-harbor.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 574816,
+      "generator": "OpenAI ImageGen",
+      "type": "AI-generated anime fan illustration",
+      "sourceArtifact": "exec-207abe0c-d7f4-4dc2-948a-fa96230fa11a.png"
+    },
+    {
+      "file": "/artwork/scenes/one-piece-cove.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 679788,
+      "generator": "OpenAI ImageGen",
+      "type": "AI-generated anime fan illustration",
+      "sourceArtifact": "exec-ad5b66df-6880-405a-b723-55c429fc99e4.png"
+    },
+    {
+      "file": "/artwork/scenes/demon-slayer-shrine.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 676220,
+      "generator": "OpenAI ImageGen",
+      "type": "AI-generated anime fan illustration",
+      "sourceArtifact": "exec-97ece907-5259-49a7-a82f-61d54e078168.png"
+    },
+    {
+      "file": "/artwork/scenes/demon-slayer-training.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 772092,
+      "generator": "OpenAI ImageGen",
+      "type": "AI-generated anime fan illustration",
+      "sourceArtifact": "exec-0e0e157c-0847-417d-8952-aa07a8c4f221.png"
+    },
+    {
+      "file": "/artwork/scenes/attack-on-titan-gate.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 503462,
+      "generator": "OpenAI ImageGen",
+      "type": "AI-generated anime fan illustration",
+      "sourceArtifact": "exec-d89ae828-673b-40d1-a1c4-b571496ae2de.png"
+    },
+    {
+      "file": "/artwork/scenes/attack-on-titan-watch.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 480404,
+      "generator": "OpenAI ImageGen",
+      "type": "AI-generated anime fan illustration",
+      "sourceArtifact": "exec-a99db10c-f876-4c73-b644-ba785cd784c6.png"
+    },
+    {
+      "file": "/artwork/characters/luffy.webp",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 381294,
+      "generator": "OpenAI ImageGen",
+      "type": "AI-generated anime character fan illustration",
+      "sourceArtifact": "exec-d20045ad-abf9-449d-84d0-aa3caa24a4fd.png"
+    },
+    {
+      "file": "/artwork/characters/zoro.webp",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 320592,
+      "generator": "OpenAI ImageGen",
+      "type": "AI-generated anime character fan illustration",
+      "sourceArtifact": "exec-a36ecb4f-561f-4135-8241-3a9e5ce7e1f4.png"
+    },
+    {
+      "file": "/artwork/characters/tanjiro.webp",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 416184,
+      "generator": "OpenAI ImageGen",
+      "type": "AI-generated anime character fan illustration",
+      "sourceArtifact": "exec-de714d87-b8ef-4c34-893b-a4f2e81729cb.png"
+    },
+    {
+      "file": "/artwork/characters/nezuko.webp",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 539574,
+      "generator": "OpenAI ImageGen",
+      "type": "AI-generated anime character fan illustration",
+      "sourceArtifact": "exec-9f977f51-2f86-48ba-b3ec-cdd777720c7a.png"
+    },
+    {
+      "file": "/artwork/characters/levi.webp",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 331468,
+      "generator": "OpenAI ImageGen",
+      "type": "AI-generated anime character fan illustration",
+      "sourceArtifact": "exec-8647a204-d8ce-4f9d-8662-eb84aaf86784.png"
+    },
+    {
+      "file": "/artwork/characters/mikasa.webp",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 339970,
+      "generator": "OpenAI ImageGen",
+      "type": "AI-generated anime character fan illustration",
+      "sourceArtifact": "exec-2dba7070-560c-4e6d-90ab-803562806788.png"
+    }
+  ]
+}

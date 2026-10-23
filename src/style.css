@@ -236,3 +236,46 @@ canvas:focus-visible { outline-offset: -4px; }
   #character-list { top: auto; bottom: 22px; left: 20px; flex-direction: row; }#character-list button { font-size: 10px; padding: 8px; }
   .model-tools { left: auto; right: 20px; transform: none; bottom: 20px; }.gallery-help, .model-credit { display: none; }
 }
+
+.presentation-switch { position: absolute; top: 270px; left: 32px; display: flex; padding: 4px; gap: 4px; background: #08101dd9; border: 1px solid #ffffff35; border-radius: 7px; pointer-events: auto; backdrop-filter: blur(12px); }
+.presentation-switch button { min-height: 38px; padding: 8px 13px; border: 1px solid transparent; border-radius: 4px; color: #b7c1d3; background: transparent; font-size: 11px; }
+.presentation-switch button[aria-pressed=true] { color: var(--world-accent); border-color: var(--world-accent); background: #ffffff0b; }
+#scene-list { top: 328px; }.gallery-open { top: 491px; }
+#app[data-presentation=anime] .map-panel { display: none; }
+#app[data-presentation=anime].is-exploring .vignette { background: linear-gradient(90deg, #0409179c, #04091730 34%, transparent 65%), linear-gradient(180deg, #03091738, transparent 30%, transparent 70%, #03091755); }
+#app[data-presentation=anime] .crosshair { visibility: hidden; }
+#app[data-presentation=anime] .world-tip { background: #091224aa; }
+#anime-status { position: absolute; z-index: 7; left: 50%; top: 48%; transform: translate(-50%,-50%); width: min(420px,calc(100vw - 40px)); padding: 18px 22px; border: 1px solid #ffffff33; border-radius: 8px; background: #0c1425e8; color: #e9edf5; text-align: center; font-size: 13px; line-height: 1.8; }
+#anime-status button, #portrait-retry { display: block; min-height: 44px; margin: 12px auto 0; padding: 8px 20px; color: var(--world-accent); background: #1c2a3b; border: 1px solid var(--world-accent); border-radius: 4px; }
+#anime-status[hidden], #anime-status button[hidden], #character-art-stage[hidden], #character-art[hidden], #portrait-status[hidden], #portrait-retry[hidden] { display: none; }
+#app.is-gallery #anime-status, #app[data-presentation="3d"] #anime-status { display: none; }
+.gallery-presentation { top: 99px; right: 32px; left: auto; z-index: 4; }
+#character-art-stage { position: absolute; left: 32%; right: 12%; top: 110px; bottom: 160px; pointer-events: auto; touch-action: none; cursor: grab; overflow: hidden; }
+#character-art { width: 100%; height: 100%; object-fit: contain; object-position: center; transform-origin: center; pointer-events: none; user-select: none; mask-image: linear-gradient(90deg,transparent,black 8%,black 92%,transparent); }
+#portrait-status { position: absolute; top: 48%; width: 100%; text-align: center; font-size: 12px; color: #c4ccda; }
+#app[data-presentation=anime] .model-tools { left: 58%; }
+#app[data-presentation=anime] .gallery-help { left: 58%; }
+#app.is-gallery .gallery-heading, #app.is-gallery #character-list, #app.is-gallery #gallery-close, #app.is-gallery .model-tools { z-index: 2; }
+#app.is-cinematic[data-presentation=anime] .vignette { background: none; }
+@media (max-width:650px) {
+  .presentation-switch { top: 245px; left: 16px; }.presentation-switch button { padding: 8px 12px; min-height: 40px; }
+  #scene-list { top: auto; }.gallery-open { top: auto; }
+  #app[data-presentation=anime].is-exploring .vignette { background: linear-gradient(180deg,#03071288,transparent 42%,transparent 70%,#03071280),linear-gradient(90deg,#03071240,transparent 75%); }
+  .gallery-presentation { left: auto; top: 77px; right: 16px; }.gallery-presentation button { padding: 8px; font-size: 9px; }
+  #gallery-close { max-width: 150px; padding: 8px 10px; font-size: 10px; }
+  #character-art-stage { left: 12px; right: 12px; top: 230px; bottom: 199px; }
+  #app[data-presentation=anime] .model-tools, #app[data-presentation=anime] .gallery-help { left: 50%; }
+}
+@media (max-height:580px) and (min-width:651px) {
+  .presentation-switch { top: 126px; left: 20px; }.presentation-switch button { min-height: 32px; padding: 6px 10px; font-size: 10px; }
+  #scene-list { top: 173px; }.gallery-open { top: 309px; }
+  .gallery-presentation { top: 68px; left: auto; right: 20px; }
+  #character-art-stage { left: 30%; right: 22%; top: 70px; bottom: 44px; }
+  #app[data-presentation=anime] .model-tools { left: auto; }
+}
+#app.is-gallery .world-panel, #app.is-gallery #immersive-hud, #app.is-gallery #landmark-markers, #app.is-gallery #world-toolbar, #app.is-gallery .world-tip, #app.is-gallery .footerbar { display: none; }
+@media (max-height:580px) and (min-width:651px) {
+  #app.is-exploring .world-panel { display: flex; align-items: center; gap: 12px; max-width: 450px; }
+  #app.is-exploring .world-panel .back-button { margin: 0; }
+  #app.is-exploring .world-copy h2 { font-size: 18px; }
+}

@@ -58,8 +58,9 @@
 
         <section id="immersive-hud" class="immersive-hud" aria-label="พื้นที่สำรวจสามมิติ" hidden>
           <div class="location-card"><span id="location-index"></span><h3 id="location-name"></h3><div id="position-readout"></div></div>
+          <nav class="presentation-switch" id="world-presentation" aria-label="รูปแบบการสำรวจ"><button type="button" data-presentation="anime" aria-pressed="true">ภาพอนิเมะ</button><button type="button" data-presentation="3d" aria-pressed="false">เดิน 3D</button></nav>
           <nav id="scene-list" aria-label="เดินทางไปยังจุดสำรวจ"></nav>
-          <button id="gallery-open" class="gallery-open" type="button"><span>◈</span> ชมโมเดลตัวละคร <small>G</small></button>
+          <button id="gallery-open" class="gallery-open" type="button"><span>◈</span> ชมตัวละคร <small>G</small></button>
           <div class="map-panel"><span>EXPLORER / N ↑</span><canvas id="mini-map" width="128" height="128" aria-label="แผนที่ตำแหน่งและทิศทาง"></canvas></div>
           <nav class="movement-pad" aria-label="ปุ่มเดินสำหรับจอสัมผัส">
             <button class="move-key forward" data-key="KeyW" aria-label="เดินไปข้างหน้า" type="button">↑</button>
@@ -69,13 +70,15 @@
           </nav>
           <span class="look-hint">ลากจอเพื่อมองรอบตัว · กดลูกศรค้างเพื่อเดิน</span>
         </section>
-        <section id="character-gallery" class="character-gallery" aria-label="ห้องชมโมเดลตัวละครสามมิติ" hidden>
+        <section id="character-gallery" class="character-gallery" aria-label="ห้องชมตัวละคร" hidden>
+          <div id="character-art-stage" hidden><img id="character-art" alt="" draggable="false" hidden /><div id="portrait-status" role="status"><span></span><button id="portrait-retry" type="button" hidden>ลองอีกครั้ง</button></div></div>
+          <nav class="presentation-switch gallery-presentation" aria-label="รูปแบบชมตัวละคร"><button type="button" data-presentation="anime" aria-pressed="true">ภาพอนิเมะ</button><button type="button" data-presentation="3d" aria-pressed="false">โมเดล 3D</button></nav>
           <button id="gallery-close" type="button">← กลับไปสำรวจโลก</button>
-          <div class="gallery-heading"><span class="gallery-eyebrow">CHARACTER ARCHIVE / 3D FAN SCULPTURES</span><h2 id="character-name"></h2><h3 id="character-thai"></h3><p id="character-detail"></p></div>
+          <div class="gallery-heading"><span class="gallery-eyebrow" id="gallery-eyebrow">CHARACTER ARCHIVE / 3D FAN SCULPTURES</span><h2 id="character-name"></h2><h3 id="character-thai"></h3><p id="character-detail"></p></div>
           <nav id="character-list" aria-label="เลือกตัวละครทีละตัว"></nav>
           <div class="model-tools" role="group" aria-label="ควบคุมโมเดล"><button id="model-zoom-in" type="button" aria-label="ซูมเข้า">＋</button><button id="model-zoom-out" type="button" aria-label="ซูมออก">−</button><button id="model-reset" type="button">มุมเริ่มต้น</button><button id="model-spin" type="button" aria-pressed="false">หมุนอัตโนมัติ</button></div>
-          <p class="gallery-help">ลากเพื่อหมุน · เลื่อน / จีบเพื่อซูม · ปุ่มลูกศรหมุน · + − ซูม · Home คืนมุม · Esc กลับ</p>
-          <p class="model-credit">โมเดลแฟนอาร์ต stylized สร้างขึ้นสำหรับโปรเจกต์นี้</p>
+          <p class="gallery-help" id="gallery-help">ลากเพื่อหมุน · เลื่อน / จีบเพื่อซูม · ปุ่มลูกศรหมุน · + − ซูม · Home คืนมุม · Esc กลับ</p>
+          <p class="model-credit" id="model-credit">โมเดลแฟนอาร์ต stylized สร้างขึ้นสำหรับโปรเจกต์นี้</p>
         </section>
 
         <section class="world-picker" id="world-picker" aria-label="เลือกประตูสู่โลกต่าง ๆ">
@@ -104,6 +107,7 @@
       </footer>
 
       <div class="transition-screen" id="transition-screen" aria-hidden="true"><span class="transition-sigil">✳</span><span id="transition-label" role="status">ENTERING WORLD</span></div>
+      <div id="anime-status" role="status" hidden><span id="anime-status-message"></span><button id="anime-retry" type="button" hidden>ลองอีกครั้ง</button></div>
       <div class="toast" id="toast" role="status" aria-live="polite"></div>
       <dialog id="explore-dialog" class="explore-dialog" aria-labelledby="explore-title" aria-describedby="explore-progress">
         <div class="explore-heading"><span>FIELD NOTES / สมุดสำรวจ</span><button id="explore-close" type="button" aria-label="ปิดสมุดสำรวจ" autofocus>ปิด ×</button></div>

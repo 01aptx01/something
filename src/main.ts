@@ -343,7 +343,7 @@ async function enterWorld(index: number) {
     document.querySelector('#world-title')!.textContent = info.title;
     document.querySelector('#world-description')!.textContent = info.description;
     document.querySelector('#world-coordinates')!.textContent = info.coordinates;
-    document.querySelector('#world-tip-text')!.textContent = 'WASD เดิน · ลากเพื่อมองรอบตัว · G ชมตัวละคร';
+    document.querySelector('#world-tip-text')!.textContent = 'ลากสำรวจภาพ · W/S ซูม · เลือกสถานที่เพื่อเดินทาง';
     intro.classList.add('hidden');
     intro.inert = true;
     picker.classList.add('hidden');
@@ -351,14 +351,16 @@ async function enterWorld(index: number) {
     worldPanel.hidden = worldPanel.inert = false;
     worldPanel.classList.add('visible');
     document.querySelector('#footerbar')!.classList.add('in-world');
-    document.querySelector('.footer-controls')!.innerHTML = '<kbd>WASD</kbd> WALK · DRAG LOOK · <kbd>G</kbd> CAST · <kbd>R</kbd> RESET';
+    document.querySelector('.footer-controls')!.innerHTML = '<kbd>W/S</kbd> ZOOM · <kbd>A/D</kbd> PAN · <kbd>G</kbd> CAST · <kbd>R</kbd> RESET';
     document.querySelector('#crosshair')!.classList.add('visible');
     appRoot.classList.add('is-exploring');
     appRoot.dataset.world = String(index);
     exploration.enter(index);
+    await immersive.ready;
+    if (request !== navigationToken) return;
     finishTransition();
     playChime(index);
-    canvas.setAttribute('aria-label', `${info.title} · WASD เดิน · ลากหรือปุ่มลูกศรมองรอบตัว · G ชมตัวละคร · R กลับจุดเริ่ม · Escape กลับ`);
+    canvas.setAttribute('aria-label', `${info.title} · โหมดภาพอนิเมะ: ลากหรือ A/D เลื่อน W/S ซูม · เลือกเดิน 3D เพื่อสำรวจอิสระ · G ชมตัวละคร · Escape กลับ`);
     canvas.focus({ preventScroll: true });
   } catch {
     if (request !== navigationToken) return;
