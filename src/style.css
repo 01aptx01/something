@@ -79,7 +79,7 @@ kbd { min-width: 14px; height: 15px; padding: 1px 4px; display: inline-flex; jus
 .world-panel { position: absolute; z-index: 2; top: 18%; left: 9.2%; width: min(490px, 42vw); opacity: 0; transform: translateY(12px); transition: opacity .45s ease, transform .45s ease; pointer-events: none; }.world-panel.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
 .back-button { margin-bottom: clamp(52px, 13vh, 130px); padding: 9px 12px; color: rgba(243,239,255,.74); border: 1px solid rgba(239,231,255,.22); border-radius: 3px; background: rgba(10,10,20,.25); backdrop-filter: blur(9px); font-size: 9px; letter-spacing: .06em; transition: .2s; }.back-button:hover { border-color: var(--world-accent); color: white; }.back-button span { margin-right: 6px; color: var(--world-accent); font-size: 15px; vertical-align: -1px; }
 .world-kicker { color: var(--world-accent); font-size: 9px; letter-spacing: .18em; }.world-copy h2 { margin: 17px 0 15px; font-size: clamp(37px, 5.2vw, 68px); line-height: .98; font-weight: 600; letter-spacing: -.065em; text-shadow: 0 4px 35px rgba(0,0,0,.45); }.world-copy p { max-width: 340px; margin: 0; color: rgba(243,240,255,.73); font-size: 13px; line-height: 1.8; text-shadow: 0 2px 15px #111; }.world-coordinates { margin-top: 25px; color: rgba(237,232,252,.46); font-size: 8px; letter-spacing: .16em; }
-.world-tip { position: absolute; right: 4vw; bottom: 17%; padding: 12px 15px; color: rgba(242,238,255,.78); background: rgba(12,12,21,.42); border: 1px solid rgba(239,231,255,.16); border-radius: 3px; backdrop-filter: blur(12px); font-size: 8px; letter-spacing: .04em; }.tip-dot { background: var(--world-accent); box-shadow: 0 0 9px var(--world-accent); }
+.world-tip { position: absolute; right: 4vw; bottom: 17%; display: flex; align-items: center; gap: 6px; padding: 12px 15px; color: rgba(242,238,255,.78); background: rgba(12,12,21,.42); border: 1px solid rgba(239,231,255,.16); border-radius: 3px; backdrop-filter: blur(12px); font-size: 8px; letter-spacing: .04em; opacity: 0; transform: translateY(8px); transition: .3s ease; pointer-events: none; }.tip-dot { background: var(--world-accent); box-shadow: 0 0 9px var(--world-accent); }
 .crosshair { position: absolute; z-index: 1; left: 50%; top: 50%; width: 30px; height: 30px; border: 1px solid rgba(248,240,255,.23); border-radius: 50%; opacity: 0; transform: translate(-50%,-50%) scale(.7); transition: .3s; pointer-events: none; }.crosshair.visible { opacity: .7; transform: translate(-50%,-50%) scale(1); }.crosshair span { position: absolute; left: 50%; top: 50%; width: 3px; height: 3px; border-radius: 50%; background: var(--world-accent); box-shadow: 0 0 8px var(--world-accent); transform: translate(-50%,-50%); }.crosshair i { position: absolute; inset: 5px; border: 1px dashed rgba(246,239,255,.23); border-radius: 50%; animation: spin 18s linear infinite; }
 .intro.hidden, .world-picker.hidden { animation: none; opacity: 0; transform: translateY(10px); transition: .35s ease; pointer-events: none; }.world-picker.hidden { transform: translateY(12px); }.in-world .footer-center, .in-world > span:first-child { opacity: 0; }.in-world .footer-controls { color: rgba(240,236,255,.65); }
 .transition-screen { position: absolute; z-index: 10; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; color: rgba(237,232,255,.62); background: rgba(6,6,14,.96); font-size: 9px; letter-spacing: .24em; opacity: 0; pointer-events: none; transition: opacity .3s ease; }.transition-screen.active { opacity: 1; }.transition-sigil { color: #cfb7ff; font-size: 34px; animation: spin 2.5s linear infinite; text-shadow: 0 0 20px #9e76ff; }
@@ -104,4 +104,20 @@ kbd { min-width: 14px; height: 15px; padding: 1px 4px; display: inline-flex; jus
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+/* The gallery uses the same commissioned fan-art scenes as the 3D worlds. */
+.card-art > span { display: none; }
+.card-art::before { content: ''; position: absolute; inset: 0; background-size: cover; background-position: center; transform: scale(1.02); transition: transform .7s cubic-bezier(.2,.7,.2,1); }
+.world-card:hover .card-art::before, .world-card:focus-visible .card-art::before { transform: scale(1.1); }
+.card-sea .card-art::before { background-image: url('/artwork/one-piece.webp'); background-position: 72% 50%; }
+.card-night .card-art::before { background-image: url('/artwork/demon-slayer.webp'); background-position: 72% 50%; }
+.card-wall .card-art::before { background-image: url('/artwork/attack-on-titan.webp'); background-position: 70% 50%; }
+#app.is-exploring .vignette { background: linear-gradient(90deg, rgba(5,6,14,.72) 0%, rgba(5,6,14,.42) 36%, rgba(5,6,14,.08) 72%), linear-gradient(180deg, rgba(5,6,14,.2), transparent 27%, transparent 72%, rgba(5,6,14,.3)), radial-gradient(ellipse at 50% 45%, transparent 30%, rgba(4,5,13,.32) 100%); }
+#app.is-exploring .world-tip { opacity: 1; transform: translateY(0); }
+@media (max-width: 650px) {
+  #app.is-exploring .vignette { background: linear-gradient(180deg, rgba(5,6,14,.62) 0%, rgba(5,6,14,.38) 50%, rgba(5,6,14,.08) 100%), linear-gradient(90deg, rgba(5,6,14,.28), transparent 88%); }
+  #app.is-exploring .world-panel { top: auto; bottom: 15%; left: 6%; width: 88vw; padding: 14px; border: 1px solid rgba(239,231,255,.12); border-radius: 6px; background: linear-gradient(110deg, rgba(7,8,16,.86), rgba(7,8,16,.58)); backdrop-filter: blur(9px); }
+  #app.is-exploring .world-panel .back-button { margin-bottom: 3vh; }
+  #app.is-exploring .world-tip { right: 18px; bottom: 7%; }
 }

@@ -3,6 +3,7 @@ import './style.css';
 import { buildWorld, WORLDS } from './worlds';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#world-canvas')!;
+const appRoot = document.querySelector<HTMLElement>('#app')!;
 const intro = document.querySelector<HTMLElement>('#intro')!;
 const picker = document.querySelector<HTMLElement>('#world-picker')!;
 const worldPanel = document.querySelector<HTMLElement>('#world-panel')!;
@@ -10,6 +11,8 @@ const transitionScreen = document.querySelector<HTMLElement>('#transition-screen
 const toast = document.querySelector<HTMLElement>('#toast')!;
 const fallback = document.querySelector<HTMLElement>('#webgl-fallback')!;
 const cards = [...document.querySelectorAll<HTMLButtonElement>('.world-card')];
+const backgroundLoader = new THREE.TextureLoader();
+const worldBackgrounds = new Map<number, THREE.Texture>();
 
 let renderer: THREE.WebGLRenderer;
 try {
@@ -53,6 +56,7 @@ let toastTimer = 0;
 let audioContext: AudioContext | null = null;
 let audioEnabled = false;
 let transitioning = false;
+let activeBackgroundIndex = -1;
 
 function textTexture(text: string) {
   const textureCanvas = document.createElement('canvas');
@@ -229,6 +233,40 @@ function showToast(message: string) {
   toastTimer = window.setTimeout(() => toast.classList.remove('visible'), 2700);
 }
 
+async function loadWorldBackground(index: number) {
+  const cached = worldBackgrounds.get(index);
+  if (cached) return cached;
+  const texture = await backgroundLoader.loadAsync(WORLDS[index].artwork);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 8);
+  worldBackgrounds.set(index, texture);
+  return texture;
+}
+
+function fitWorldBackground(index: number, texture: THREE.Texture) {
+  const image = texture.image as HTMLImageElement;
+  const imageAspect = image.width / image.height;
+  const viewportAspect = window.innerWidth / window.innerHeight;
+  const cropX = Math.min(1, viewportAspect / imageAspect);
+  const cropY = Math.min(1, imageAspect / viewportAspect);
+  const focusX = window.innerWidth <= 650 ? WORLDS[index].mobileFocus : WORLDS[index].desktopFocus;
+  texture.repeat.set(cropX, cropY);
+  texture.offset.set((1 - cropX) * focusX, (1 - cropY) * 0.5);
+  texture.needsUpdate = true;
+}
+
+function panWorldBackground(pointerX: number, pointerY: number) {
+  if (activeBackgroundIndex < 0) return;
+  const texture = worldBackgrounds.get(activeBackgroundIndex);
+  if (!texture) return;
+  const horizontalRange = 1 - texture.repeat.x;
+  const verticalRange = 1 - texture.repeat.y;
+  const info = WORLDS[activeBackgroundIndex];
+  const focusX = window.innerWidth <= 650 ? info.mobileFocus : info.desktopFocus;
+  texture.offset.x = THREE.MathUtils.clamp(horizontalRange * focusX - pointerX * 0.018, 0, horizontalRange);
+  texture.offset.y = THREE.MathUtils.clamp(verticalRange * 0.5 + pointerY * 0.012, 0, verticalRange);
+}
+
 function playChime(index: number) {
   if (!audioEnabled || !audioContext) return;
   const oscillator = audioContext.createOscillator();
@@ -251,12 +289,22 @@ async function enterWorld(index: number) {
   playChime(index);
   transitionScreen.classList.add('active');
   await new Promise((resolve) => window.setTimeout(resolve, 420));
+  let background: THREE.Texture | null = null;
+  try {
+    background = await loadWorldBackground(index);
+  } catch {
+    // The procedural scene remains usable if a background asset cannot be loaded.
+  }
   clearWorld();
   const world = buildWorld(index);
   worldLayer.add(world);
   hub.visible = false;
   const info = WORLDS[index];
-  scene.background = new THREE.Color(world.userData.sky as string);
+  if (background) {
+    fitWorldBackground(index, background);
+    activeBackgroundIndex = index;
+  }
+  scene.background = background ?? new THREE.Color(world.userData.sky as string);
   scene.fog = new THREE.FogExp2(world.userData.sky as string, 0.019);
   document.documentElement.style.setProperty('--world-accent', info.color);
   document.querySelector<HTMLElement>('#world-kicker')!.textContent = info.kicker;
@@ -270,6 +318,7 @@ async function enterWorld(index: number) {
   worldPanel.classList.add('visible');
   document.querySelector<HTMLElement>('#footerbar')!.classList.add('in-world');
   document.querySelector<HTMLElement>('#crosshair')!.classList.add('visible');
+  appRoot.classList.add('is-exploring');
   camera.position.set(0, 2.25, 11.8);
   camera.lookAt(0, 0.3, -1.2);
   transitionScreen.classList.remove('active');
@@ -282,6 +331,7 @@ async function returnToHub() {
   transitionScreen.classList.add('active');
   await new Promise((resolve) => window.setTimeout(resolve, 360));
   activeWorld = -1;
+  activeBackgroundIndex = -1;
   clearWorld();
   hub.visible = true;
   scene.background = new THREE.Color('#080912');
@@ -292,6 +342,7 @@ async function returnToHub() {
   picker.classList.remove('hidden');
   document.querySelector<HTMLElement>('#footerbar')!.classList.remove('in-world');
   document.querySelector<HTMLElement>('#crosshair')!.classList.remove('visible');
+  appRoot.classList.remove('is-exploring');
   camera.position.set(0, 2.2, 11.8);
   camera.lookAt(0, 0.1, 0);
   transitionScreen.classList.remove('active');
@@ -337,6 +388,7 @@ canvas.addEventListener('pointermove', (event) => {
   const bounds = canvas.getBoundingClientRect();
   pointer.x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1;
   pointer.y = -((event.clientY - bounds.top) / bounds.height) * 2 + 1;
+  panWorldBackground(pointer.x, pointer.y);
   if (pointerDown) {
     const movement = event.clientX - lastPointerX;
     if (Math.abs(event.clientX - dragStartX) + Math.abs(event.clientY - dragStartY) > 5) dragging = true;
@@ -381,6 +433,10 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, window.innerWidth < 700 ? 1.4 : 1.75));
   renderer.setSize(window.innerWidth, window.innerHeight);
+  if (activeBackgroundIndex >= 0) {
+    const background = worldBackgrounds.get(activeBackgroundIndex);
+    if (background) fitWorldBackground(activeBackgroundIndex, background);
+  }
 });
 
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -400,7 +456,7 @@ function animate() {
   });
   worldLayer.children.forEach((root) => {
     root.children.forEach((child) => {
-      if (child.name === 'Falling wisteria petal' && !reducedMotion) {
+      if (child.userData.floatSeed !== undefined && !reducedMotion) {
         const seed = Number(child.userData.floatSeed ?? 0);
         child.position.y = Number(child.userData.baseY) + Math.sin(elapsed * 0.6 + seed) * 0.16;
         child.position.x = Number(child.userData.baseX) + Math.cos(elapsed * 0.45 + seed) * 0.13;
