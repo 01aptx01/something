@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import './style.css';
 import { buildWorld, WORLDS } from './worlds';
+import { disposeGroup, WorldEffects } from './effects';
+import { ExplorationUI } from './exploration';
 
 const canvas = document.querySelector<HTMLCanvasElement>('#world-canvas')!;
 const appRoot = document.querySelector<HTMLElement>('#app')!;
@@ -13,6 +15,12 @@ const fallback = document.querySelector<HTMLElement>('#webgl-fallback')!;
 const cards = [...document.querySelectorAll<HTMLButtonElement>('.world-card')];
 const backgroundLoader = new THREE.TextureLoader();
 const worldBackgrounds = new Map<number, THREE.Texture>();
+const backgroundRequests = new Map<number, Promise<THREE.Texture>>();
+const main = document.querySelector<HTMLElement>('main')!;
+const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+let reducedMotion = motionQuery.matches;
+const pixelRatio = () => Math.min(window.devicePixelRatio, window.innerWidth <= 650 ? 1.5 : 2);
+document.querySelector('#reload-scene')!.addEventListener('click', () => window.location.reload());
 
 let renderer: THREE.WebGLRenderer;
 try {
@@ -23,7 +31,7 @@ try {
   throw new Error('WebGL could not be initialized.');
 }
 
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+renderer.setPixelRatio(pixelRatio());
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -57,6 +65,16 @@ let audioContext: AudioContext | null = null;
 let audioEnabled = false;
 let transitioning = false;
 let activeBackgroundIndex = -1;
+let navigationToken = 0;
+let pendingWorld = -1;
+let cinematic = false;
+let actionRemaining = 0;
+let contextLost = false;
+const parallaxTarget = new THREE.Vector2();
+const parallaxCurrent = new THREE.Vector2();
+const effects = new WorldEffects();
+const exploration = new ExplorationUI(triggerWorldAction, toggleCinematic);
+scene.add(effects.root);
 
 function textTexture(text: string) {
   const textureCanvas = document.createElement('canvas');
@@ -216,31 +234,52 @@ function createHub() {
 
 function layoutPortals() {
   const compact = window.innerWidth <= 650;
-  compactDecor.forEach((object) => { object.visible = !compact; });
+  const landscape = window.innerHeight <= 580 && !compact;
+  compactDecor.forEach((object) => { object.visible = !compact && !landscape; });
   portalGroups.forEach((group, index) => {
-    const x = compact ? (index - 1) * 1.12 : window.innerWidth >= 1200 ? index * 2.58 : (index - 1) * 3.55;
-    group.position.set(x, compact ? 1.15 : 0.35, -0.3 - Math.abs(index - 1) * 0.13);
-    group.scale.setScalar(compact ? 0.38 : window.innerWidth >= 1200 ? 0.84 : 1);
+    const x = landscape ? index * 2.35 + 0.75 : compact ? (index - 1) * 1.12 : window.innerWidth >= 1200 ? index * 2.58 : (index - 1) * 3.55;
+    group.position.set(x, landscape ? 1.5 : compact ? 1.15 : 0.35, -0.3 - Math.abs(index - 1) * 0.13);
+    group.scale.setScalar(landscape ? 0.52 : compact ? 0.38 : window.innerWidth >= 1200 ? 0.84 : 1);
   });
 }
 
 createHub();
 
-function showToast(message: string) {
+function showToast(message: string, duration = 4000) {
   toast.textContent = message;
   toast.classList.add('visible');
   window.clearTimeout(toastTimer);
-  toastTimer = window.setTimeout(() => toast.classList.remove('visible'), 2700);
+  toastTimer = window.setTimeout(hideToast, duration);
 }
 
-async function loadWorldBackground(index: number) {
+function hideToast() {
+  window.clearTimeout(toastTimer);
+  toast.classList.remove('visible');
+  toast.textContent = '';
+}
+
+function loadWorldBackground(index: number): Promise<THREE.Texture> {
   const cached = worldBackgrounds.get(index);
-  if (cached) return cached;
-  const texture = await backgroundLoader.loadAsync(WORLDS[index].artwork);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 8);
-  worldBackgrounds.set(index, texture);
-  return texture;
+  if (cached) return Promise.resolve(cached);
+  const pending = backgroundRequests.get(index);
+  if (pending) return pending;
+  let timer = 0;
+  const image = backgroundLoader.loadAsync(WORLDS[index].artwork).then((texture) => {
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.generateMipmaps = false;
+    texture.minFilter = THREE.LinearFilter;
+    const existing = worldBackgrounds.get(index);
+    if (existing) { texture.dispose(); return existing; }
+    worldBackgrounds.set(index, texture);
+    return texture;
+  });
+  const timeout = new Promise<never>((_, reject) => { timer = window.setTimeout(() => reject(new Error('Background timeout')), 10000); });
+  const request = Promise.race([image, timeout]).finally(() => {
+    window.clearTimeout(timer);
+    backgroundRequests.delete(index);
+  });
+  backgroundRequests.set(index, request);
+  return request;
 }
 
 function fitWorldBackground(index: number, texture: THREE.Texture) {
@@ -253,22 +292,31 @@ function fitWorldBackground(index: number, texture: THREE.Texture) {
   texture.repeat.set(cropX, cropY);
   texture.offset.set((1 - cropX) * focusX, (1 - cropY) * 0.5);
   texture.needsUpdate = true;
+  exploration.fitMarkers(texture);
 }
 
 function panWorldBackground(pointerX: number, pointerY: number) {
+  if (reducedMotion) return;
+  parallaxTarget.set(pointerX, pointerY);
+}
+
+function updateWorldBackground(delta: number) {
   if (activeBackgroundIndex < 0) return;
+  if (parallaxCurrent.distanceToSquared(parallaxTarget) < 0.00000001) return;
   const texture = worldBackgrounds.get(activeBackgroundIndex);
   if (!texture) return;
   const horizontalRange = 1 - texture.repeat.x;
   const verticalRange = 1 - texture.repeat.y;
   const info = WORLDS[activeBackgroundIndex];
   const focusX = window.innerWidth <= 650 ? info.mobileFocus : info.desktopFocus;
-  texture.offset.x = THREE.MathUtils.clamp(horizontalRange * focusX - pointerX * 0.018, 0, horizontalRange);
-  texture.offset.y = THREE.MathUtils.clamp(verticalRange * 0.5 + pointerY * 0.012, 0, verticalRange);
+  parallaxCurrent.lerp(parallaxTarget, 1 - Math.exp(-delta * 5));
+  texture.offset.x = THREE.MathUtils.clamp(horizontalRange * focusX - parallaxCurrent.x * 0.018, 0, horizontalRange);
+  texture.offset.y = THREE.MathUtils.clamp(verticalRange * 0.5 + parallaxCurrent.y * 0.012, 0, verticalRange);
+  exploration.fitMarkers(texture);
 }
 
 function playChime(index: number) {
-  if (!audioEnabled || !audioContext) return;
+  if (!audioEnabled || !audioContext || audioContext.state !== 'running') return;
   const oscillator = audioContext.createOscillator();
   const gain = audioContext.createGain();
   oscillator.type = 'sine';
@@ -282,101 +330,183 @@ function playChime(index: number) {
   oscillator.stop(audioContext.currentTime + 0.95);
 }
 
-async function enterWorld(index: number) {
-  if (transitioning || index < 0 || index >= WORLDS.length || activeWorld === index) return;
+function beginTransition(label: string) {
   transitioning = true;
-  activeWorld = index;
-  playChime(index);
+  hideToast();
+  effects.clear();
+  actionRemaining = 0;
+  cinematic = false;
+  exploration.setCinematic(false);
+  exploration.leave();
+  appRoot.classList.remove('is-cinematic');
+  appRoot.setAttribute('aria-busy', 'true');
+  main.inert = true;
+  pointerDown = dragging = false;
+  canvas.style.cursor = 'wait';
+  hoveredPortal = -1;
+  document.querySelector('#transition-label')!.textContent = label;
+  transitionScreen.setAttribute('aria-hidden', 'false');
   transitionScreen.classList.add('active');
-  await new Promise((resolve) => window.setTimeout(resolve, 420));
-  let background: THREE.Texture | null = null;
-  try {
-    background = await loadWorldBackground(index);
-  } catch {
-    // The procedural scene remains usable if a background asset cannot be loaded.
-  }
-  clearWorld();
-  const world = buildWorld(index);
-  worldLayer.add(world);
-  hub.visible = false;
-  const info = WORLDS[index];
-  if (background) {
-    fitWorldBackground(index, background);
-    activeBackgroundIndex = index;
-  }
-  scene.background = background ?? new THREE.Color(world.userData.sky as string);
-  scene.fog = new THREE.FogExp2(world.userData.sky as string, 0.019);
-  document.documentElement.style.setProperty('--world-accent', info.color);
-  document.querySelector<HTMLElement>('#world-kicker')!.textContent = info.kicker;
-  document.querySelector<HTMLElement>('#world-title')!.textContent = info.title;
-  document.querySelector<HTMLElement>('#world-description')!.textContent = info.description;
-  document.querySelector<HTMLElement>('#world-coordinates')!.textContent = info.coordinates;
-  document.querySelector<HTMLElement>('#world-tip-text')!.textContent = info.tip;
-  intro.classList.add('hidden');
-  picker.classList.add('hidden');
-  worldPanel.hidden = false;
-  worldPanel.classList.add('visible');
-  document.querySelector<HTMLElement>('#footerbar')!.classList.add('in-world');
-  document.querySelector<HTMLElement>('#crosshair')!.classList.add('visible');
-  appRoot.classList.add('is-exploring');
-  camera.position.set(0, 2.25, 11.8);
-  camera.lookAt(0, 0.3, -1.2);
-  transitionScreen.classList.remove('active');
-  transitioning = false;
 }
 
-async function returnToHub() {
-  if (transitioning || activeWorld < 0) return;
-  transitioning = true;
-  transitionScreen.classList.add('active');
-  await new Promise((resolve) => window.setTimeout(resolve, 360));
-  activeWorld = -1;
-  activeBackgroundIndex = -1;
+function finishTransition() {
+  transitioning = false;
+  pendingWorld = -1;
+  appRoot.setAttribute('aria-busy', 'false');
+  main.inert = false;
+  transitionScreen.classList.remove('active');
+  transitionScreen.setAttribute('aria-hidden', 'true');
+  canvas.style.cursor = 'grab';
+}
+
+function resetHub() {
+  activeWorld = activeBackgroundIndex = -1;
   clearWorld();
   hub.visible = true;
   scene.background = new THREE.Color('#080912');
   scene.fog = new THREE.FogExp2('#080912', 0.027);
   worldPanel.classList.remove('visible');
-  worldPanel.hidden = true;
+  worldPanel.hidden = worldPanel.inert = true;
   intro.classList.remove('hidden');
+  intro.inert = false;
   picker.classList.remove('hidden');
-  document.querySelector<HTMLElement>('#footerbar')!.classList.remove('in-world');
-  document.querySelector<HTMLElement>('#crosshair')!.classList.remove('visible');
+  picker.inert = false;
+  document.querySelector('#footerbar')!.classList.remove('in-world');
+  document.querySelector('.footer-controls')!.innerHTML = '<kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> SELECT <span class="control-sep">·</span> <kbd>ESC</kbd> BACK';
+  document.querySelector('#crosshair')!.classList.remove('visible');
   appRoot.classList.remove('is-exploring');
+  delete appRoot.dataset.world;
+  canvas.setAttribute('aria-label', 'ฉากโลกอนิเมะสามมิติ');
   camera.position.set(0, 2.2, 11.8);
   camera.lookAt(0, 0.1, 0);
-  transitionScreen.classList.remove('active');
-  transitioning = false;
+}
+
+async function enterWorld(index: number) {
+  if (transitioning || index < 0 || index >= WORLDS.length || activeWorld >= 0) return;
+  const request = ++navigationToken;
+  pendingWorld = index;
+  beginTransition(`ENTERING ${WORLDS[index].title}`);
+  try {
+    const [background] = await Promise.all([
+      loadWorldBackground(index),
+      new Promise((resolve) => window.setTimeout(resolve, reducedMotion ? 0 : 420)),
+    ]);
+    if (request !== navigationToken) return;
+    clearWorld();
+    const world = buildWorld(index);
+    worldLayer.add(world);
+    activeWorld = activeBackgroundIndex = index;
+    hub.visible = false;
+    const info = WORLDS[index];
+    scene.background = background;
+    scene.fog = new THREE.FogExp2(world.userData.sky as string, 0.019);
+    document.documentElement.style.setProperty('--world-accent', info.color);
+    document.querySelector('#world-kicker')!.textContent = info.kicker;
+    document.querySelector('#world-title')!.textContent = info.title;
+    document.querySelector('#world-description')!.textContent = info.description;
+    document.querySelector('#world-coordinates')!.textContent = info.coordinates;
+    document.querySelector('#world-tip-text')!.textContent = 'เลือกจุด 01 / 02 เพื่อค้นพบเรื่องราว';
+    intro.classList.add('hidden');
+    intro.inert = true;
+    picker.classList.add('hidden');
+    picker.inert = true;
+    worldPanel.hidden = worldPanel.inert = false;
+    worldPanel.classList.add('visible');
+    document.querySelector('#footerbar')!.classList.add('in-world');
+    document.querySelector('.footer-controls')!.innerHTML = '<kbd>SPACE</kbd> EFFECT <span class="control-sep">·</span> <kbd>C</kbd> CINEMA <span class="control-sep">·</span> <kbd>ESC</kbd> BACK';
+    document.querySelector('#crosshair')!.classList.add('visible');
+    appRoot.classList.add('is-exploring');
+    appRoot.dataset.world = String(index);
+    parallaxCurrent.set(0, 0);
+    parallaxTarget.set(0, 0);
+    exploration.enter(index);
+    fitWorldBackground(index, background);
+    camera.position.set(0, 2.25, 11.8);
+    camera.lookAt(0, 0.3, -1.2);
+    finishTransition();
+    playChime(index);
+    canvas.setAttribute('aria-label', `${info.title} · Space เล่นเอฟเฟกต์ · C ชมภาพ · Escape กลับ`);
+    canvas.focus({ preventScroll: true });
+  } catch {
+    if (request !== navigationToken) return;
+    resetHub();
+    finishTransition();
+    showToast('โหลดภาพโลกนี้ไม่สำเร็จ กรุณาลองเลือกโลกอีกครั้ง', 6000);
+    cards[index].focus({ preventScroll: true });
+  }
+}
+
+async function returnToHub() {
+  const previous = activeWorld >= 0 ? activeWorld : pendingWorld;
+  if (previous < 0 && !transitioning) return;
+  const request = ++navigationToken;
+  pendingWorld = -1;
+  beginTransition('RETURNING TO PORTALS');
+  await new Promise((resolve) => window.setTimeout(resolve, reducedMotion ? 0 : 260));
+  if (request !== navigationToken) return;
+  resetHub();
+  finishTransition();
+  cards[Math.max(previous, 0)].focus({ preventScroll: true });
 }
 
 function clearWorld() {
-  worldLayer.traverse((object) => {
-    const mesh = object as THREE.Mesh;
-    mesh.geometry?.dispose();
-    if (Array.isArray(mesh.material)) mesh.material.forEach((item) => item.dispose());
-    else mesh.material?.dispose();
-  });
-  worldLayer.clear();
+  effects.clear();
+  disposeGroup(worldLayer);
+}
+
+function triggerWorldAction() {
+  if (activeWorld < 0 || transitioning || actionRemaining > 0 || exploration.dialogOpen) return;
+  actionRemaining = effects.trigger(activeWorld, reducedMotion);
+  exploration.setActionBusy(true);
+  playChime(activeWorld);
+  if (reducedMotion) showToast(['ลมทะเลพัดผ่านดาดฟ้า', 'สายน้ำโอบล้อมกลีบวิสทีเรีย', 'พลุสีเขียวส่งสัญญาณถึงหน่วยสำรวจ'][activeWorld]);
+}
+
+function toggleCinematic() {
+  if (activeWorld < 0 || transitioning) return;
+  cinematic = !cinematic;
+  appRoot.classList.toggle('is-cinematic', cinematic);
+  exploration.setCinematic(cinematic);
+  worldPanel.inert = cinematic;
 }
 
 cards.forEach((card) => card.addEventListener('click', () => enterWorld(Number(card.dataset.world))));
 document.querySelector<HTMLButtonElement>('#back-button')!.addEventListener('click', returnToHub);
 
+document.querySelector('.brand')!.addEventListener('click', (event) => { event.preventDefault(); void returnToHub(); });
 document.querySelector<HTMLButtonElement>('#sound-toggle')!.addEventListener('click', async () => {
-  audioEnabled = !audioEnabled;
-  if (audioEnabled && !audioContext) audioContext = new AudioContext();
-  if (audioEnabled && audioContext?.state === 'suspended') await audioContext.resume();
+  try {
+    audioEnabled = !audioEnabled;
+    if (audioEnabled && !audioContext) audioContext = new AudioContext();
+    if (audioEnabled && audioContext?.state === 'suspended') await audioContext.resume();
+  } catch {
+    audioEnabled = false;
+    showToast('อุปกรณ์ยังไม่พร้อมเล่นเสียง ลองเปิดเสียงอีกครั้ง');
+  }
   document.querySelector<HTMLElement>('#sound-label')!.textContent = audioEnabled ? 'SOUND ON' : 'SOUND OFF';
   document.querySelector<HTMLButtonElement>('#sound-toggle')!.classList.toggle('is-on', audioEnabled);
+  document.querySelector('#sound-toggle')!.setAttribute('aria-pressed', String(audioEnabled));
   if (audioEnabled) playChime(Math.max(activeWorld, 0));
 });
 
 window.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && activeWorld >= 0) void returnToHub();
+  if (event.repeat || event.ctrlKey || event.altKey || event.metaKey || exploration.dialogOpen) return;
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    if (cinematic) toggleCinematic();
+    else if (activeWorld >= 0 || transitioning) void returnToHub();
+    return;
+  }
+  if (transitioning) return;
+  if (event.key.toLowerCase() === 'c' && activeWorld >= 0) { event.preventDefault(); toggleCinematic(); }
+  if (event.code === 'Space' && !(event.target instanceof HTMLElement && event.target.closest('button, a, input, select, textarea'))) {
+    if (activeWorld >= 0) { event.preventDefault(); triggerWorldAction(); }
+  }
   if (activeWorld < 0 && ['1', '2', '3'].includes(event.key)) void enterWorld(Number(event.key) - 1);
 });
 
 canvas.addEventListener('pointerdown', (event) => {
+  if (transitioning || contextLost || event.button !== 0 || !event.isPrimary) return;
   pointerDown = true;
   dragging = false;
   dragStartX = lastPointerX = event.clientX;
@@ -385,6 +515,7 @@ canvas.addEventListener('pointerdown', (event) => {
 });
 
 canvas.addEventListener('pointermove', (event) => {
+  if (transitioning || !event.isPrimary) return;
   const bounds = canvas.getBoundingClientRect();
   pointer.x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1;
   pointer.y = -((event.clientY - bounds.top) / bounds.height) * 2 + 1;
@@ -392,7 +523,7 @@ canvas.addEventListener('pointermove', (event) => {
   if (pointerDown) {
     const movement = event.clientX - lastPointerX;
     if (Math.abs(event.clientX - dragStartX) + Math.abs(event.clientY - dragStartY) > 5) dragging = true;
-    if (activeWorld < 0 && dragging) targetRotation += movement * 0.004;
+    if (activeWorld < 0 && dragging) targetRotation = THREE.MathUtils.clamp(targetRotation + movement * 0.004, -0.28, 0.28);
   }
   lastPointerX = event.clientX;
   raycaster.setFromCamera(pointer, camera);
@@ -401,16 +532,14 @@ canvas.addEventListener('pointermove', (event) => {
     hoveredPortal = intersects.length ? Number(intersects[0].object.userData.portalIndex) : -1;
     canvas.style.cursor = hoveredPortal >= 0 ? 'pointer' : pointerDown ? 'grabbing' : 'grab';
   } else {
-    const intersects = raycaster.intersectObjects(worldLayer.children, true);
-    const landmark = intersects.find((hit) => hit.object.userData.landmark)?.object;
-    canvas.style.cursor = landmark ? 'pointer' : 'grab';
+    canvas.style.cursor = pointerDown ? 'grabbing' : 'grab';
   }
 });
 
 canvas.addEventListener('pointerup', (event) => {
   if (!pointerDown) return;
   pointerDown = false;
-  canvas.releasePointerCapture(event.pointerId);
+  if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
   if (dragging) return;
   const bounds = canvas.getBoundingClientRect();
   pointer.x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1;
@@ -419,9 +548,6 @@ canvas.addEventListener('pointerup', (event) => {
   if (activeWorld < 0) {
     const hit = raycaster.intersectObjects(portalMeshes, false)[0];
     if (hit) void enterWorld(Number(hit.object.userData.portalIndex));
-  } else {
-    const hit = raycaster.intersectObjects(worldLayer.children, true).find((item) => item.object.userData.landmark);
-    if (hit) showToast(String(hit.object.userData.landmark));
   }
 });
 
@@ -431,7 +557,7 @@ window.addEventListener('resize', () => {
   layoutPortals();
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, window.innerWidth < 700 ? 1.4 : 1.75));
+  renderer.setPixelRatio(pixelRatio());
   renderer.setSize(window.innerWidth, window.innerHeight);
   if (activeBackgroundIndex >= 0) {
     const background = worldBackgrounds.get(activeBackgroundIndex);
@@ -439,19 +565,38 @@ window.addEventListener('resize', () => {
   }
 });
 
-const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+motionQuery.addEventListener('change', (event) => {
+  reducedMotion = event.matches;
+  parallaxCurrent.set(0, 0);
+  parallaxTarget.set(0, 0);
+  effects.clear();
+  actionRemaining = 0;
+  exploration.setActionBusy(false);
+  const texture = worldBackgrounds.get(activeBackgroundIndex);
+  if (texture) fitWorldBackground(activeBackgroundIndex, texture);
+});
+canvas.addEventListener('webglcontextlost', (event) => {
+  event.preventDefault();
+  contextLost = true;
+  document.querySelector('#webgl-fallback h2')!.textContent = 'การแสดงผล 3 มิติหยุดชั่วคราว';
+  document.querySelector('#webgl-fallback p')!.textContent = 'ลองโหลดหน้าใหม่เพื่อกลับสู่พอร์ทัล';
+  fallback.hidden = false;
+  document.querySelector<HTMLButtonElement>('#reload-scene')!.focus({ preventScroll: true });
+});
 function animate() {
   requestAnimationFrame(animate);
   const delta = Math.min(clock.getDelta(), 0.045);
+  if (document.hidden || contextLost) return;
   const elapsed = clock.elapsedTime;
   hub.rotation.y += (targetRotation - hub.rotation.y) * Math.min(delta * 4, 1);
   hub.children.forEach((child) => {
     if (child.userData.baseY !== undefined && !reducedMotion) child.position.y = Number(child.userData.baseY) + Math.sin(elapsed * 0.8 + child.id) * 0.11;
+    if (child.name === 'Wayfinder crystal' && !reducedMotion) child.rotation.y = elapsed * 0.28;
   });
   portalRings.forEach((ring, index) => {
-    ring.rotation.z = Math.sin(elapsed * 0.4 + index) * 0.045;
+    ring.rotation.z = reducedMotion ? 0 : Math.sin(elapsed * 0.4 + index) * 0.045;
     ring.scale.setScalar(hoveredPortal === index ? 1.035 : 1);
-    portalMaterials[index].uniforms.uTime.value = elapsed;
+    portalMaterials[index].uniforms.uTime.value = reducedMotion ? 0 : elapsed;
     portalMaterials[index].uniforms.uHover.value += ((hoveredPortal === index ? 1 : 0) - portalMaterials[index].uniforms.uHover.value) * delta * 4;
   });
   worldLayer.children.forEach((root) => {
@@ -460,10 +605,16 @@ function animate() {
         const seed = Number(child.userData.floatSeed ?? 0);
         child.position.y = Number(child.userData.baseY) + Math.sin(elapsed * 0.6 + seed) * 0.16;
         child.position.x = Number(child.userData.baseX) + Math.cos(elapsed * 0.45 + seed) * 0.13;
+        if (child.name === 'Falling wisteria petal') child.rotation.z += delta * 0.12;
       }
-      if (child.name === 'Wayfinder crystal' && !reducedMotion) child.rotation.y = elapsed * 0.28;
     });
   });
+  if (!reducedMotion) updateWorldBackground(delta);
+  effects.update(delta);
+  if (actionRemaining > 0) {
+    actionRemaining = Math.max(0, actionRemaining - delta);
+    if (actionRemaining === 0) exploration.setActionBusy(false);
+  }
   renderer.render(scene, camera);
 }
 animate();

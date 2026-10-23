@@ -10,7 +10,7 @@
   </head>
   <body>
     <div id="app">
-      <canvas id="world-canvas" aria-label="ฉากโลกอนิเมะสามมิติ"></canvas>
+      <canvas id="world-canvas" tabindex="0" aria-label="ฉากโลกอนิเมะสามมิติ"></canvas>
       <div class="vignette" aria-hidden="true"></div>
 
       <header class="topbar">
@@ -20,7 +20,7 @@
         </a>
         <div class="topbar-right">
           <span class="live-indicator"><i></i> IMMERSIVE EXPERIENCE</span>
-          <button class="sound-button" id="sound-toggle" type="button" aria-label="เปิดหรือปิดเสียง">
+          <button class="sound-button" id="sound-toggle" type="button" aria-label="เปิดหรือปิดเสียง" aria-pressed="false">
             <span class="sound-bars"><i></i><i></i><i></i><i></i></span>
             <span id="sound-label">SOUND OFF</span>
           </button>
@@ -49,20 +49,26 @@
         <div class="world-tip"><span class="tip-dot"></span><span id="world-tip-text">แตะวัตถุในฉากเพื่อสำรวจ</span></div>
 
         <div class="crosshair" id="crosshair" aria-hidden="true"><span></span><i></i></div>
+        <div id="landmark-markers" aria-label="จุดสำรวจในภาพ" hidden></div>
+        <nav class="world-toolbar" id="world-toolbar" aria-label="เครื่องมือสำรวจโลก" hidden>
+          <button id="world-action" type="button" title="เล่นเอฟเฟกต์ประจำโลก · Space">เล่นเอฟเฟกต์</button>
+          <button id="explore-toggle" type="button" aria-haspopup="dialog">สำรวจ 0/2</button>
+          <button id="cinema-toggle" type="button" aria-pressed="false">ชมภาพ · C</button>
+        </nav>
 
         <section class="world-picker" id="world-picker" aria-label="เลือกประตูสู่โลกต่าง ๆ">
           <div class="picker-heading"><span>CHOOSE YOUR WORLD</span><span class="picker-rule"></span><span class="picker-index">01 — 03</span></div>
           <div class="world-cards" id="world-cards">
             <button class="world-card card-sea" data-world="0" type="button">
-              <span class="card-art"><span class="card-sun"></span><span class="card-ship"><i></i><i></i></span><span class="card-wave"></span></span>
+              <span class="card-art" aria-hidden="true"></span>
               <span class="card-content"><span class="card-number">01 / ADVENTURE</span><strong>ONE PIECE</strong><span class="card-subtitle">SAIL THE GRAND LINE <b>↗</b></span></span>
             </button>
             <button class="world-card card-night" data-world="1" type="button">
-              <span class="card-art"><span class="card-moon"></span><span class="card-gate"><i></i><i></i></span><span class="card-petal petal-one"></span><span class="card-petal petal-two"></span></span>
+              <span class="card-art" aria-hidden="true"></span>
               <span class="card-content"><span class="card-number">02 / FANTASY</span><strong>DEMON SLAYER</strong><span class="card-subtitle">WHERE WISTERIA BLOOMS <b>↗</b></span></span>
             </button>
             <button class="world-card card-wall" data-world="2" type="button">
-              <span class="card-art"><span class="card-sunset"></span><span class="card-wall-shape"></span><span class="card-tower"></span></span>
+              <span class="card-art" aria-hidden="true"></span>
               <span class="card-content"><span class="card-number">03 / SURVIVAL</span><strong>ATTACK ON TITAN</strong><span class="card-subtitle">BEYOND THE WALLS <b>↗</b></span></span>
             </button>
           </div>
@@ -75,10 +81,16 @@
         <span class="footer-controls"><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> SELECT <span class="control-sep">·</span> <kbd>ESC</kbd> BACK</span>
       </footer>
 
-      <div class="transition-screen" id="transition-screen" aria-hidden="true"><span class="transition-sigil">✳</span><span>ENTERING WORLD</span></div>
+      <div class="transition-screen" id="transition-screen" aria-hidden="true"><span class="transition-sigil">✳</span><span id="transition-label" role="status">ENTERING WORLD</span></div>
       <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      <dialog id="explore-dialog" class="explore-dialog" aria-labelledby="explore-title" aria-describedby="explore-progress">
+        <div class="explore-heading"><span>FIELD NOTES / สมุดสำรวจ</span><button id="explore-close" type="button" aria-label="ปิดสมุดสำรวจ" autofocus>ปิด ×</button></div>
+        <h2 id="explore-title"></h2>
+        <p id="explore-progress"></p>
+        <div id="explore-entries"></div>
+      </dialog>
       <div class="webgl-fallback" id="webgl-fallback" hidden>
-        <div class="fallback-mark">✳</div><h2>โลกนี้ต้องใช้ WebGL</h2><p>ลองเปิดด้วยเบราว์เซอร์ที่รองรับการแสดงผล 3 มิติ</p>
+        <div class="fallback-mark">✳</div><h2>โลกนี้ต้องใช้ WebGL</h2><p>ลองเปิดด้วยเบราว์เซอร์ที่รองรับการแสดงผล 3 มิติ</p><button id="reload-scene" type="button">ลองโหลดอีกครั้ง</button>
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>

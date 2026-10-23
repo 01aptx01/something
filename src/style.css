@@ -59,20 +59,8 @@ h1 em { color: transparent; font-style: normal; -webkit-text-stroke: 1px rgba(22
 .card-subtitle { display: flex; align-items: center; justify-content: space-between; color: rgba(233, 228, 250, .56); font-size: 7px; letter-spacing: .07em; }
 .card-subtitle b { color: #dfd4ff; font-size: 12px; font-weight: 400; }
 .card-sea .card-art { background: radial-gradient(ellipse at 50% 82%, rgba(249,190,133,.5), transparent 27%), linear-gradient(180deg,#172340 0%,#305568 42%,#b87c65 58%,#135262 62%,#091d32 100%); }
-.card-sun { position: absolute; top: 16%; left: 57%; width: 35px; height: 35px; border-radius: 50%; background: #ffd49e; box-shadow: 0 0 30px #f5b27e; }
-.card-ship { position: absolute; left: 20%; top: 41%; width: 60px; height: 28px; border-bottom: 4px solid #171824; }
-.card-ship::before { content: ''; position: absolute; bottom: -9px; left: 0; width: 60px; height: 0; border-top: 12px solid #25242c; border-left: 7px solid transparent; border-right: 7px solid transparent; }
-.card-ship i { position: absolute; bottom: 0; left: 26px; width: 2px; height: 27px; background: #171824; }.card-ship i:nth-child(2) { left: 29px; bottom: 4px; width: 22px; height: 18px; background: #efe5d4; clip-path: polygon(0 0, 100% 100%, 0 100%); }
-.card-wave { position: absolute; left: -20%; right: -20%; bottom: 1%; height: 29px; border-top: 1px solid rgba(120,239,220,.7); border-radius: 50%; box-shadow: 0 -8px 0 -7px rgba(120,239,220,.6), 0 -16px 0 -15px rgba(120,239,220,.45); }
 .card-night .card-art { background: radial-gradient(ellipse at 75% 17%, rgba(191,157,255,.5), transparent 25%), linear-gradient(180deg,#24203c,#171629 55%,#10101a); }
-.card-moon { position: absolute; top: 13%; right: 18%; width: 30px; height: 30px; border-radius: 50%; background: #ead8ff; box-shadow: 0 0 22px rgba(204,166,255,.7); }
-.card-gate { position: absolute; left: 32%; bottom: 8%; width: 44px; height: 37px; border-left: 4px solid #b84f62; border-right: 4px solid #b84f62; border-top: 4px solid #db6470; }
-.card-gate::before { content: ''; position: absolute; top: 7px; left: -9px; width: 54px; height: 4px; background: #de6471; }.card-gate i { position: absolute; top: -7px; width: 6px; height: 6px; border-radius: 50%; background: #ed8790; }.card-gate i:first-child { left: -7px; }.card-gate i:last-child { right: -7px; }
-.card-petal { position: absolute; width: 7px; height: 11px; border-radius: 100% 0 100% 0; background: #da9cff; box-shadow: 0 0 10px #d994ff; }.petal-one { top: 40%; left: 22%; transform: rotate(22deg); }.petal-two { top: 61%; right: 22%; transform: rotate(80deg); }
 .card-wall .card-art { background: radial-gradient(ellipse at 50% 50%, #db9277, transparent 39%), linear-gradient(180deg,#30252c,#6a464c 48%,#30242c); }
-.card-sunset { position: absolute; top: 23%; right: 26%; width: 31px; height: 31px; border-radius: 50%; background: #ffc18c; box-shadow: 0 0 27px rgba(255,167,123,.8); }
-.card-wall-shape { position: absolute; left: 0; right: 0; bottom: 7%; height: 38%; background: linear-gradient(180deg,#89716a,#49424a); clip-path: polygon(0 20%,12% 20%,12% 0,20% 0,20% 20%,38% 20%,38% 0,46% 0,46% 20%,64% 20%,64% 0,72% 0,72% 20%,100% 20%,100% 100%,0 100%); }
-.card-tower { position: absolute; bottom: 8%; left: 27%; width: 15px; height: 61%; background: #57434a; }.card-tower::before { content: ''; position: absolute; top: -11px; left: -6px; border-left: 14px solid transparent; border-right: 14px solid transparent; border-bottom: 14px solid #57434a; }
 .footerbar { position: absolute; z-index: 2; right: 5.1vw; bottom: 28px; left: 5.1vw; display: flex; justify-content: space-between; align-items: center; color: rgba(222, 219, 241, .38); font-size: 7px; letter-spacing: .15em; transition: opacity .3s; }
 .footer-center i { width: 4px; height: 4px; margin-right: 6px; background: #bc9cff; box-shadow: 0 0 9px #bc9cff; }.footer-controls { display: flex; align-items: center; gap: 5px; }
 kbd { min-width: 14px; height: 15px; padding: 1px 4px; display: inline-flex; justify-content: center; align-items: center; color: rgba(235,231,255,.62); border: 1px solid rgba(228,222,255,.18); border-radius: 2px; background: rgba(255,255,255,.025); font: inherit; font-size: 7px; }.control-sep { padding: 0 3px; }
@@ -106,8 +94,7 @@ kbd { min-width: 14px; height: 15px; padding: 1px 4px; display: inline-flex; jus
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
 
-/* The gallery uses the same commissioned fan-art scenes as the 3D worlds. */
-.card-art > span { display: none; }
+/* The gallery shares the generated fan-art backgrounds with each world. */
 .card-art::before { content: ''; position: absolute; inset: 0; background-size: cover; background-position: center; transform: scale(1.02); transition: transform .7s cubic-bezier(.2,.7,.2,1); }
 .world-card:hover .card-art::before, .world-card:focus-visible .card-art::before { transform: scale(1.1); }
 .card-sea .card-art::before { background-image: url('/artwork/one-piece.webp'); background-position: 72% 50%; }
@@ -120,4 +107,59 @@ kbd { min-width: 14px; height: 15px; padding: 1px 4px; display: inline-flex; jus
   #app.is-exploring .world-panel { top: auto; bottom: 15%; left: 6%; width: 88vw; padding: 14px; border: 1px solid rgba(239,231,255,.12); border-radius: 6px; background: linear-gradient(110deg, rgba(7,8,16,.86), rgba(7,8,16,.58)); backdrop-filter: blur(9px); }
   #app.is-exploring .world-panel .back-button { margin-bottom: 3vh; }
   #app.is-exploring .world-tip { right: 18px; bottom: 7%; }
+}
+
+button:focus-visible, a:focus-visible, canvas:focus-visible { outline: 2px solid var(--world-accent); outline-offset: 5px; }
+canvas:focus-visible { outline-offset: -4px; }
+.world-toolbar { position: absolute; z-index: 5; bottom: 8%; left: 50%; display: flex; gap: 8px; transform: translateX(-50%); padding: 7px; border: 1px solid rgba(236,230,255,.16); border-radius: 9px; background: rgba(7,9,18,.76); backdrop-filter: blur(16px); pointer-events: auto; }
+.world-toolbar button, #reload-scene { min-height: 40px; padding: 9px 15px; border: 1px solid rgba(235,230,255,.2); border-radius: 5px; background: rgba(255,255,255,.045); color: #f5f3ff; white-space: nowrap; font-size: 12px; transition: background .2s, border-color .2s; }
+.world-toolbar button:hover { background: rgba(235,230,255,.12); border-color: var(--world-accent); }
+#world-action { color: var(--world-accent); border-color: var(--world-accent); }
+#world-action:disabled { opacity: .55; cursor: wait; }
+.world-toolbar[hidden], #landmark-markers[hidden], .landmark-marker[hidden], .world-toolbar button[hidden] { display: none; }
+#landmark-markers { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.landmark-marker { position: absolute; width: 44px; height: 44px; display: grid; place-items: center; padding: 0; color: white; background: rgba(7,9,18,.55); border: 1px solid var(--world-accent); border-radius: 50%; transform: translate(-50%,-50%); box-shadow: 0 0 0 5px rgba(220,220,255,.06), 0 0 22px rgba(0,0,0,.3); backdrop-filter: blur(4px); pointer-events: auto; }
+.marker-number { font: 11px Consolas, monospace; letter-spacing: .08em; }
+.marker-label { position: absolute; top: 53px; left: 50%; transform: translateX(-50%); padding: 6px 9px; border-radius: 4px; background: rgba(7,9,18,.9); color: #f5f3ff; font-size: 11px; white-space: nowrap; opacity: 0; pointer-events: none; }
+.landmark-marker:hover .marker-label, .landmark-marker:focus-visible .marker-label { opacity: 1; }
+.landmark-marker.is-discovered { background: var(--world-accent); color: #10131f; }
+.explore-dialog { width: min(540px, calc(100vw - 32px)); max-height: min(78dvh, 660px); padding: 25px; overflow-y: auto; color: #f5f3ff; background: #10121e; border: 1px solid var(--world-accent); border-radius: 12px; box-shadow: 0 25px 100px #0009; }
+.explore-dialog::backdrop { background: rgba(2,4,12,.65); backdrop-filter: blur(5px); }
+.explore-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; color: var(--world-accent); font: 10px Consolas, monospace; letter-spacing: .08em; }
+.explore-heading button { min-height: 40px; padding: 8px 12px; background: transparent; color: #f5f3ff; border: 1px solid rgba(235,230,255,.25); border-radius: 5px; }
+.explore-dialog h2 { font-size: clamp(25px, 5vw, 35px); letter-spacing: -.04em; margin: 25px 0 8px; }
+#explore-progress { color: #c1bfd2; font-size: 12px; line-height: 1.7; }
+#explore-entries article { padding: 18px 0; border-top: 1px solid rgba(235,230,255,.13); }
+.note-choice { padding: 9px 11px; text-align: left; min-height: 44px; color: #f5f3ff; background: #1b1e30; border: 1px solid rgba(235,230,255,.2); border-radius: 5px; font-size: 14px; }
+.note-choice[aria-pressed=true] { border-color: var(--world-accent); color: var(--world-accent); }
+.note-choice[aria-pressed=true]::after { content: ' ✓'; }
+#explore-entries p { font-size: 14px; line-height: 1.85; color: #cbc9dc; margin: 13px 0 0; }
+#app.is-exploring .world-tip { bottom: 20%; }
+#app.is-cinematic .world-panel, #app.is-cinematic #landmark-markers, #app.is-cinematic .world-tip, #app.is-cinematic .crosshair, #app.is-cinematic .footerbar, #app.is-cinematic .topbar { visibility: hidden; }
+#app.is-cinematic .vignette { background: radial-gradient(ellipse at center, transparent 45%, rgba(4,5,13,.2)); }
+#app.is-cinematic .world-toolbar { top: 20px; bottom: auto; left: auto; right: 4vw; transform: none; }
+.toast { max-width: min(540px, calc(100vw - 32px)); text-align: center; line-height: 1.7; bottom: 18%; }
+@media (max-width: 650px) {
+  .world-toolbar { bottom: 25px; gap: 5px; padding: 5px; max-width: calc(100vw - 24px); }
+  .world-toolbar button { padding: 8px 10px; font-size: 10px; min-height: 44px; }
+  #app.is-exploring .world-panel { bottom: 19%; }
+  #app.is-exploring .world-tip { bottom: 12%; font-size: 7px; padding: 7px 10px; }
+  #app.is-exploring .footerbar { display: none; }
+  .explore-dialog { padding: 18px; }
+  .toast { bottom: 13%; font-size: 11px; }
+}
+@media (max-height: 580px) {
+  .intro { top: 20%; left: 5%; }
+  h1 { font-size: 38px; margin: 15px 0; }
+  .intro-copy, .drag-hint, .world-count { display: none; }
+  .world-picker { bottom: 12%; right: 5%; width: 65%; }
+  .world-card { height: 104px; }
+  .card-art { bottom: 32px; }
+  .world-panel { top: 18%; left: 5%; }
+  .back-button { margin-bottom: 15px; }
+  .world-copy h2 { font-size: 34px; margin: 10px 0; }
+  .world-coordinates { margin-top: 12px; }
+  .world-toolbar { bottom: 15px; }
+  #app.is-exploring .world-tip { display: none; }
+  #app.is-exploring .footerbar { display: none; }
 }
