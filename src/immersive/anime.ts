@@ -1,4 +1,6 @@
 import * as T from 'three';
+import { boundedOffset, panAfterDrag, portraitLimit } from './viewport';
+import { atmosphere } from './atmosphere';
 import { WORLDS } from '../worlds';
 
 export type Presentation = 'anime' | '3d';
@@ -12,6 +14,7 @@ export function sceneArtwork(world: number, scene: number) {
 export class AnimeScene {
   readonly root = new T.Group();
   private material: T.ShaderMaterial;
+  private ambience: ReturnType<typeof atmosphere>;
   private textures = new Map<number, T.Texture>();
   private pending = new Map<number, Promise<T.Texture>>();
   private disposed = false;
@@ -30,11 +33,11 @@ export class AnimeScene {
   private retry = document.querySelector<HTMLButtonElement>('#anime-retry')!;
   constructor(private world: number) {
     this.material = new T.ShaderMaterial({
-      uniforms: { map: { value: null }, crop: { value: new T.Vector2(1,1) }, offset: { value: new T.Vector2() }, pan: { value: new T.Vector2() }, time: { value: 0 }, theme: { value: world } },
+      uniforms: { previous: { value: null }, blend: { value: 1 }, oldCrop: { value:new T.Vector2(1,1) }, oldOffset: {value:new T.Vector2()}, map: { value: null }, crop: { value: new T.Vector2(1,1) }, offset: { value: new T.Vector2() }, pan: { value: new T.Vector2() }, time: { value: 0 }, theme: { value: world } },
       depthTest: false, depthWrite: false, toneMapped: false,
       vertexShader: `varying vec2 vUv; void main(){vUv=uv;gl_Position=vec4(position.xy, .999, 1.);}`,
       fragmentShader: `
-        uniform sampler2D map; uniform vec2 crop; uniform vec2 offset; uniform vec2 pan; uniform float time; uniform float theme; varying vec2 vUv;
+        uniform sampler2D map; uniform sampler2D previous; uniform float blend; uniform vec2 oldCrop; uniform vec2 oldOffset; uniform vec2 crop; uniform vec2 offset; uniform vec2 pan; uniform float time; uniform float theme; varying vec2 vUv;
         void main(){
           vec2 uv = vUv * crop + offset;
           // Small depth differences give the painted foreground a gentle parallax without reshaping faces.
@@ -44,14 +47,17 @@ export class AnimeScene {
           float water = (1.-smoothstep(.48,.62,uv.x))*(1.-smoothstep(.25,.47,uv.y));
           uv.x += water * sin(uv.y*130.+time*.55)*.00016*(1.-step(1.5,theme));
           vec3 color = texture2D(map,clamp(uv,vec2(.001),vec2(.999))).rgb;
+          color=mix(texture2D(previous,clamp(vUv*oldCrop+oldOffset,vec2(.001),vec2(.999))).rgb,color,blend);
           gl_FragColor=vec4(color,1.);
           #include <colorspace_fragment>
         }`,
     });
     const quad = new T.Mesh(new T.PlaneGeometry(2,2), this.material); quad.frustumCulled = false; quad.renderOrder = -1000; this.root.add(quad);
+    this.ambience=atmosphere(world);this.root.add(this.ambience.points);
     this.retry.addEventListener('click', () => { void this.load(this.selected); }, { signal: this.signal.signal });
   }
   get scene() { return this.current; }
+  get settled() { return this.current>=0 && Number(this.material.uniforms.blend.value)>=1; }
   async load(index: number): Promise<boolean> {
     const token = ++this.token; this.selected = index;
     this.status.hidden = false; this.retry.hidden = true; this.message.textContent = 'กำลังโหลดฉากอนิเมะ…';
@@ -78,6 +84,11 @@ export class AnimeScene {
         texture = await request;
       }
       if (this.disposed || token !== this.token) return false;
+      const old=this.material.uniforms.map.value as T.Texture|null;
+      this.material.uniforms.previous.value=old??texture;
+      (this.material.uniforms.oldCrop.value as T.Vector2).copy(this.material.uniforms.crop.value);
+      (this.material.uniforms.oldOffset.value as T.Vector2).copy(this.material.uniforms.offset.value);
+      this.material.uniforms.blend.value=old&&this.current!==index?0:1;
       this.material.uniforms.map.value = texture; this.current = index; this.reset(); this.fit(); this.status.hidden = true;
       const app = document.querySelector<HTMLElement>('#app')!; app.dataset.artworkState = 'ready'; app.dataset.artScene = String(index);
       return true;
@@ -87,8 +98,14 @@ export class AnimeScene {
       this.retry.hidden = false; document.querySelector<HTMLElement>('#app')!.dataset.artworkState = 'error'; return false;
     }
   }
+  toggleZoom() { if(this.zoom>1.05)this.reset();else this.zoomBy(1.45); }
   reset() { this.pan.set(0,0); this.targetPan.set(0,0); this.zoom=1; this.fit(); }
   move(x: number, y: number) { this.targetPan.x = T.MathUtils.clamp(this.targetPan.x+x,-1,1); this.targetPan.y=T.MathUtils.clamp(this.targetPan.y+y,-1,1); }
+  private focus() { return this.current===0?(innerWidth<=650?.73:.5):(innerWidth<=650?.77:.5); }
+  panByPixels(x:number,y:number) {
+    const crop=this.material.uniforms.crop.value as T.Vector2;
+    this.targetPan.set(panAfterDrag(crop.x,this.focus(),this.targetPan.x,-x,innerWidth),panAfterDrag(crop.y,.5,this.targetPan.y,y,innerHeight));
+  }
   zoomBy(scale: number) { this.zoom=T.MathUtils.clamp(this.zoom*scale,1,1.8); this.fit(); }
   fit() {
     if (this.current < 0) return;
@@ -96,9 +113,7 @@ export class AnimeScene {
     const aspect = image.width/image.height, viewport = innerWidth/innerHeight;
     const crop = this.material.uniforms.crop.value as T.Vector2;
     crop.set(Math.min(1,viewport/aspect)/this.zoom/1.07,Math.min(1,aspect/viewport)/this.zoom/1.07);
-    const mobile = innerWidth <= 650;
-    const focus = this.current === 0 ? (mobile ? .73 : .5) : (mobile ? .77 : .5);
-    (this.material.uniforms.offset.value as T.Vector2).set((1-crop.x)*focus+this.pan.x*Math.min(.08,(1-crop.x)*.40), (1-crop.y)*.5+this.pan.y*Math.min(.06,(1-crop.y)*.40));
+    (this.material.uniforms.offset.value as T.Vector2).set(boundedOffset(1-crop.x,this.focus(),this.pan.x),boundedOffset(1-crop.y,.5,this.pan.y));
   }
   project(u:number,v:number):[number,number] {
     const crop=this.material.uniforms.crop.value as T.Vector2,offset=this.material.uniforms.offset.value as T.Vector2;
@@ -107,15 +122,19 @@ export class AnimeScene {
   update(delta: number, reducedMotion: boolean) {
     this.pan.lerp(this.targetPan, reducedMotion ? 1 : 1-Math.exp(-delta*10)); this.fit();
     if (!reducedMotion) this.time+=delta;
+    this.material.uniforms.blend.value=reducedMotion?1:Math.min(1,Number(this.material.uniforms.blend.value)+delta*3.5);
+    this.ambience.points.visible=!reducedMotion;this.ambience.material.uniforms.time.value=this.time;
     this.material.uniforms.time.value=this.time; (this.material.uniforms.pan.value as T.Vector2).copy(this.pan);
-    const canvas = document.querySelector<HTMLElement>('#world-canvas')!; canvas.dataset.artView = `${this.pan.x.toFixed(3)},${this.pan.y.toFixed(3)},${this.zoom.toFixed(3)}`;
+    const readout=document.querySelector('#zoom-readout')!;const label=`${Math.round(this.zoom*100)}%`;if(readout.textContent!==label)readout.textContent=label;
+    const canvas = document.querySelector<HTMLElement>('#world-canvas')!; canvas.dataset.artBlend=Number(this.material.uniforms.blend.value).toFixed(2); canvas.dataset.artView = `${this.pan.x.toFixed(3)},${this.pan.y.toFixed(3)},${this.zoom.toFixed(3)}`;
   }
   dispose() {
     this.disposed=true; this.token++; this.signal.abort(); this.textures.forEach(texture=>texture.dispose()); this.textures.clear();
     this.requests.forEach(request=>request.abort());this.requests.clear();
     this.timers.forEach(timer=>clearTimeout(timer)); this.timers.clear();
+    this.ambience.points.geometry.dispose();this.ambience.material.dispose();
     this.root.traverse(o=>{if(o instanceof T.Mesh)o.geometry.dispose();}); this.material.dispose(); this.root.removeFromParent(); this.root.clear(); this.status.hidden=true;
-    const app=document.querySelector<HTMLElement>('#app')!; delete app.dataset.artScene; delete app.dataset.artworkState; delete document.querySelector<HTMLElement>('#world-canvas')!.dataset.artView;
+    const app=document.querySelector<HTMLElement>('#app')!; delete app.dataset.artScene; delete app.dataset.artworkState; delete document.querySelector<HTMLElement>('#world-canvas')!.dataset.artView;delete document.querySelector<HTMLElement>('#world-canvas')!.dataset.artBlend;
   }
 }
 
@@ -164,8 +183,8 @@ export class AnimePortrait {
     }catch{if(token!==this.token)return;this.status.querySelector('span')!.textContent='โหลดภาพตัวละครไม่สำเร็จ';document.querySelector<HTMLButtonElement>('#portrait-retry')!.hidden=false;}
     finally{if(token===this.token){clearTimeout(this.requestTimer);this.loading=false;}}
   }
-  move(x:number,y:number){this.pan.x=T.MathUtils.clamp(this.pan.x+x,-innerWidth*.22,innerWidth*.22);this.pan.y=T.MathUtils.clamp(this.pan.y+y,-innerHeight*.2,innerHeight*.2);this.render();}
-  zoomBy(scale:number){this.zoom=T.MathUtils.clamp(this.zoom*scale,.8,2.8);this.render();}
+  move(x:number,y:number){const r=this.stage.getBoundingClientRect(),[mx,my]=portraitLimit(r.width,r.height,this.image.naturalWidth/Math.max(1,this.image.naturalHeight),this.zoom);this.pan.x=T.MathUtils.clamp(this.pan.x+x,-mx,mx);this.pan.y=T.MathUtils.clamp(this.pan.y+y,-my,my);this.render();}
+  zoomBy(scale:number){this.zoom=T.MathUtils.clamp(this.zoom*scale,.8,2.8);this.move(0,0);}
   reset(){this.pan.set(0,0);this.zoom=1;this.render();}
   update(elapsed:number,motion:boolean){this.render(motion?Math.sin(elapsed*.5)*3:0);}
   private render(float=0){this.image.style.transform=`translate(${this.pan.x}px,${this.pan.y+float}px) scale(${this.zoom})`;this.stage.dataset.view=`${this.pan.x},${this.pan.y},${this.zoom.toFixed(3)}`;}

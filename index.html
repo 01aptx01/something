@@ -19,6 +19,7 @@
           <span>ANIME<span class="brand-light"> WORLDS</span></span>
         </a>
         <div class="topbar-right">
+          <button id="controls-open" class="header-help" type="button" aria-haspopup="dialog" aria-label="วิธีเล่นและคุณภาพภาพ">? <span>วิธีเล่น</span></button>
           <span class="live-indicator"><i></i> IMMERSIVE EXPERIENCE</span>
           <button class="sound-button" id="sound-toggle" type="button" aria-label="เปิดหรือปิดเสียง" aria-pressed="false">
             <span class="sound-bars"><i></i><i></i><i></i><i></i></span>
@@ -31,7 +32,7 @@
         <section class="intro" id="intro" aria-label="เลือกโลกอนิเมะ">
           <div class="eyebrow"><span class="eyebrow-line"></span> A MULTIVERSE OF STORIES</div>
           <h1>STEP INTO<br /><em>THE STORY</em></h1>
-          <p class="intro-copy">โลกที่คุณรัก รอให้คุณเข้าไปสัมผัส<br />เลือกประตูบานหนึ่ง แล้วออกเดินทาง</p>
+          <p class="intro-copy">โลกที่คุณรัก ในแสงและเรื่องราวที่คุ้นเคย<br />สำรวจ 9 ซีน · ชมตัวละคร · เดินทางในแบบของคุณ</p>
           <div class="drag-hint"><span class="mouse-icon"><i></i></span><span>DRAG TO EXPLORE</span><span class="hint-divider"></span><span>เลือกโลกด้านล่าง</span></div>
           <div class="world-count"><strong>03</strong><span>WORLDS<br />AVAILABLE</span></div>
         </section>
@@ -52,14 +53,20 @@
         <div id="landmark-markers" aria-label="จุดสำรวจในฉากสามมิติ" hidden></div>
         <nav class="world-toolbar" id="world-toolbar" aria-label="เครื่องมือสำรวจโลก" hidden>
           <button id="world-action" type="button" title="เล่นเอฟเฟกต์ประจำโลก · Space">เล่นเอฟเฟกต์</button>
-          <button id="explore-toggle" type="button" aria-haspopup="dialog">สำรวจ 0/2</button>
+          <button id="explore-toggle" type="button" aria-haspopup="dialog">สมุดสำรวจ 0/6</button>
+          <button id="save-view" type="button" title="บันทึกมุมที่กำลังชมเป็นภาพ PNG">บันทึกภาพ</button>
           <button id="cinema-toggle" type="button" aria-pressed="false">ชมภาพ · C</button>
         </nav>
 
         <section id="immersive-hud" class="immersive-hud" aria-label="พื้นที่สำรวจสามมิติ" hidden>
           <div class="location-card"><span id="location-index"></span><h3 id="location-name"></h3><div id="position-readout"></div></div>
           <nav class="presentation-switch" id="world-presentation" aria-label="รูปแบบการสำรวจ"><button type="button" data-presentation="anime" aria-pressed="true">ภาพอนิเมะ</button><button type="button" data-presentation="3d" aria-pressed="false">เดิน 3D</button></nav>
-          <nav id="scene-list" aria-label="เดินทางไปยังจุดสำรวจ"></nav>
+          <section class="scene-rail" aria-label="เลือกสถานที่">
+            <div class="scene-rail-heading"><span>CHOOSE YOUR SCENE</span><span id="journey-progress">ค้นพบ 0/6</span></div>
+            <div class="scene-navigation"><button id="scene-prev" class="scene-arrow" type="button" aria-label="ซีนก่อนหน้า">←</button><nav id="scene-list" aria-label="เดินทางไปยังจุดสำรวจ"></nav><button id="scene-next" class="scene-arrow" type="button" aria-label="ซีนถัดไป">→</button></div>
+          </section>
+          <div id="scene-caption"><div><span id="scene-mood"></span><span id="scene-current">01 / 03</span></div><p id="scene-description"></p></div>
+          <div class="view-tools" role="group" aria-label="ปรับมุมมอง"><button id="view-zoom-out" type="button" aria-label="ซูมภาพออก">−</button><span id="zoom-readout">100%</span><button id="view-zoom-in" type="button" aria-label="ซูมภาพเข้า">＋</button><button id="view-reset" type="button" title="คืนมุมเริ่มต้น · R" aria-label="คืนมุมเริ่มต้น">↺</button></div>
           <button id="gallery-open" class="gallery-open" type="button"><span>◈</span> ชมตัวละคร <small>G</small></button>
           <div class="map-panel"><span>EXPLORER / N ↑</span><canvas id="mini-map" width="128" height="128" aria-label="แผนที่ตำแหน่งและทิศทาง"></canvas></div>
           <nav class="movement-pad" aria-label="ปุ่มเดินสำหรับจอสัมผัส">
@@ -75,6 +82,7 @@
           <nav class="presentation-switch gallery-presentation" aria-label="รูปแบบชมตัวละคร"><button type="button" data-presentation="anime" aria-pressed="true">ภาพอนิเมะ</button><button type="button" data-presentation="3d" aria-pressed="false">โมเดล 3D</button></nav>
           <button id="gallery-close" type="button">← กลับไปสำรวจโลก</button>
           <div class="gallery-heading"><span class="gallery-eyebrow" id="gallery-eyebrow">CHARACTER ARCHIVE / 3D FAN SCULPTURES</span><h2 id="character-name"></h2><h3 id="character-thai"></h3><p id="character-detail"></p></div>
+          <div class="character-navigation"><button id="character-prev" type="button" aria-label="ตัวละครก่อนหน้า">←</button><span id="character-counter">01 / 02</span><button id="character-next" type="button" aria-label="ตัวละครถัดไป">→</button></div>
           <nav id="character-list" aria-label="เลือกตัวละครทีละตัว"></nav>
           <div class="model-tools" role="group" aria-label="ควบคุมโมเดล"><button id="model-zoom-in" type="button" aria-label="ซูมเข้า">＋</button><button id="model-zoom-out" type="button" aria-label="ซูมออก">−</button><button id="model-reset" type="button">มุมเริ่มต้น</button><button id="model-spin" type="button" aria-pressed="false">หมุนอัตโนมัติ</button></div>
           <p class="gallery-help" id="gallery-help">ลากเพื่อหมุน · เลื่อน / จีบเพื่อซูม · ปุ่มลูกศรหมุน · + − ซูม · Home คืนมุม · Esc กลับ</p>
@@ -114,6 +122,13 @@
         <h2 id="explore-title"></h2>
         <p id="explore-progress"></p>
         <div id="explore-entries"></div>
+      </dialog>
+      <dialog id="controls-dialog" class="explore-dialog controls-dialog" aria-labelledby="controls-title">
+        <div class="explore-heading"><span>YOUR WAY INTO THE STORY</span><form method="dialog"><button type="submit" aria-label="ปิดวิธีเล่น" autofocus>ปิด ×</button></form></div>
+        <h2 id="controls-title">ออกสำรวจในแบบของคุณ</h2><p>เริ่มด้วยภาพอนิเมะ หรือสลับไปเดิน 3D ได้ทุกเมื่อ</p>
+        <div class="control-guide"><article><h3>ภาพอนิเมะ</h3><p>ลากเลื่อน · จีบจอหรือล้อเมาส์เพื่อซูม<br />W/S ซูม · A/D เลื่อน · ดับเบิลคลิกขยายภาพ</p></article><article><h3>เดิน 3D</h3><p>WASD เดิน · Shift เร่ง · ลากมองรอบตัว<br />มือถือกดลูกศรค้าง แล้วใช้อีกนิ้วมองรอบตัว</p></article><article><h3>สำรวจและเก็บเรื่องราว</h3><p>แตะจุดในภาพเพื่ออ่านและบันทึกการค้นพบ<br />[ ] เปลี่ยนซีน/ตัวละคร · G ชมตัวละคร</p></article><article><h3>เก็บมุมที่ชอบ</h3><p>C ซ่อนเมนู · บันทึกภาพเก็บมุมที่กำลังชม<br />R คืนมุม · Esc ปิดหน้าต่างหรือกลับ</p></article></div>
+        <label class="quality-choice" for="quality-select"><span>คุณภาพการแสดงผล<small>ลดความละเอียดหากอุปกรณ์แสดงผลไม่ลื่น</small></span><select id="quality-select"><option value="auto">อัตโนมัติ</option><option value="smooth">เน้นความลื่น</option><option value="sharp">เน้นความคมชัด</option></select></label>
+        <p class="guide-note">ภาพและตัวละครเป็นแฟนอาร์ต · โหมดภาพใช้การเลื่อนและซูมภายในกรอบ · เดินอิสระในโหมด 3D</p>
       </dialog>
       <div class="webgl-fallback" id="webgl-fallback" hidden>
         <div class="fallback-mark">✳</div><h2>โลกนี้ต้องใช้ WebGL</h2><p>ลองเปิดด้วยเบราว์เซอร์ที่รองรับการแสดงผล 3 มิติ</p><button id="reload-scene" type="button">ลองโหลดอีกครั้ง</button>

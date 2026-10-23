@@ -1,0 +1,90 @@
+/* Shared visual system for the painted scenes, journal and character archive. */
+.header-help { height:34px; padding:0 11px; border:1px solid #ffffff26; border-radius:5px; background:#ffffff05; color:#e2e5f4; font-size:11px; }
+.header-help span { margin-left:6px; font-size:9px; }.topbar-right { gap:16px; }
+.intro-copy { line-height:1.9; }.world-card { border-radius:8px; overflow:hidden; }.card-content { background:linear-gradient(0deg,#050a16e6,transparent); }
+#app.is-exploring .footerbar, #app.is-exploring .world-tip { display:none; }
+#app.is-exploring .world-panel { top:100px; left:40px; max-width:330px; }
+#app.is-exploring .world-copy h2 { font-size:30px; font-weight:600; letter-spacing:-.045em; }
+#app.is-exploring .back-button { margin-bottom:16px; background:#09101da1; border-color:#ffffff24; border-radius:5px; min-height:36px; }
+.location-card { top:215px; left:40px; } .location-card h3 { font-size:18px; margin-bottom:12px; }
+#position-readout { font-size:9px; opacity:.7; }
+.presentation-switch { top:156px; right:40px; left:auto; }.presentation-switch button { min-height:40px; padding:9px 15px; }
+.gallery-open { top:216px; right:40px; left:auto; min-height:44px; padding:11px 16px; background:#0a1222c7; }
+.map-panel { top:285px; right:40px; }
+.view-tools { position:absolute; top:100px; right:40px; display:flex; align-items:center; gap:2px; border:1px solid #ffffff2b; border-radius:7px; padding:4px; color:#eef2fa; background:#091120bd; backdrop-filter:blur(16px); pointer-events:auto; }
+.view-tools button { width:36px; height:36px; border:0; border-radius:4px; color:#eaf0f9; background:transparent; font-size:19px; }
+.view-tools button:hover { background:#ffffff15; }.view-tools span { width:40px; text-align:center; font:10px Consolas,monospace; color:#bbc7d9; }
+#view-reset { margin-left:3px; border-left:1px solid #ffffff22; }
+#app[data-presentation="3d"] #view-zoom-in, #app[data-presentation="3d"] #view-zoom-out, #app[data-presentation="3d"] #zoom-readout { display:none; }
+#scene-caption { position:absolute; bottom:275px; left:40px; width:310px; padding:13px 15px; background:linear-gradient(90deg,#070f1cba,#070f1c65); border-left:1px solid var(--world-accent); border-radius:0 6px 6px 0; backdrop-filter:blur(10px); }
+#scene-caption>div { display:flex; justify-content:space-between; gap:8px; font:8px Consolas,monospace; letter-spacing:.08em; color:var(--world-accent); }
+#scene-current { color:#d2d9e4; white-space:nowrap; }#scene-caption p { margin:9px 0 0; font-size:12px; line-height:1.9; color:#e0e7f0; }
+.scene-rail { position:absolute; bottom:92px; left:50%; transform:translateX(-50%); width:min(760px,calc(100vw - 390px)); pointer-events:auto; }
+.scene-rail-heading { display:flex; justify-content:space-between; margin:0 46px 10px; color:#e2e8f4; font:8px Consolas,monospace; letter-spacing:.17em; text-shadow:0 2px 8px #000; }
+#journey-progress { color:var(--world-accent); font-size:10px; letter-spacing:0; }
+.scene-navigation { display:flex; align-items:center; gap:8px; }
+#scene-list { position:static; inset:auto; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; flex:1; min-width:0; }
+.scene-arrow { flex:0 0 34px; min-height:44px; padding:0; background:#0b1422c9; border:1px solid #ffffff25; border-radius:6px; color:#f0f4fa; font-size:18px; backdrop-filter:blur(12px); }
+.scene-choice { position:relative; display:block; min-width:0; height:112px; padding:0; text-align:left; border:1px solid #ffffff2e; border-radius:7px; overflow:hidden; background:#0b1528; box-shadow:0 4px 20px #0002; transition:border-color .2s,transform .2s; }
+.scene-choice::after { position:absolute; inset:0; content:''; background:linear-gradient(0deg,#030813f2,transparent 95%); pointer-events:none; }
+.scene-choice>img { width:100%; height:100%; object-fit:cover; display:block; opacity:.8; transition:opacity .2s,transform .35s; }
+.scene-choice:hover>img { opacity:1; transform:scale(1.04); }.scene-choice[aria-pressed=true] { border-color:var(--world-accent); box-shadow:0 0 0 1px var(--world-accent),0 5px 24px #0004; }
+.scene-choice[aria-pressed=true]>img { opacity:1; }.scene-choice .scene-info { position:absolute; bottom:11px; left:12px; right:10px; z-index:1; display:flex; flex-direction:column; gap:5px; opacity:1; }
+.scene-choice .scene-number { display:block; font:8px Consolas,monospace; letter-spacing:.13em; opacity:.65; }.scene-choice strong { display:block; color:#f4f7fc; font-size:12px; line-height:1.5; font-weight:500; }
+.scene-progress { position:absolute; z-index:1; top:8px; right:8px; border:1px solid #ffffff2b; border-radius:4px; padding:3px 5px; background:#070d1bc9; color:#dce4ef; font:8px Consolas,monospace; }
+.scene-choice.is-complete .scene-progress { color:var(--world-accent); border-color:var(--world-accent); }
+.world-toolbar { bottom:22px; padding:6px; gap:6px; border-radius:9px; background:#09101ee0; }.world-toolbar button { min-height:42px; padding:9px 14px; font-size:11px; }
+#save-view:disabled { opacity:.5; cursor:wait; }
+.movement-pad { display:none; }.look-hint { bottom:40px; left:40px; font-size:9px; color:#d7e0efb3; }
+#app.is-cinematic .look-hint { display:none; }#app.is-cinematic .world-toolbar { top:18px; bottom:auto; }
+#app.is-cinematic #immersive-hud { display:none; }
+/* Character archive */
+.gallery-presentation { top:100px; right:40px; left:auto; }.gallery-heading { left:7%; top:25%; width:290px; }.gallery-heading h2 { font-size:42px; line-height:1.06; }
+#gallery-close { left:40px; top:100px; }.gallery-heading p { color:#bdc8d9; line-height:1.9; }
+#character-art-stage { left:37%; right:8%; top:120px; bottom:155px; }
+#character-list { left:7%; top:61%; gap:9px; width:250px; }
+#character-list button { display:flex; align-items:center; gap:12px; text-align:left; min-height:74px; padding:5px 12px 5px 5px; background:#121c2b99; font-size:12px; }
+#character-list img { height:62px; width:42px; object-fit:cover; border-radius:3px; pointer-events:none; }
+.character-navigation { position:absolute; left:7%; bottom:80px; display:flex; align-items:center; gap:14px; pointer-events:auto; }
+.character-navigation button { width:42px; padding:8px; font-size:18px; }.character-navigation span { font:10px Consolas,monospace; color:#aab8ce; letter-spacing:.1em; }
+#app[data-presentation=anime] .model-tools, #app[data-presentation=anime] .gallery-help { left:64%; }.model-tools { bottom:86px; }.gallery-help { bottom:47px; }.model-credit { bottom:20px; }
+/* Notes and help */
+.journal-scene { margin-top:24px; }.journal-scene-heading { display:flex; align-items:center; justify-content:space-between; gap:10px; border-bottom:1px solid #ffffff20; padding-bottom:10px; }
+.journal-scene-heading h3 { margin:0; color:#d6deed; font-size:12px; line-height:1.6; font-weight:500; }.journal-travel { min-height:40px; padding:8px 10px; border:1px solid var(--world-accent); border-radius:5px; background:transparent; color:var(--world-accent); font-size:10px; white-space:nowrap; }
+.journal-travel:disabled { border-color:#ffffff20; color:#94a0b5; cursor:default; }#explore-entries article { border-top:0; padding:16px 0 8px; }
+.control-guide { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px; }.control-guide article { padding:14px; border:1px solid #ffffff15; border-radius:6px; background:#ffffff04; }.control-guide h3 { color:var(--world-accent); font-size:13px; margin:0 0 10px; }
+.control-guide p, .controls-dialog>p { font-size:12px; line-height:1.9; color:#c1cbdc; }.controls-dialog { width:min(660px,calc(100vw - 28px)); }.controls-dialog h2 { font-size:29px; }
+.quality-choice { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:20px; padding:16px 0; border-top:1px solid #ffffff1b; font-size:12px; }.quality-choice small { display:block; margin-top:7px; color:#a7b4c9; font-size:10px; }
+.quality-choice select { min-height:44px; padding:9px; color:#e7edf7; background:#1c273b; border:1px solid #ffffff2b; border-radius:5px; font:inherit; }.guide-note { opacity:.6; font-size:10px!important; }
+@media(max-width:1100px) and (min-width:651px) { #scene-caption { width:260px; bottom:260px; }#app.is-exploring .world-panel { left:28px; }.location-card,#scene-caption { left:28px; }.gallery-heading { width:240px; }.gallery-heading h2 { font-size:33px; }#character-list { width:220px; } }
+@media(max-width:650px) {
+ .header-help { padding:0 9px; }.header-help span { display:none; }.topbar-right { gap:8px; }.topbar { padding:0 16px; }.brand { gap:8px; font-size:10px; letter-spacing:.12em; }.sound-button { padding:0 9px; font-size:8px; }
+ #app.is-exploring .world-panel { top:78px; left:16px; max-width:180px; }#app.is-exploring .world-copy h2 { font-size:20px; }#app.is-exploring .back-button { min-height:36px; margin-bottom:13px; font-size:9px; padding:8px 10px; }
+ .location-card { top:173px; left:16px; max-width:175px; }.location-card h3 { font-size:13px; margin:7px 0; }#location-index { font-size:7px; letter-spacing:.05em; }#position-readout { display:none; }
+ .view-tools { top:83px; right:16px; }.view-tools button { width:38px; height:38px; }.view-tools span { width:34px; }
+ .presentation-switch { top:143px; right:16px; left:auto; }.presentation-switch button { padding:9px 11px; min-height:40px; font-size:10px; }
+ .gallery-open { top:202px; right:16px; bottom:auto; left:auto; padding:10px 12px; min-height:42px; font-size:10px; }
+ .map-panel { top:260px; right:16px; }#scene-caption { left:16px; right:16px; width:auto; bottom:263px; padding:10px 12px; }#scene-caption p { font-size:10px; margin-top:7px; line-height:1.8; }#scene-caption>div { font-size:7px; }
+ .scene-rail { bottom:82px; left:12px; right:12px; width:auto; transform:none; }.scene-rail-heading { margin:0 29px 8px; font-size:6px; letter-spacing:.12em; }#journey-progress { font-size:8px; }.scene-navigation { gap:5px; }.scene-arrow { flex-basis:24px; border-radius:4px; font-size:14px; }#scene-list { gap:5px; }
+ .scene-choice { height:91px; }.scene-choice .scene-info { left:7px; right:5px; bottom:7px; gap:4px; }.scene-choice .scene-number { font-size:6px; }.scene-choice strong { font-size:9px; line-height:1.5; }.scene-progress { top:5px; right:5px; font-size:7px; padding:2px 4px; }
+ .world-toolbar { bottom:10px; left:12px; right:12px; width:auto; max-width:none; transform:none; gap:4px; padding:5px; }.world-toolbar button { flex:1; min-width:0; min-height:44px; padding:7px 5px; white-space:normal; font-size:9px; line-height:1.5; }
+ .look-hint { left:16px; bottom:236px; font-size:8px; }#app[data-presentation="3d"] .movement-pad { display:grid; bottom:265px; left:16px; }#app[data-presentation="3d"] #scene-caption { display:none; }
+ #app.is-cinematic .world-toolbar { top:14px; bottom:auto; left:auto; right:14px; width:auto; }#app.is-cinematic .world-toolbar button { flex:none; padding:8px 12px; }
+ .gallery-presentation { top:77px; right:16px; }.gallery-presentation button { font-size:9px; padding:8px; }#gallery-close { left:16px; top:77px; max-width:150px; min-height:44px; padding:8px 10px; font-size:10px; }
+ .gallery-heading { top:140px; left:20px; width:calc(100% - 40px); }.gallery-heading h2 { font-size:23px; margin:12px 0 9px; line-height:1.2; }.gallery-heading h3 { font-size:12px; }.gallery-heading p { display:none; }
+ #character-art-stage { left:12px; right:12px; top:236px; bottom:222px; }#character-list { left:16px; right:16px; top:auto; bottom:145px; width:auto; flex-direction:row; gap:7px; }#character-list button { flex:1; min-width:0; min-height:64px; padding:4px 7px 4px 4px; gap:7px; font-size:10px; }#character-list img { width:33px; height:53px; }
+ .character-navigation { top:193px; bottom:auto; right:16px; left:auto; gap:7px; }.character-navigation button { min-height:40px; width:32px; font-size:16px; }.character-navigation span { font-size:8px; }
+ #app[data-presentation=anime] .model-tools, #app[data-presentation=anime] .gallery-help { left:50%; }.model-tools { bottom:87px; }.gallery-help { bottom:48px; }.model-credit { bottom:20px; }
+ .control-guide { grid-template-columns:1fr; gap:9px; }.control-guide article { padding:11px 13px; }.control-guide p { margin:0; }.controls-dialog h2 { font-size:24px; }.quality-choice { align-items:flex-start; }.quality-choice small { max-width:170px; line-height:1.7; }
+}
+@media(max-height:580px) and (min-width:651px) {
+ #app.is-exploring .world-panel { top:72px; left:20px; max-width:450px; }#app.is-exploring .world-copy h2 { font-size:18px; }#app.is-exploring .world-panel .back-button { margin:0; }
+ .location-card,#scene-caption,.map-panel,.look-hint { display:none; }.view-tools { top:75px; right:20px; }.view-tools button { width:30px; height:30px; font-size:16px; }.view-tools span { font-size:8px; width:32px; }
+ .presentation-switch { top:124px; right:20px; left:auto; }.presentation-switch button { min-height:32px; padding:6px 10px; font-size:10px; }.gallery-open { top:172px; right:20px; left:auto; min-height:38px; padding:8px 12px; }
+ .scene-rail { bottom:66px; width:min(660px,calc(100vw - 280px)); }.scene-rail-heading { margin-bottom:6px; }.scene-choice { height:90px; }.scene-choice strong { font-size:10px; }.scene-choice .scene-info { bottom:8px; left:9px; }
+ .world-toolbar { bottom:7px; }.world-toolbar button { min-height:38px; padding:8px 12px; font-size:10px; }#app[data-presentation="3d"] .movement-pad { display:grid; left:20px; right:auto; bottom:70px; }
+ #gallery-close { left:20px; top:68px; }.gallery-presentation { top:68px; right:20px; }.gallery-heading { top:126px; left:20px; width:240px; }.gallery-heading h2 { font-size:25px; margin-top:8px; }.gallery-heading p { display:none; }
+ #character-art-stage { left:32%; right:24%; top:77px; bottom:58px; }#character-list { left:20px; right:auto; width:240px; bottom:20px; top:auto; flex-direction:row; }#character-list button { min-height:54px; font-size:9px; padding:4px; gap:6px; }#character-list img { height:44px; width:29px; }
+ .character-navigation { left:20px; right:auto; bottom:94px; top:auto; gap:9px; }.character-navigation button { min-height:36px; width:36px; }
+ #app[data-presentation=anime] .model-tools, .model-tools { left:auto; right:20px; transform:none; bottom:20px; }.model-tools button { font-size:10px; padding:8px; }.gallery-help,.model-credit { display:none; }
+}

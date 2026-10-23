@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import './style.css';
+import './polish.css';
 import { WORLDS } from './worlds';
 import { ImmersiveWorld } from './immersive/runtime';
 import { disposeGroup, WorldEffects } from './effects';
@@ -17,7 +18,13 @@ const cards = [...document.querySelectorAll<HTMLButtonElement>('.world-card')];
 const main = document.querySelector<HTMLElement>('main')!;
 const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 let reducedMotion = motionQuery.matches;
-const pixelRatio = () => Math.min(window.devicePixelRatio, window.innerWidth <= 650 ? 1.5 : 2);
+let quality='auto';try{quality=localStorage.getItem('anime-worlds-quality')??'auto';}catch{/* Device preferences are optional. */}
+if(!['auto','smooth','sharp'].includes(quality))quality='auto';
+const pixelRatio = () => Math.min(window.devicePixelRatio,quality==='smooth'?1:quality==='sharp'?2:window.innerWidth<=650?1.5:2);
+const controlsDialog=document.querySelector<HTMLDialogElement>('#controls-dialog')!;
+const qualitySelect=document.querySelector<HTMLSelectElement>('#quality-select')!;qualitySelect.value=quality;
+const helpButton=document.querySelector<HTMLButtonElement>('#controls-open')!;helpButton.addEventListener('click',()=>controlsDialog.showModal());
+controlsDialog.addEventListener('click',e=>{const r=controlsDialog.getBoundingClientRect();if(e.target===controlsDialog&&(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom))controlsDialog.close();});
 document.querySelector('#reload-scene')!.addEventListener('click', () => window.location.reload());
 
 let renderer: THREE.WebGLRenderer;
@@ -38,6 +45,7 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.shadowMap.autoUpdate = false;
 renderer.shadowMap.needsUpdate = true;
+qualitySelect.addEventListener('change',()=>{quality=qualitySelect.value;try{localStorage.setItem('anime-worlds-quality',quality);}catch{/* Optional preference. */}renderer.setPixelRatio(pixelRatio());renderer.setSize(innerWidth,innerHeight);});
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color('#080912');
@@ -71,7 +79,7 @@ let cinematic = false;
 let actionRemaining = 0;
 let contextLost = false;
 const effects = new WorldEffects();
-const exploration = new ExplorationUI(triggerWorldAction, toggleCinematic);
+const exploration = new ExplorationUI(triggerWorldAction, toggleCinematic,scene=>{immersive?.jump(scene);canvas.focus({preventScroll:true});});
 scene.add(effects.root);
 
 function textTexture(text: string) {
@@ -274,6 +282,7 @@ function playChime(index: number) {
 function beginTransition(label: string) {
   transitioning = true;
   hideToast();
+  saveFrame=false;saveButton.disabled=false;
   effects.clear();
   actionRemaining = 0;
   cinematic = false;
@@ -332,7 +341,7 @@ async function enterWorld(index: number) {
     await new Promise(resolve => window.setTimeout(resolve, reducedMotion ? 0 : 420));
     if (request !== navigationToken) return;
     clearWorld();
-    immersive = new ImmersiveWorld(index, scene, camera, canvas, () => reducedMotion, () => { renderer.shadowMap.needsUpdate = true; });
+    immersive = new ImmersiveWorld(index, scene, camera, canvas, () => reducedMotion, () => { renderer.shadowMap.needsUpdate = true; },scene=>exploration.setScene(scene));
     worldLayer.add(immersive.root);
     renderer.shadowMap.needsUpdate = true;
     activeWorld = index;
@@ -392,7 +401,7 @@ function clearWorld() {
 }
 
 function triggerWorldAction() {
-  if (activeWorld < 0 || transitioning || actionRemaining > 0 || exploration.dialogOpen || immersive?.galleryOpen) return;
+  if (activeWorld < 0 || transitioning || actionRemaining > 0 || document.querySelector('dialog[open]') || immersive?.galleryOpen) return;
   actionRemaining = effects.trigger(activeWorld, reducedMotion);
   const direction = camera.getWorldDirection(new THREE.Vector3());
   effects.root.position.copy(camera.position).addScaledVector(direction, 4);
@@ -408,9 +417,12 @@ function toggleCinematic() {
   cinematic = !cinematic;
   appRoot.classList.toggle('is-cinematic', cinematic);
   exploration.setCinematic(cinematic);
-  worldPanel.inert = cinematic;
+  worldPanel.inert = cinematic;document.querySelector<HTMLElement>('#immersive-hud')!.inert=cinematic;
 }
 
+let saveFrame=false;
+const saveButton=document.querySelector<HTMLButtonElement>('#save-view')!;
+saveButton.addEventListener('click',()=>{if(activeWorld>=0&&!transitioning&&!immersive?.galleryOpen){saveFrame=true;saveButton.disabled=true;}});
 cards.forEach((card) => card.addEventListener('click', () => enterWorld(Number(card.dataset.world))));
 document.querySelector<HTMLButtonElement>('#back-button')!.addEventListener('click', returnToHub);
 
@@ -431,7 +443,9 @@ document.querySelector<HTMLButtonElement>('#sound-toggle')!.addEventListener('cl
 });
 
 window.addEventListener('keydown', (event) => {
-  if (event.repeat || event.ctrlKey || event.altKey || event.metaKey || exploration.dialogOpen) return;
+  if (event.repeat || event.ctrlKey || event.altKey || event.metaKey || document.querySelector('dialog[open]')) return;
+  if((event.target as HTMLElement).closest('input,select,textarea'))return;
+  if(event.key==='?'){event.preventDefault();controlsDialog.showModal();return;}
   if (event.key === 'Escape') {
     event.preventDefault();
     if (immersive?.galleryOpen) immersive.closeGallery();
@@ -541,6 +555,15 @@ function animate() {
     if (actionRemaining === 0) exploration.setActionBusy(false);
   }
   renderer.render(scene, camera);
+  if(saveFrame){
+    saveFrame=false;
+    const name=`anime-worlds-${activeWorld+1}-scene-${Number(appRoot.dataset.scene??0)+1}.png`;
+    canvas.toBlob(blob=>{
+      saveButton.disabled=false;
+      if(!blob){showToast('บันทึกภาพไม่สำเร็จ ลองอีกครั้ง');return;}
+      const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=name;link.click();window.setTimeout(()=>URL.revokeObjectURL(url),1000);showToast('บันทึกมุมที่กำลังชมแล้ว');
+    },'image/png');
+  }
   canvas.dataset.triangles = String(renderer.info.render.triangles);
   canvas.dataset.draws = String(renderer.info.render.calls);
   canvas.dataset.geometries = String(renderer.info.memory.geometries);

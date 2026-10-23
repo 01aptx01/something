@@ -15,7 +15,7 @@
 | ภาพตัวละคร 6 คน | OpenAI ImageGen, สร้างใหม่สำหรับโปรเจกต์ | Local WebP 1024×1536, quality 93 | ภาพเต็มตัวสำหรับ gallery แบบเลื่อน/ซูม |
 | Three.js และ addons | https://github.com/mrdoob/three.js | npm package, MIT | OrbitControls และ BufferGeometryUtils ใช้ license ของ Three.js |
 
-โมเดลไม่มีไฟล์ GLB ที่ต้องโหลดแยก โค้ด geometry อยู่ใน app bundle ประมาณ 95 kB ก่อน gzip ณรอบ build นี้ (Three.js/addons แยก chunk) โหลดและสร้างเพียงโลกที่เปิดอยู่ และสร้างทีละโมเดลในห้องแสดง คืน geometry/material/texture/instance buffer/shadow map เมื่อออกจากโลก
+โมเดลไม่มีไฟล์ GLB ที่ต้องโหลดแยก โค้ด geometry อยู่ใน app bundle ประมาณ 116 kB ก่อน gzip ณรอบ build นี้ (Three.js/addons แยก chunk) โหลดและสร้างเพียงโลกที่เปิดอยู่ และสร้างทีละโมเดลในห้องแสดง คืน geometry/material/texture/instance buffer/shadow map เมื่อออกจากโลก
 
 โค้ดงานแฟนโมเดลใน repository ไม่ได้ให้สิทธิ์ในตัวละครต้นฉบับเพิ่มเติม ไม่มีการอ้างว่าเป็นงาน official หรือ scan ตัวละคร สัดส่วนเป็น stylized, ชุดและรายละเอียดลดรูป ไม่มี rig, facial animation, combat หรืออนิเมชันเดิน
 
@@ -34,3 +34,14 @@
 โหลดภาพเฉพาะสถานที่ที่เลือก มี timeout, retry, ยกเลิกคำขอเมื่อออกจากโลก และ token ป้องกันภาพที่มาช้าเปิดทับซีนใหม่ ภาพตัวละครใช้ DOM image ที่ลาก/จีบเพื่อซูมได้ โดยแยกปุ่มภาพอนิเมะกับโมเดล 3D อย่างชัดเจน
 
 รายการไฟล์ใหม่ ขนาด ผู้สร้าง และ source artifact: [public/artwork/manifest.json](../public/artwork/manifest.json) รวม 12 ไฟล์ประมาณ 6 MB เป็นภาพแฟนอาร์ต AI ไม่ใช่งาน official
+
+## Latest polish
+
+- `public/artwork/thumbs`: ภาพย่อจากภาพเดิม 15 ไฟล์ รวม 218,272 bytes; ฉาก 320×180 และตัวละคร 160×240, WebP quality 78 ไม่มีภาพวาดใหม่หรือแหล่งภายนอกเพิ่มเติม
+- `src/immersive/catalog.ts`: เรื่องราวและตำแหน่งจุดสำรวจเฉพาะทั้ง 9 ซีน รวม 18 จุด
+- `src/immersive/atmosphere.ts`: ละออง/กลีบดอก/ประกาย screen-space 36 จุดบนจอเล็กหรือ 64 จุดบนจอใหญ่; ปิดเมื่อ reduced motion
+- `src/immersive/viewport.ts`: ขอบเขตเลื่อนภาพที่เปิดให้สำรวจทั่วภาพ โดยไม่เผยขอบว่าง และขอบเขตภาพตัวละครหลังซูม
+- ฉาก 3D และแท่นแสดงโมเดลสร้างเมื่อเลือกใช้ ไม่ต้องสร้างเพื่อเปิดภาพอนิเมะ
+- PNG export อ่าน canvas หลัง render เฟรมเดียวกัน เพื่อบันทึกมุมปัจจุบันโดยไม่รวม DOM เมนู
+
+ยังไม่มี benchmark บนอุปกรณ์จริง ไม่ใช้จำนวน geometry หรือผล headless เพื่ออ้าง FPS บนมือถือ
