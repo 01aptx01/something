@@ -49,12 +49,34 @@
         <div class="world-tip"><span class="tip-dot"></span><span id="world-tip-text">แตะวัตถุในฉากเพื่อสำรวจ</span></div>
 
         <div class="crosshair" id="crosshair" aria-hidden="true"><span></span><i></i></div>
-        <div id="landmark-markers" aria-label="จุดสำรวจในภาพ" hidden></div>
+        <div id="landmark-markers" aria-label="จุดสำรวจในฉากสามมิติ" hidden></div>
         <nav class="world-toolbar" id="world-toolbar" aria-label="เครื่องมือสำรวจโลก" hidden>
           <button id="world-action" type="button" title="เล่นเอฟเฟกต์ประจำโลก · Space">เล่นเอฟเฟกต์</button>
           <button id="explore-toggle" type="button" aria-haspopup="dialog">สำรวจ 0/2</button>
           <button id="cinema-toggle" type="button" aria-pressed="false">ชมภาพ · C</button>
         </nav>
+
+        <section id="immersive-hud" class="immersive-hud" aria-label="พื้นที่สำรวจสามมิติ" hidden>
+          <div class="location-card"><span id="location-index"></span><h3 id="location-name"></h3><div id="position-readout"></div></div>
+          <nav id="scene-list" aria-label="เดินทางไปยังจุดสำรวจ"></nav>
+          <button id="gallery-open" class="gallery-open" type="button"><span>◈</span> ชมโมเดลตัวละคร <small>G</small></button>
+          <div class="map-panel"><span>EXPLORER / N ↑</span><canvas id="mini-map" width="128" height="128" aria-label="แผนที่ตำแหน่งและทิศทาง"></canvas></div>
+          <nav class="movement-pad" aria-label="ปุ่มเดินสำหรับจอสัมผัส">
+            <button class="move-key forward" data-key="KeyW" aria-label="เดินไปข้างหน้า" type="button">↑</button>
+            <button class="move-key left" data-key="KeyA" aria-label="เดินไปทางซ้าย" type="button">←</button>
+            <button class="move-key backward" data-key="KeyS" aria-label="เดินถอยหลัง" type="button">↓</button>
+            <button class="move-key right" data-key="KeyD" aria-label="เดินไปทางขวา" type="button">→</button>
+          </nav>
+          <span class="look-hint">ลากจอเพื่อมองรอบตัว · กดลูกศรค้างเพื่อเดิน</span>
+        </section>
+        <section id="character-gallery" class="character-gallery" aria-label="ห้องชมโมเดลตัวละครสามมิติ" hidden>
+          <button id="gallery-close" type="button">← กลับไปสำรวจโลก</button>
+          <div class="gallery-heading"><span class="gallery-eyebrow">CHARACTER ARCHIVE / 3D FAN SCULPTURES</span><h2 id="character-name"></h2><h3 id="character-thai"></h3><p id="character-detail"></p></div>
+          <nav id="character-list" aria-label="เลือกตัวละครทีละตัว"></nav>
+          <div class="model-tools" role="group" aria-label="ควบคุมโมเดล"><button id="model-zoom-in" type="button" aria-label="ซูมเข้า">＋</button><button id="model-zoom-out" type="button" aria-label="ซูมออก">−</button><button id="model-reset" type="button">มุมเริ่มต้น</button><button id="model-spin" type="button" aria-pressed="false">หมุนอัตโนมัติ</button></div>
+          <p class="gallery-help">ลากเพื่อหมุน · เลื่อน / จีบเพื่อซูม · ปุ่มลูกศรหมุน · + − ซูม · Home คืนมุม · Esc กลับ</p>
+          <p class="model-credit">โมเดลแฟนอาร์ต stylized สร้างขึ้นสำหรับโปรเจกต์นี้</p>
+        </section>
 
         <section class="world-picker" id="world-picker" aria-label="เลือกประตูสู่โลกต่าง ๆ">
           <div class="picker-heading"><span>CHOOSE YOUR WORLD</span><span class="picker-rule"></span><span class="picker-index">01 — 03</span></div>

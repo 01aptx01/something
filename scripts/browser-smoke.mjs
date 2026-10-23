@@ -56,95 +56,129 @@ async function session(width = 1440, height = 900, mobile = false) {
 }
 
 const s = await session();
+const position = () => s.evaluate('document.querySelector("#world-canvas").dataset.position.split(",").map(Number)');
+const hold = async (key, code, condition) => {
+  await s.evaluate('document.querySelector("#world-canvas").focus()');
+  await s.send('Input.dispatchKeyEvent', { type: 'keyDown', key, code });
+  try { await s.until(condition, 15000); }
+  finally { await s.send('Input.dispatchKeyEvent', { type: 'keyUp', key, code }); }
+};
 try {
-  const failures = [];
+  const failures = [], warnings = [];
   s.listeners.set('Network.loadingFailed', p => failures.push(p.errorText));
+  s.listeners.set('Runtime.consoleAPICalled', p => { if (p.type === 'error') warnings.push(p.args.map(a => a.value).join(' ')); });
   await s.navigate();
-  await s.evaluate('localStorage.removeItem("anime-worlds-discoveries-v1")');
-  await s.navigate();
+  await s.evaluate('localStorage.removeItem("anime-worlds-discoveries-v1")'); await s.navigate();
   await s.shot('hub');
-  for (const [index, name] of [[0, 'one-piece'], [1, 'demon-slayer'], [2, 'attack-on-titan']]) {
+  const hubGeometry = Number(await s.evaluate('document.querySelector("canvas").dataset.geometries'));
+  for (const [index, name, models] of [[0, 'one-piece', ['luffy','zoro']], [1, 'demon-slayer', ['tanjiro','nezuko']], [2, 'attack-on-titan', ['levi','mikasa']]]) {
     await s.enter(index);
     assert.equal(await s.evaluate('document.querySelector("#world-picker").inert'), true);
     assert.equal(await s.evaluate('document.activeElement.id'), 'world-canvas');
+    await s.until('Number(document.querySelector("canvas").dataset.triangles) > 15000');
     await s.shot(name);
-    await s.key(' ', 'Space');
-    await s.until('document.querySelector("#world-action").disabled');
-    await wait(450); await s.shot(name + '-action');
-    await s.click('.landmark-marker:not([hidden])');
-    await s.until('document.querySelector("#explore-dialog").open');
-    await s.key('Escape');
-    await s.until('!document.querySelector("#explore-dialog").open');
-    assert.equal(await s.evaluate('document.querySelector("#app").dataset.world'), String(index));
-    await s.click('#explore-toggle');
+    const start = await position();
+    await hold('w', 'KeyW', `Math.hypot(...document.querySelector('canvas').dataset.position.split(',').map(Number).map((v,i)=>v-${JSON.stringify(start)}[i])) > .3`);
+    await s.key('r', 'KeyR');
+    assert.deepEqual(await position(), start, 'R restores the scene spawn');
+    const heading = await s.evaluate('document.querySelector("canvas").dataset.heading');
+    await hold('ArrowLeft', 'ArrowLeft', `document.querySelector('canvas').dataset.heading !== ${JSON.stringify(heading)}`);
+    await s.key('r', 'KeyR');
+    const beforeDrag = await s.evaluate('document.querySelector("canvas").dataset.heading');
+    await s.send('Input.dispatchMouseEvent', { type: 'mousePressed', x: 800, y: 500, button: 'left', clickCount: 1 });
+    await s.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 900, y: 530, button: 'left', buttons: 1 });
+    await s.send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: 900, y: 530, button: 'left', clickCount: 1 });
+    await s.until(`document.querySelector('canvas').dataset.heading !== ${JSON.stringify(beforeDrag)}`); await s.key('r', 'KeyR');
+    for (let scene = 1; scene < 3; scene++) {
+      await s.click(`[data-scene="${scene}"]`); await s.until(`document.querySelector('#app').dataset.scene === '${scene}'`);
+      await wait(250); await s.shot(`${name}-scene-${scene + 1}`);
+      assert.equal(await s.evaluate('document.querySelectorAll(".scene-choice[aria-pressed=true]").length'), 1);
+    }
+    if (index === 2) {
+      const wall = await position(); assert.equal(wall[1], 10.7, 'wall lookout is actually elevated');
+      await hold('w', 'KeyW', 'Number(document.querySelector("canvas").dataset.position.split(",")[1]) < 10.6');
+    }
+    await s.click('[data-scene="0"]');
+    await s.key(' ', 'Space'); await s.until('document.querySelector("#world-action").disabled');
+    await wait(400); await s.shot(name + '-action');
+    await s.click('#explore-toggle'); await s.until('document.querySelector("#explore-dialog").open');
     for (let i = 0; i < 2; i++) await s.evaluate(`document.querySelectorAll('.note-choice')[${i}].click()`);
     assert.match(await s.evaluate('document.querySelector("#explore-toggle").textContent'), /2\/2/);
     if (index === 1) await s.shot('field-notes');
-    await s.key('Escape');
-    await s.key('c', 'KeyC');
+    await s.key('Escape'); await s.until('!document.querySelector("#explore-dialog").open');
+    assert.equal(await s.evaluate('document.querySelector("#app").dataset.world'), String(index));
+    await s.evaluate('document.querySelector("canvas").focus()'); await s.key('c', 'KeyC');
     assert.equal(await s.evaluate('document.querySelector("#app").classList.contains("is-cinematic")'), true);
-    if (index === 0) await s.shot('cinematic');
-    await s.key('Escape');
-    assert.equal(await s.evaluate('document.querySelector("#app").classList.contains("is-cinematic")'), false);
-    await s.until('!document.querySelector("#world-action").disabled', 14000);
-    await s.evaluate('document.querySelector("canvas").focus()');
-    for (let n = 0; n < 10; n++) { await s.key('Tab'); assert.equal(await s.evaluate('!!document.activeElement.closest("#world-picker")'), false, 'hidden world cards cannot receive Tab'); }
+    if (index === 0) await s.shot('cinematic'); await s.key('Escape');
+    const saved = await position();
+    await s.click('#gallery-open'); await s.until('document.querySelector("#app").classList.contains("is-gallery")');
+    for (let model = 0; model < 2; model++) {
+      await s.click(`[data-character="${model}"]`);
+      await s.until(`document.querySelector('#app').dataset.character === '${models[model]}' && Number(document.querySelector('canvas').dataset.triangles)>10000`);
+      await wait(250); await s.shot(`model-${models[model]}`);
+    }
+    await s.until('!!document.querySelector("canvas").dataset.modelView');
+    const modelView = await s.evaluate('document.querySelector("canvas").dataset.modelView');
+    await s.key('ArrowRight'); await s.until(`document.querySelector('canvas').dataset.modelView !== ${JSON.stringify(modelView)}`);
+    const rotated = await s.evaluate('document.querySelector("canvas").dataset.modelView');
+    await s.click('#model-zoom-in'); await s.until(`document.querySelector('canvas').dataset.modelView !== ${JSON.stringify(rotated)}`);
+    await s.click('#model-reset'); await s.click('#model-spin');
+    await s.until('Number(document.querySelector("canvas").dataset.modelRotation) > .01');
+    await s.key('Escape'); await s.until('!document.querySelector("#app").classList.contains("is-gallery")');
+    assert.deepEqual(await position(), saved, 'gallery returns to the same exploration position');
+    assert.equal(await s.evaluate('document.activeElement.id'), 'gallery-open');
+    await s.until('!document.querySelector("#world-action").disabled', 15000);
     await s.back();
     assert.equal(await s.evaluate('document.activeElement.dataset.world'), String(index));
-    assert.equal(await s.evaluate('document.querySelector("#toast").textContent'), '');
-    console.log(`PASS desktop: ${name}, effect, markers, notes, cinematic, focus`);
+    await s.until(`Number(document.querySelector('canvas').dataset.geometries) <= ${hubGeometry + 2}`, 15000);
+    console.log(`PASS ${name}: 3 scenes, walk/look/reset, elevation, effects, notes, cinematic, 2 volumetric models, orbit/zoom/spin, restore, disposal`);
   }
   await s.metrics(390, 844, true); await s.navigate(); await s.shot('mobile-hub');
-  for (let i = 0; i < 3; i++) {
-    await s.enter(i);
-    assert.match(await s.evaluate('document.querySelector("#explore-toggle").textContent'), /2\/2/, 'progress survives page reload');
-    const box = await s.evaluate('document.querySelector("#world-toolbar").getBoundingClientRect().toJSON()');
-    assert.ok(box.left >= 0 && box.right <= 390 && box.bottom <= 844, 'toolbar fits mobile');
-    await s.click('#explore-toggle');
-    assert.equal(await s.evaluate('document.querySelectorAll(".note-choice").length'), 2, 'cropped landmarks remain accessible');
-    await s.key('Escape');
-    if (i === 1) await s.shot('mobile-demon-slayer');
-    const point = await s.evaluate('(()=>{const r=document.querySelector("#world-action").getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()');
-    await s.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [point] });
+  for (let world = 0; world < 3; world++) {
+    await s.enter(world);
+    assert.match(await s.evaluate('document.querySelector("#explore-toggle").textContent'), /2\/2/, 'progress survives reload');
+    const fits = await s.evaluate(`['#world-toolbar','#scene-list','#gallery-open','.movement-pad'].every(q=>{const r=document.querySelector(q).getBoundingClientRect();return r.left>=0&&r.right<=390&&r.bottom<=844})`);
+    assert.equal(fits, true, 'mobile controls fit viewport');
+    const start = await position();
+    const point = await s.evaluate('(()=>{const r=document.querySelector(".forward").getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()');
+    await s.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ ...point, id: 1 }] });
+    await s.until(`document.querySelector('canvas').dataset.position !== ${JSON.stringify(start.map(v=>v.toFixed(3)).join(','))}`, 15000);
+    // A second finger can look while the first holds the movement control.
+    const heading = await s.evaluate('document.querySelector("canvas").dataset.heading');
+    await s.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ ...point, id: 1 }, { x: 260, y: 380, id: 2 }] });
+    await s.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ ...point, id: 1 }, { x: 310, y: 380, id: 2 }] });
     await s.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-    await s.until('document.querySelector("#world-action").disabled');
-    await s.back();
+    await s.until(`document.querySelector('canvas').dataset.heading !== ${JSON.stringify(heading)}`);
+    await s.click('[data-scene="0"]');
+    if (world === 1) await s.shot('mobile-demon-slayer');
+    await s.click('#gallery-open'); await s.until('document.querySelector("#app").classList.contains("is-gallery")');
+    if (world === 1) await s.shot('mobile-gallery');
+    await s.click('[data-character="1"]'); await s.click('#model-zoom-out'); await s.click('#gallery-close'); await s.back();
   }
+  await s.metrics(844, 390, true); await s.navigate(); await s.shot('landscape-hub'); await s.enter(2); await s.shot('landscape-world');
+  await s.click('#gallery-open'); await s.shot('landscape-gallery'); await s.key('Escape'); await s.back();
   await s.send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 2, mobile: true }); await s.navigate();
-  assert.equal(await s.evaluate('document.querySelector("canvas").width'), 585, 'retina mobile pixel ratio is capped consistently');
-  await s.metrics(844, 390, true); await wait(250); await s.shot('landscape-hub'); await s.enter(2);
-  const fits = await s.evaluate('(()=>{const p=document.querySelector("#world-panel").getBoundingClientRect(),t=document.querySelector("#world-toolbar").getBoundingClientRect();return {top:p.top,bottom:p.bottom,toolbar:t.top}})()');
-  assert.ok(fits.top >= 62 && fits.bottom <= fits.toolbar, `landscape fits: ${JSON.stringify(fits)}`);
-  await s.back();
+  assert.equal(await s.evaluate('document.querySelector("canvas").width'), 585);
   await s.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
   await s.metrics(1440, 900); await s.navigate(); await s.enter(1);
-  const before = await s.evaluate('[...document.querySelectorAll(".landmark-marker")].map(x=>x.style.left).join()');
-  await s.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 1380, y: 740 }); await wait(300);
-  assert.equal(await s.evaluate('[...document.querySelectorAll(".landmark-marker")].map(x=>x.style.left).join()'), before, 'reduced motion disables parallax');
   await s.click('#world-action'); await s.until('document.querySelector("#toast").textContent.includes("สายน้ำ")');
-  assert.equal(s.errors.length, 0, JSON.stringify(s.errors));
-  assert.equal(failures.length, 0, JSON.stringify(failures));
-  console.log('PASS mobile/touch, landscape, reduced motion, no runtime/resource errors');
+  await s.click('#gallery-open'); await s.click('#model-spin'); await wait(400);
+  assert.equal(await s.evaluate('Number(document.querySelector("canvas").dataset.modelRotation)'), 0, 'reduced motion stops automatic model spin');
+  await s.key('ArrowRight'); await s.key('Escape'); await s.back();
+  assert.equal(s.errors.length, 0, JSON.stringify(s.errors)); assert.equal(failures.length, 0, JSON.stringify(failures)); assert.equal(warnings.length, 0, JSON.stringify(warnings));
+  console.log('PASS mobile movement + simultaneous touch look, gallery, landscape, retina, reduced motion, no console/resource errors');
 } finally { await s.close(); }
 
-for (const mode of ['fail', 'cancel', 'timeout']) {
-  const b = await session();
-  const held = [];
-  try {
-    await b.send('Fetch.enable', { patterns: [{ urlPattern: '*/artwork/one-piece.webp', requestStage: 'Request' }] });
-    b.listeners.set('Fetch.requestPaused', p => { if (mode === 'fail') void b.send('Fetch.failRequest', { requestId: p.requestId, errorReason: 'Failed' }); else held.push(p.requestId); });
-    await b.navigate(); await b.click('[data-world="0"]');
-    await b.until('document.querySelector("#app").getAttribute("aria-busy") === "true"');
-    if (mode === 'cancel') { await b.key('Escape'); }
-    else await b.until('document.querySelector("#toast").textContent.includes("ไม่สำเร็จ")', 13000);
-    await b.until('document.querySelector("#app").getAttribute("aria-busy") === "false"');
-    assert.equal(await b.evaluate('document.querySelector("#app").dataset.world'), undefined);
-    for (const requestId of held) await b.send('Fetch.continueRequest', { requestId });
-    await b.send('Fetch.disable'); await wait(700);
-    assert.equal(await b.evaluate('document.querySelector("#app").dataset.world'), undefined, 'late response cannot reopen a cancelled world');
-    await b.enter(0);
-    assert.equal(b.errors.length, 0, JSON.stringify(b.errors));
-    console.log(`PASS loading ${mode}: returns to hub and retries`);
-  } finally { await b.close(); }
-}
-console.log('All browser checks passed.');
+const b = await session();
+try {
+  await b.navigate(); await b.click('[data-world="0"]');
+  await b.until('document.querySelector("#app").getAttribute("aria-busy") === "true"'); await b.key('Escape');
+  await b.until('!document.querySelector("#app").dataset.world && document.querySelector("#app").getAttribute("aria-busy") === "false"');
+  await wait(600); assert.equal(await b.evaluate('document.querySelector("#app").dataset.world'), undefined, 'cancelled transition cannot reopen');
+  // World geometry is local: failed decorative artwork cannot block entry anymore.
+  await b.send('Fetch.enable', { patterns: [{ urlPattern: '*/artwork/*', requestStage: 'Request' }] });
+  b.listeners.set('Fetch.requestPaused', p => { void b.send('Fetch.failRequest', { requestId: p.requestId, errorReason: 'Failed' }); });
+  await b.navigate(); await b.enter(0); await b.back(); await b.enter(2);
+  assert.equal(b.errors.length, 0, JSON.stringify(b.errors)); console.log('PASS cancel/retry, 3D worlds load even when decorative artwork fails');
+} finally { await b.close(); }
+console.log('All immersive browser checks passed.');

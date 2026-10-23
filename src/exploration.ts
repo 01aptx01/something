@@ -1,4 +1,3 @@
-import type * as THREE from 'three';
 import { WORLDS } from './worlds';
 
 const storageKey = 'anime-worlds-discoveries-v1';
@@ -54,23 +53,6 @@ export class ExplorationUI {
     this.world = -1;
     this.toolbar.hidden = this.markers.hidden = true;
     this.markers.replaceChildren();
-  }
-
-  fitMarkers(texture: THREE.Texture) {
-    if (this.world < 0) return;
-    const nodes = [...this.markers.querySelectorAll<HTMLButtonElement>('button')];
-    const panel = document.querySelector('#world-panel')!.getBoundingClientRect();
-    WORLDS[this.world].landmarks.forEach((landmark, index) => {
-      const x = (landmark.point[0] - texture.offset.x) / texture.repeat.x;
-      const y = (landmark.point[1] - (1 - texture.offset.y - texture.repeat.y)) / texture.repeat.y;
-      const marker = nodes[index];
-      const px = x * window.innerWidth;
-      const py = y * window.innerHeight;
-      const overPanel = px > panel.left - 24 && px < panel.right + 24 && py > panel.top - 24 && py < panel.bottom + 24;
-      marker.hidden = x < 0.04 || x > 0.96 || y < 0.1 || y > 0.83 || overPanel;
-      marker.style.left = `${x * 100}%`;
-      marker.style.top = `${y * 100}%`;
-    });
   }
 
   setCinematic(enabled: boolean) {

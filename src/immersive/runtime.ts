@@ -1,0 +1,239 @@
+import * as T from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { disposeGroup } from '../effects';
+import { buildEnvironment, DESTINATIONS, type Environment } from './environments';
+import { walkable } from './navigation';
+import { CAST, character } from './characters';
+import { box, lights, material, mesh } from './kit';
+
+const $ = <E extends HTMLElement = HTMLElement>(selector: string) => document.querySelector<E>(selector)!;
+
+export class ImmersiveWorld {
+  private environment: Environment;
+  private gallery = new T.Group();
+  private sculpture = new T.Group();
+  private orbit: OrbitControls;
+  private keys = new Set<string>();
+  private yaw = 0;
+  private pitch = 0;
+  private ground = 0;
+  private destination = 0;
+  private savedPosition = new T.Vector3();
+  private savedQuaternion = new T.Quaternion();
+  private previousFog: T.FogExp2;
+  private castIndex = 0;
+  private rotating = false;
+  private drag: { id: number; x: number; y: number } | null = null;
+  private abort = new AbortController();
+  private map = $<HTMLCanvasElement>('#mini-map');
+  private projection = new T.Vector3();
+  private markerPositions: T.Vector3[];
+  readonly root = new T.Group();
+  galleryOpen = false;
+
+  constructor(readonly world: number, private scene: T.Scene, private camera: T.PerspectiveCamera, private canvas: HTMLCanvasElement, private reducedMotion: () => boolean, private invalidateShadows: () => void) {
+    this.environment = buildEnvironment(world);
+    this.root.add(this.environment.root, this.gallery);
+    this.gallery.visible = false;
+    this.previousFog = new T.FogExp2(this.environment.fog, this.environment.density);
+    scene.background = new T.Color(this.environment.fog); scene.fog = this.previousFog;
+    camera.fov = 65; camera.updateProjectionMatrix();
+    this.markerPositions = [new T.Vector3(...DESTINATIONS[world][0].marker), new T.Vector3(...DESTINATIONS[world][1].marker)];
+    this.orbit = new OrbitControls(camera, canvas); this.orbit.enabled = false; this.orbit.enablePan = false; this.orbit.enableDamping = false;
+    this.orbit.minDistance = 1.9; this.orbit.maxDistance = 8.5; this.orbit.minPolarAngle = .2; this.orbit.maxPolarAngle = Math.PI * .87;
+    this.orbit.target.set(0, 1.18, 0);
+    this.buildGallery(); this.bind(); this.jump(0);
+    $('#immersive-hud').hidden = false;
+    $('#scene-list').replaceChildren(...DESTINATIONS[world].map((d, index) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'scene-choice'; b.dataset.scene = String(index);
+      b.innerHTML = `<span>0${index + 1}</span><strong></strong>`; b.querySelector('strong')!.textContent = d.name;
+      b.setAttribute('aria-pressed', String(index === 0)); b.addEventListener('click', () => { this.jump(index); this.canvas.focus({ preventScroll: true }); }); return b;
+    }));
+    this.jump(0);
+    $('#character-list').replaceChildren(...CAST[world].map((c, index) => {
+      const b = document.createElement('button'); b.type = 'button'; b.dataset.character = String(index); b.textContent = c.thai;
+      b.addEventListener('click', () => this.selectCharacter(index)); return b;
+    }));
+  }
+
+  private bind() {
+    const signal = this.abort.signal;
+    window.addEventListener('keydown', event => {
+      if (document.querySelector('dialog[open]') || document.hidden || $('#app').getAttribute('aria-busy') === 'true') return;
+      if ((event.target as HTMLElement).closest('input,select,textarea') || event.ctrlKey || event.metaKey || event.altKey) return;
+      if (this.galleryOpen) {
+        if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', '+', '=', '-', 'Home'].includes(event.key)) {
+          event.preventDefault();
+          if (event.key === 'Home') this.resetModel();
+          else if (['+', '=', '-'].includes(event.key)) this.zoomModel(event.key === '-' ? 1.15 : .87);
+          else {
+            const offset = this.camera.position.clone().sub(this.orbit.target);
+            const spherical = new T.Spherical().setFromVector3(offset);
+            spherical.theta += event.key === 'ArrowLeft' ? -.12 : event.key === 'ArrowRight' ? .12 : 0;
+            spherical.phi = T.MathUtils.clamp(spherical.phi + (event.key === 'ArrowUp' ? -.1 : event.key === 'ArrowDown' ? .1 : 0), .2, Math.PI * .87);
+            this.camera.position.copy(this.orbit.target).add(new T.Vector3().setFromSpherical(spherical)); this.orbit.update();
+          }
+        }
+        return;
+      }
+      if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ShiftLeft', 'ShiftRight', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.code)) {
+        if (event.target === this.canvas || event.target === document.body) { event.preventDefault(); this.keys.add(event.code); }
+      }
+      if (event.key.toLowerCase() === 'g' && !event.repeat) this.openGallery();
+      if (event.key.toLowerCase() === 'r' && !event.repeat) this.jump(this.destination);
+    }, { signal });
+    window.addEventListener('keyup', e => this.keys.delete(e.code), { signal });
+    const stop = () => { this.keys.clear(); this.drag = null; document.querySelectorAll('.move-key').forEach(b => b.classList.remove('held')); };
+    window.addEventListener('blur', stop, { signal }); document.addEventListener('visibilitychange', stop, { signal });
+    $('#explore-dialog').addEventListener('toggle', stop, { signal });
+    this.canvas.addEventListener('pointerdown', e => {
+      if (this.galleryOpen || e.button !== 0 || (!e.isPrimary && e.pointerType !== 'touch')) return;
+      this.canvas.setPointerCapture(e.pointerId);
+      this.drag = { id: e.pointerId, x: e.clientX, y: e.clientY }; this.canvas.focus({ preventScroll: true });
+    }, { signal });
+    this.canvas.addEventListener('pointermove', e => {
+      if (!this.drag || this.galleryOpen || e.pointerId !== this.drag.id) return;
+      this.yaw -= (e.clientX - this.drag.x) * .004; this.pitch = T.MathUtils.clamp(this.pitch - (e.clientY - this.drag.y) * .003, -1.25, 1.25);
+      this.drag.x = e.clientX; this.drag.y = e.clientY; this.look();
+    }, { signal });
+    this.canvas.addEventListener('pointerup', () => { this.drag = null; }, { signal });
+    this.canvas.addEventListener('pointercancel', stop, { signal });
+    document.querySelectorAll<HTMLButtonElement>('.move-key').forEach(button => {
+      button.addEventListener('pointerdown', e => { e.preventDefault(); button.setPointerCapture(e.pointerId); this.keys.add(button.dataset.key!); button.classList.add('held'); }, { signal });
+      const release = () => { this.keys.delete(button.dataset.key!); button.classList.remove('held'); };
+      button.addEventListener('pointerup', release, { signal }); button.addEventListener('pointercancel', release, { signal }); button.addEventListener('lostpointercapture', release, { signal });
+    });
+    $('#gallery-open').addEventListener('click', () => this.openGallery(), { signal });
+    $('#gallery-close').addEventListener('click', () => this.closeGallery(), { signal });
+    $('#model-reset').addEventListener('click', () => this.resetModel(), { signal });
+    $('#model-zoom-in').addEventListener('click', () => this.zoomModel(.85), { signal });
+    $('#model-zoom-out').addEventListener('click', () => this.zoomModel(1.18), { signal });
+    $('#model-spin').addEventListener('click', () => { this.rotating = !this.rotating; $('#model-spin').setAttribute('aria-pressed', String(this.rotating)); }, { signal });
+  }
+  private look() { this.camera.quaternion.setFromEuler(new T.Euler(this.pitch, this.yaw, 0, 'YXZ')); }
+  jump(index: number) {
+    if (this.galleryOpen) this.closeGallery();
+    this.destination = index; this.keys.clear();
+    const d = DESTINATIONS[this.world][index]; this.camera.position.set(...d.position); this.ground = d.position[1] - 1.7;
+    this.camera.lookAt(new T.Vector3(...d.look));
+    const e = new T.Euler().setFromQuaternion(this.camera.quaternion, 'YXZ'); this.yaw = e.y; this.pitch = e.x;
+    $('#location-name').textContent = d.name; $('#location-index').textContent = d.english;
+    document.querySelectorAll<HTMLElement>('.scene-choice').forEach((b, i) => b.setAttribute('aria-pressed', String(i === index)));
+    $('#app').dataset.scene = String(index); this.reportPosition();
+  }
+  private buildGallery() {
+    lights(this.gallery, 0);
+    const floor = mesh(this.gallery, new T.CircleGeometry(10, 64), material('#121724', .4, .35), 0, -.12, 0); floor.rotation.x = -Math.PI / 2;
+    mesh(this.gallery, new T.CylinderGeometry(.98, 1.08, .14, 64), material('#333e50', .28, .5), 0, -.03, 0);
+    const ring = mesh(this.gallery, new T.TorusGeometry(1.05, .012, 8, 80), new T.MeshBasicMaterial({ color: ['#70e5d6', '#ce9aff', '#ffb88d'][this.world] }), 0, .05, 0); ring.rotation.x = -Math.PI / 2;
+    for (let i = 0; i < 24; i++) { const a = i * Math.PI / 12; const tick = box(this.gallery, material('#647188'), Math.sin(a) * 1.35, -.025, Math.cos(a) * 1.35, .02, .02, .10); tick.rotation.y = a; }
+    const rim = new T.PointLight(['#57e6cf', '#c18aff', '#ffaf82'][this.world], 15, 8); rim.position.set(-2, 2, -2); this.gallery.add(rim, this.sculpture);
+  }
+  openGallery() {
+    if (this.galleryOpen || $('#app').classList.contains('is-cinematic')) return;
+    this.keys.clear(); this.drag = null; this.galleryOpen = true;
+    this.savedPosition.copy(this.camera.position); this.savedQuaternion.copy(this.camera.quaternion);
+    this.environment.root.visible = false; this.gallery.visible = true;
+    this.scene.background = new T.Color('#0d1220'); this.scene.fog = new T.FogExp2('#0d1220', .05);
+    this.camera.fov = 38; this.camera.updateProjectionMatrix(); this.orbit.enabled = true;
+    $('#app').classList.add('is-gallery'); $('#character-gallery').hidden = false;
+    $('#world-panel').inert = $('#immersive-hud').inert = $('#world-toolbar').inert = true;
+    this.invalidateShadows();
+    this.selectCharacter(this.castIndex); $('#gallery-close').focus({ preventScroll: true });
+  }
+  closeGallery() {
+    if (!this.galleryOpen) return;
+    this.invalidateShadows();
+    this.galleryOpen = false; this.rotating = false; $('#model-spin').setAttribute('aria-pressed', 'false'); this.orbit.enabled = false;
+    this.environment.root.visible = true; this.gallery.visible = false;
+    this.scene.background = new T.Color(this.environment.fog); this.scene.fog = this.previousFog;
+    this.camera.fov = 65; this.camera.updateProjectionMatrix(); this.camera.position.copy(this.savedPosition); this.camera.quaternion.copy(this.savedQuaternion);
+    const e = new T.Euler().setFromQuaternion(this.camera.quaternion, 'YXZ'); this.yaw = e.y; this.pitch = e.x;
+    $('#app').classList.remove('is-gallery'); $('#character-gallery').hidden = true;
+    $('#world-panel').inert = $('#immersive-hud').inert = $('#world-toolbar').inert = false;
+    $('#gallery-open').focus({ preventScroll: true });
+  }
+  private selectCharacter(index: number) {
+    this.invalidateShadows();
+    this.castIndex = index; disposeGroup(this.sculpture);
+    const info = CAST[this.world][index]; const model = character(info.id); this.sculpture.add(model); this.sculpture.rotation.y = 0;
+    $('#character-name').textContent = info.name; $('#character-thai').textContent = info.thai; $('#character-detail').textContent = info.detail;
+    $('#app').dataset.character = info.id;
+    document.querySelectorAll<HTMLElement>('[data-character]').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.character) === index)));
+    this.resetModel();
+  }
+  private resetModel() { this.camera.position.set(innerWidth <= 650 ? 3.6 : 3.0, 2.0, innerWidth <= 650 ? 6.9 : 4.8); this.orbit.target.set(0, innerWidth <= 650 ? 1.3 : 1.18, 0); this.sculpture.rotation.y = 0; this.orbit.update(); }
+  private zoomModel(scale: number) {
+    const offset = this.camera.position.clone().sub(this.orbit.target); offset.setLength(T.MathUtils.clamp(offset.length() * scale, this.orbit.minDistance, this.orbit.maxDistance));
+    this.camera.position.copy(this.orbit.target).add(offset); this.orbit.update();
+  }
+  private reportPosition() {
+    const position = this.camera.position;
+    $('#position-readout').textContent = `${position.x.toFixed(1)} / ${this.ground.toFixed(1)} / ${position.z.toFixed(1)} M`;
+    this.canvas.dataset.position = [position.x, position.y, position.z].map(v => v.toFixed(3)).join(',');
+    this.canvas.dataset.heading = this.yaw.toFixed(3);
+  }
+  private drawMap() {
+    const ctx = this.map.getContext('2d')!, size = 128, scale = 1.65;
+    ctx.clearRect(0, 0, size, size); ctx.strokeStyle = '#ffffff10'; ctx.lineWidth = 1;
+    for (let i = 0; i < size; i += 16) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, size); ctx.moveTo(0, i); ctx.lineTo(size, i); ctx.stroke(); }
+    ctx.strokeStyle = '#d7e7e84d'; ctx.fillStyle = '#d7e7e816';
+    if (this.world === 0) { ctx.fillRect(58, 50, 12, 28); ctx.strokeRect(58, 50, 12, 28); ctx.fillRect(69, 63, 20, 4); ctx.fillRect(86, 26, 32, 72); }
+    else if (this.world === 1) { ctx.fillRect(61, 22, 6, 84); ctx.fillRect(64, 61, 33, 6); ctx.fillRect(92, 16, 5, 96); }
+    else { ctx.fillRect(14, 21, 100, 6); for (const x of [50, 74]) for (let z = 40; z <= 92; z += 12) ctx.fillRect(x, z, 7, 8); }
+    DESTINATIONS[this.world].forEach((d, i) => { ctx.fillStyle = i === this.destination ? '#e8e5ff' : '#8f96ae'; ctx.beginPath(); ctx.arc(64 + d.position[0] * scale, 64 + d.position[2] * scale, 2.5, 0, Math.PI * 2); ctx.fill(); });
+    ctx.save(); ctx.translate(64 + this.camera.position.x * scale, 64 + this.camera.position.z * scale); ctx.rotate(-this.yaw);
+    ctx.fillStyle = ['#71e9d1', '#ddaaff', '#ffb590'][this.world]; ctx.beginPath(); ctx.moveTo(0, -6); ctx.lineTo(-4, 5); ctx.lineTo(0, 3); ctx.lineTo(4, 5); ctx.closePath(); ctx.fill(); ctx.restore();
+  }
+  update(delta: number, elapsed: number, paused: boolean) {
+    if (paused || document.querySelector('dialog[open]')) { this.keys.clear(); this.drag = null; return; }
+    if (this.galleryOpen) {
+      if (this.rotating && !this.reducedMotion()) { this.sculpture.rotation.y += delta * .4; this.invalidateShadows(); }
+      this.orbit.update();
+      this.canvas.dataset.modelView = this.camera.position.toArray().map(v => v.toFixed(3)).join(',');
+      this.canvas.dataset.modelRotation = this.sculpture.rotation.y.toFixed(3);
+      return;
+    }
+    if (!this.reducedMotion()) {
+      if (this.environment.water) this.environment.water.uniforms.time.value = elapsed;
+      if (this.environment.particles) this.environment.particles.position.y = Math.sin(elapsed * .2) * .3;
+    }
+    const forward = Number(this.keys.has('KeyW')) - Number(this.keys.has('KeyS'));
+    const sideways = Number(this.keys.has('KeyD')) - Number(this.keys.has('KeyA'));
+    this.yaw += (Number(this.keys.has('ArrowLeft')) - Number(this.keys.has('ArrowRight'))) * delta * 1.25;
+    const pitchInput = Number(this.keys.has('ArrowUp')) - Number(this.keys.has('ArrowDown'));
+    this.pitch = T.MathUtils.clamp(this.pitch + pitchInput * delta * 1.25, -1.25, 1.25);
+    this.look();
+    if (forward || sideways) {
+      const speed = delta * (this.keys.has('ShiftLeft') || this.keys.has('ShiftRight') ? 7 : 3.5) / Math.max(1, Math.hypot(forward, sideways));
+      const dx = (-Math.sin(this.yaw) * forward + Math.cos(this.yaw) * sideways) * speed;
+      const dz = (-Math.cos(this.yaw) * forward - Math.sin(this.yaw) * sideways) * speed;
+      // Resolve axes separately to slide along building walls rather than getting stuck.
+      for (const axis of ['x', 'z'] as const) {
+        const x = this.camera.position.x + (axis === 'x' ? dx : 0), z = this.camera.position.z + (axis === 'z' ? dz : 0);
+        const height = walkable(this.world, x, z, this.environment.obstacles, this.ground);
+        if (height !== null) { this.camera.position.set(x, height + 1.7, z); this.ground = height; }
+      }
+      this.reportPosition();
+    }
+    this.canvas.dataset.heading = this.yaw.toFixed(3); this.drawMap();
+    document.querySelectorAll<HTMLButtonElement>('.landmark-marker').forEach((marker, i) => {
+      const position = this.markerPositions[i]; this.projection.copy(position).project(this.camera);
+      const x = (this.projection.x * .5 + .5) * innerWidth, y = (-this.projection.y * .5 + .5) * innerHeight;
+      marker.hidden = this.projection.z > 1 || this.projection.z < -1 || x < 35 || x > innerWidth - 35 || y < 160 || y > innerHeight - 150 || this.camera.position.distanceTo(position) > 33;
+      marker.style.left = `${x}px`; marker.style.top = `${y}px`;
+    });
+  }
+  dispose() {
+    this.closeGallery(); this.abort.abort(); this.orbit.dispose(); this.keys.clear();
+    $('#immersive-hud').hidden = true; $('#character-gallery').hidden = true;
+    delete $('#app').dataset.scene; delete $('#app').dataset.character; delete this.canvas.dataset.position; delete this.canvas.dataset.heading; delete this.canvas.dataset.modelView; delete this.canvas.dataset.modelRotation;
+    const textures = new Set<T.Texture>(); const shadows: T.LightShadow[] = [];
+    this.root.traverse(o => {
+      if (o instanceof T.Mesh) for (const mat of Array.isArray(o.material) ? o.material : [o.material]) for (const v of Object.values(mat)) if (v instanceof T.Texture) textures.add(v);
+      if (o instanceof T.DirectionalLight || o instanceof T.PointLight) if (o.shadow) shadows.push(o.shadow);
+    });
+    textures.forEach(t => t.dispose()); shadows.forEach(s => s.dispose()); disposeGroup(this.root); this.root.removeFromParent();
+    this.camera.fov = 42; this.camera.updateProjectionMatrix();
+  }
+}

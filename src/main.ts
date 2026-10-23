@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import './style.css';
-import { buildWorld, WORLDS } from './worlds';
+import { WORLDS } from './worlds';
+import { ImmersiveWorld } from './immersive/runtime';
 import { disposeGroup, WorldEffects } from './effects';
 import { ExplorationUI } from './exploration';
 
@@ -13,9 +14,6 @@ const transitionScreen = document.querySelector<HTMLElement>('#transition-screen
 const toast = document.querySelector<HTMLElement>('#toast')!;
 const fallback = document.querySelector<HTMLElement>('#webgl-fallback')!;
 const cards = [...document.querySelectorAll<HTMLButtonElement>('.world-card')];
-const backgroundLoader = new THREE.TextureLoader();
-const worldBackgrounds = new Map<number, THREE.Texture>();
-const backgroundRequests = new Map<number, Promise<THREE.Texture>>();
 const main = document.querySelector<HTMLElement>('main')!;
 const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 let reducedMotion = motionQuery.matches;
@@ -38,6 +36,8 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.25;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.shadowMap.autoUpdate = false;
+renderer.shadowMap.needsUpdate = true;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color('#080912');
@@ -64,14 +64,12 @@ let toastTimer = 0;
 let audioContext: AudioContext | null = null;
 let audioEnabled = false;
 let transitioning = false;
-let activeBackgroundIndex = -1;
+let immersive: ImmersiveWorld | null = null;
 let navigationToken = 0;
 let pendingWorld = -1;
 let cinematic = false;
 let actionRemaining = 0;
 let contextLost = false;
-const parallaxTarget = new THREE.Vector2();
-const parallaxCurrent = new THREE.Vector2();
 const effects = new WorldEffects();
 const exploration = new ExplorationUI(triggerWorldAction, toggleCinematic);
 scene.add(effects.root);
@@ -258,63 +256,6 @@ function hideToast() {
   toast.textContent = '';
 }
 
-function loadWorldBackground(index: number): Promise<THREE.Texture> {
-  const cached = worldBackgrounds.get(index);
-  if (cached) return Promise.resolve(cached);
-  const pending = backgroundRequests.get(index);
-  if (pending) return pending;
-  let timer = 0;
-  const image = backgroundLoader.loadAsync(WORLDS[index].artwork).then((texture) => {
-    texture.colorSpace = THREE.SRGBColorSpace;
-    texture.generateMipmaps = false;
-    texture.minFilter = THREE.LinearFilter;
-    const existing = worldBackgrounds.get(index);
-    if (existing) { texture.dispose(); return existing; }
-    worldBackgrounds.set(index, texture);
-    return texture;
-  });
-  const timeout = new Promise<never>((_, reject) => { timer = window.setTimeout(() => reject(new Error('Background timeout')), 10000); });
-  const request = Promise.race([image, timeout]).finally(() => {
-    window.clearTimeout(timer);
-    backgroundRequests.delete(index);
-  });
-  backgroundRequests.set(index, request);
-  return request;
-}
-
-function fitWorldBackground(index: number, texture: THREE.Texture) {
-  const image = texture.image as HTMLImageElement;
-  const imageAspect = image.width / image.height;
-  const viewportAspect = window.innerWidth / window.innerHeight;
-  const cropX = Math.min(1, viewportAspect / imageAspect);
-  const cropY = Math.min(1, imageAspect / viewportAspect);
-  const focusX = window.innerWidth <= 650 ? WORLDS[index].mobileFocus : WORLDS[index].desktopFocus;
-  texture.repeat.set(cropX, cropY);
-  texture.offset.set((1 - cropX) * focusX, (1 - cropY) * 0.5);
-  texture.needsUpdate = true;
-  exploration.fitMarkers(texture);
-}
-
-function panWorldBackground(pointerX: number, pointerY: number) {
-  if (reducedMotion) return;
-  parallaxTarget.set(pointerX, pointerY);
-}
-
-function updateWorldBackground(delta: number) {
-  if (activeBackgroundIndex < 0) return;
-  if (parallaxCurrent.distanceToSquared(parallaxTarget) < 0.00000001) return;
-  const texture = worldBackgrounds.get(activeBackgroundIndex);
-  if (!texture) return;
-  const horizontalRange = 1 - texture.repeat.x;
-  const verticalRange = 1 - texture.repeat.y;
-  const info = WORLDS[activeBackgroundIndex];
-  const focusX = window.innerWidth <= 650 ? info.mobileFocus : info.desktopFocus;
-  parallaxCurrent.lerp(parallaxTarget, 1 - Math.exp(-delta * 5));
-  texture.offset.x = THREE.MathUtils.clamp(horizontalRange * focusX - parallaxCurrent.x * 0.018, 0, horizontalRange);
-  texture.offset.y = THREE.MathUtils.clamp(verticalRange * 0.5 + parallaxCurrent.y * 0.012, 0, verticalRange);
-  exploration.fitMarkers(texture);
-}
-
 function playChime(index: number) {
   if (!audioEnabled || !audioContext || audioContext.state !== 'running') return;
   const oscillator = audioContext.createOscillator();
@@ -360,9 +301,10 @@ function finishTransition() {
 }
 
 function resetHub() {
-  activeWorld = activeBackgroundIndex = -1;
+  activeWorld = -1;
   clearWorld();
   hub.visible = true;
+  renderer.shadowMap.needsUpdate = true;
   scene.background = new THREE.Color('#080912');
   scene.fog = new THREE.FogExp2('#080912', 0.027);
   worldPanel.classList.remove('visible');
@@ -387,25 +329,21 @@ async function enterWorld(index: number) {
   pendingWorld = index;
   beginTransition(`ENTERING ${WORLDS[index].title}`);
   try {
-    const [background] = await Promise.all([
-      loadWorldBackground(index),
-      new Promise((resolve) => window.setTimeout(resolve, reducedMotion ? 0 : 420)),
-    ]);
+    await new Promise(resolve => window.setTimeout(resolve, reducedMotion ? 0 : 420));
     if (request !== navigationToken) return;
     clearWorld();
-    const world = buildWorld(index);
-    worldLayer.add(world);
-    activeWorld = activeBackgroundIndex = index;
+    immersive = new ImmersiveWorld(index, scene, camera, canvas, () => reducedMotion, () => { renderer.shadowMap.needsUpdate = true; });
+    worldLayer.add(immersive.root);
+    renderer.shadowMap.needsUpdate = true;
+    activeWorld = index;
     hub.visible = false;
     const info = WORLDS[index];
-    scene.background = background;
-    scene.fog = new THREE.FogExp2(world.userData.sky as string, 0.019);
     document.documentElement.style.setProperty('--world-accent', info.color);
     document.querySelector('#world-kicker')!.textContent = info.kicker;
     document.querySelector('#world-title')!.textContent = info.title;
     document.querySelector('#world-description')!.textContent = info.description;
     document.querySelector('#world-coordinates')!.textContent = info.coordinates;
-    document.querySelector('#world-tip-text')!.textContent = 'เลือกจุด 01 / 02 เพื่อค้นพบเรื่องราว';
+    document.querySelector('#world-tip-text')!.textContent = 'WASD เดิน · ลากเพื่อมองรอบตัว · G ชมตัวละคร';
     intro.classList.add('hidden');
     intro.inert = true;
     picker.classList.add('hidden');
@@ -413,25 +351,20 @@ async function enterWorld(index: number) {
     worldPanel.hidden = worldPanel.inert = false;
     worldPanel.classList.add('visible');
     document.querySelector('#footerbar')!.classList.add('in-world');
-    document.querySelector('.footer-controls')!.innerHTML = '<kbd>SPACE</kbd> EFFECT <span class="control-sep">·</span> <kbd>C</kbd> CINEMA <span class="control-sep">·</span> <kbd>ESC</kbd> BACK';
+    document.querySelector('.footer-controls')!.innerHTML = '<kbd>WASD</kbd> WALK · DRAG LOOK · <kbd>G</kbd> CAST · <kbd>R</kbd> RESET';
     document.querySelector('#crosshair')!.classList.add('visible');
     appRoot.classList.add('is-exploring');
     appRoot.dataset.world = String(index);
-    parallaxCurrent.set(0, 0);
-    parallaxTarget.set(0, 0);
     exploration.enter(index);
-    fitWorldBackground(index, background);
-    camera.position.set(0, 2.25, 11.8);
-    camera.lookAt(0, 0.3, -1.2);
     finishTransition();
     playChime(index);
-    canvas.setAttribute('aria-label', `${info.title} · Space เล่นเอฟเฟกต์ · C ชมภาพ · Escape กลับ`);
+    canvas.setAttribute('aria-label', `${info.title} · WASD เดิน · ลากหรือปุ่มลูกศรมองรอบตัว · G ชมตัวละคร · R กลับจุดเริ่ม · Escape กลับ`);
     canvas.focus({ preventScroll: true });
   } catch {
     if (request !== navigationToken) return;
     resetHub();
     finishTransition();
-    showToast('โหลดภาพโลกนี้ไม่สำเร็จ กรุณาลองเลือกโลกอีกครั้ง', 6000);
+    showToast('สร้างฉาก 3 มิติไม่สำเร็จ กรุณาลองเลือกโลกอีกครั้ง', 6000);
     cards[index].focus({ preventScroll: true });
   }
 }
@@ -450,20 +383,26 @@ async function returnToHub() {
 }
 
 function clearWorld() {
+  immersive?.dispose();
+  immersive = null;
   effects.clear();
   disposeGroup(worldLayer);
 }
 
 function triggerWorldAction() {
-  if (activeWorld < 0 || transitioning || actionRemaining > 0 || exploration.dialogOpen) return;
+  if (activeWorld < 0 || transitioning || actionRemaining > 0 || exploration.dialogOpen || immersive?.galleryOpen) return;
   actionRemaining = effects.trigger(activeWorld, reducedMotion);
+  const direction = camera.getWorldDirection(new THREE.Vector3());
+  effects.root.position.copy(camera.position).addScaledVector(direction, 4);
+  effects.root.position.y -= .5;
+  effects.root.rotation.y = Math.atan2(direction.x, direction.z);
   exploration.setActionBusy(true);
   playChime(activeWorld);
   if (reducedMotion) showToast(['ลมทะเลพัดผ่านดาดฟ้า', 'สายน้ำโอบล้อมกลีบวิสทีเรีย', 'พลุสีเขียวส่งสัญญาณถึงหน่วยสำรวจ'][activeWorld]);
 }
 
 function toggleCinematic() {
-  if (activeWorld < 0 || transitioning) return;
+  if (activeWorld < 0 || transitioning || immersive?.galleryOpen) return;
   cinematic = !cinematic;
   appRoot.classList.toggle('is-cinematic', cinematic);
   exploration.setCinematic(cinematic);
@@ -493,7 +432,8 @@ window.addEventListener('keydown', (event) => {
   if (event.repeat || event.ctrlKey || event.altKey || event.metaKey || exploration.dialogOpen) return;
   if (event.key === 'Escape') {
     event.preventDefault();
-    if (cinematic) toggleCinematic();
+    if (immersive?.galleryOpen) immersive.closeGallery();
+    else if (cinematic) toggleCinematic();
     else if (activeWorld >= 0 || transitioning) void returnToHub();
     return;
   }
@@ -519,7 +459,6 @@ canvas.addEventListener('pointermove', (event) => {
   const bounds = canvas.getBoundingClientRect();
   pointer.x = ((event.clientX - bounds.left) / bounds.width) * 2 - 1;
   pointer.y = -((event.clientY - bounds.top) / bounds.height) * 2 + 1;
-  panWorldBackground(pointer.x, pointer.y);
   if (pointerDown) {
     const movement = event.clientX - lastPointerX;
     if (Math.abs(event.clientX - dragStartX) + Math.abs(event.clientY - dragStartY) > 5) dragging = true;
@@ -559,21 +498,13 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setPixelRatio(pixelRatio());
   renderer.setSize(window.innerWidth, window.innerHeight);
-  if (activeBackgroundIndex >= 0) {
-    const background = worldBackgrounds.get(activeBackgroundIndex);
-    if (background) fitWorldBackground(activeBackgroundIndex, background);
-  }
 });
 
 motionQuery.addEventListener('change', (event) => {
   reducedMotion = event.matches;
-  parallaxCurrent.set(0, 0);
-  parallaxTarget.set(0, 0);
   effects.clear();
   actionRemaining = 0;
   exploration.setActionBusy(false);
-  const texture = worldBackgrounds.get(activeBackgroundIndex);
-  if (texture) fitWorldBackground(activeBackgroundIndex, texture);
 });
 canvas.addEventListener('webglcontextlost', (event) => {
   event.preventDefault();
@@ -585,7 +516,8 @@ canvas.addEventListener('webglcontextlost', (event) => {
 });
 function animate() {
   requestAnimationFrame(animate);
-  const delta = Math.min(clock.getDelta(), 0.045);
+  const frameDelta = clock.getDelta();
+  const delta = Math.min(frameDelta, 0.045);
   if (document.hidden || contextLost) return;
   const elapsed = clock.elapsedTime;
   hub.rotation.y += (targetRotation - hub.rotation.y) * Math.min(delta * 4, 1);
@@ -599,22 +531,16 @@ function animate() {
     portalMaterials[index].uniforms.uTime.value = reducedMotion ? 0 : elapsed;
     portalMaterials[index].uniforms.uHover.value += ((hoveredPortal === index ? 1 : 0) - portalMaterials[index].uniforms.uHover.value) * delta * 4;
   });
-  worldLayer.children.forEach((root) => {
-    root.children.forEach((child) => {
-      if (child.userData.floatSeed !== undefined && !reducedMotion) {
-        const seed = Number(child.userData.floatSeed ?? 0);
-        child.position.y = Number(child.userData.baseY) + Math.sin(elapsed * 0.6 + seed) * 0.16;
-        child.position.x = Number(child.userData.baseX) + Math.cos(elapsed * 0.45 + seed) * 0.13;
-        if (child.name === 'Falling wisteria petal') child.rotation.z += delta * 0.12;
-      }
-    });
-  });
-  if (!reducedMotion) updateWorldBackground(delta);
-  effects.update(delta);
+  immersive?.update(delta, elapsed, transitioning);
+  effects.root.visible = !immersive?.galleryOpen;
+  effects.update(Math.min(frameDelta, .3));
   if (actionRemaining > 0) {
-    actionRemaining = Math.max(0, actionRemaining - delta);
+    actionRemaining = Math.max(0, actionRemaining - frameDelta);
     if (actionRemaining === 0) exploration.setActionBusy(false);
   }
   renderer.render(scene, camera);
+  canvas.dataset.triangles = String(renderer.info.render.triangles);
+  canvas.dataset.draws = String(renderer.info.render.calls);
+  canvas.dataset.geometries = String(renderer.info.memory.geometries);
 }
 animate();
