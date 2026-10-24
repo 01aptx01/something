@@ -11,7 +11,10 @@
     "test:navigation": "node --experimental-strip-types --test scripts/navigation.test.mjs",
     "test:journal": "node --experimental-strip-types --test scripts/journal.test.mjs",
     "test:polish": "node scripts/polish-smoke.mjs",
-    "test:viewport": "node --experimental-strip-types --test scripts/viewport.test.mjs"
+    "test:viewport": "node --experimental-strip-types --test scripts/viewport.test.mjs",
+    "models:build": "blender -b --python scripts/build-characters.py",
+    "test:models": "node --test scripts/models.test.mjs",
+    "test:models:browser": "node scripts/models-smoke.mjs"
   },
   "dependencies": {
     "three": "^0.180.0"

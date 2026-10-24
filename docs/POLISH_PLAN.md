@@ -1,3 +1,21 @@
+# โมเดล 3D ชุดใหม่ — 24 ตุลาคม 2026
+
+- [x] หา anatomical base ที่ตรวจสิทธิ์ได้: MakeHuman hm08 CC0 พร้อม source, hash และ license ใน repository
+- [x] สร้าง Blender pipeline และ GLB ทั้ง 6 คนใหม่: ใบหน้า มือ นิ้ว ผม เสื้อผ้า ลายผ้า ดวงตา ดาบและอุปกรณ์
+- [x] ใช้ GLB ชุดใหม่กับทั้งตัวละครในโลกและห้องแสดง
+- [x] ห้องสตูดิโอมี PMREM reflection, key/fill/rim, contact shadow และแสง 3 แบบ
+- [x] มุมเต็มตัว ใบหน้า และด้านหลัง พร้อมจัดกรอบให้พ้นเมนูตามขนาดจอ
+- [x] แยก GLTFLoader chunk; anime mode ไม่โหลด GLB; มี retry, timeout, abort และ token ป้องกันคำขอเก่า
+- [x] คืน GPU texture, ImageBitmap, geometry และ material เมื่อเลิกใช้โมเดล
+- [x] ปรับ bump detail ของไม้ หิน ทราย และ water reflection ตามมุมมองในทุกโลก
+- [x] ตรวจไฟล์ GLB ทั้ง 6 รวม normals, embedded textures, ค่า position ที่เป็น finite, ขนาด และ triangle budget
+- [x] Browser studio checks: ครบ 6 ตัว × 3 มุม, แสง, lazy loading, คืน geometry/texture, คลิกจริงที่ 320px/มือถือ/แนวนอน, โหลดผิดพลาด/ลองใหม่ และคำขอเก่าไม่ทับตัวใหม่
+- [x] ภาพเต็มตัว ใบหน้า ด้านหลัง และมือถือจาก production preview พร้อมลิงก์ใน README
+
+ผลตรวจชุดส่งมอบ: production build ผ่าน, unit tests 18 ชุดผ่าน (navigation 4 / journal 4 / viewport 4 / GLB 6), studio browser suite ผ่าน และ browser regression ครบ 3 โลกผ่าน รวม touch สองนิ้ว, retina, reduced motion, การยกเลิกโหลด, ภาพโหลดช้า/ผิดพลาด/timeout และ retry สำเร็จ ไม่พบ runtime exception หรือ console/resource error ที่ไม่ใช่คำขอที่จงใจยกเลิก ภาพหน้าจอในเอกสารรวม 69 ภาพจาก browser preview ไม่มีการอ้าง FPS บนมือถือจริง
+
+โมเดลยังเป็นแฟนประติมากรรมท่าคงที่ ไม่มี rig หรืออนิเมชันเดิน ฐาน CC0 ไม่ได้เปลี่ยนสิทธิ์ของงานต้นฉบับ รายละเอียดและคำสั่งสร้างซ้ำอยู่ใน [ASSETS.md](ASSETS.md)
+
 # เก็บงานทุกโลก — 24 ตุลาคม 2026
 
 - [x] ปรับเมนูทุกโลกและหน้าตัวละครให้มีพื้นที่ชมภาพมากขึ้น รองรับมือถือ 320 พิกเซลและแนวนอน

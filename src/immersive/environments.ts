@@ -1,7 +1,7 @@
 import * as T from 'three';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { box, lights, material, mesh, rod, seeded, sky, sphere, surface, type Obstacle } from './kit';
-import { character } from './characters';
+import { box, lights, material, mesh, rod, seeded, sky, sphere, texturedMaterial, type Obstacle } from './kit';
+import { loadCharacter, disposeCharacter } from './characters';
 
 export type Destination = { name: string; english: string; position: [number, number, number]; look: [number, number, number]; marker: [number, number, number] };
 export const DESTINATIONS: Destination[][] = [
@@ -46,8 +46,19 @@ function optimize(root: T.Group) {
 function water(root: T.Group, color: string, x: number, z: number, w: number, d: number, y: number) {
   const mat = new T.ShaderMaterial({
     uniforms: { time: { value: 0 }, color: { value: new T.Color(color) } },
-    vertexShader: `varying vec3 p; uniform float time; void main(){p=position;vec3 v=position;v.z+=sin(v.x*.75+time)*.055+cos(v.y*.8+time*.7)*.045;gl_Position=projectionMatrix*modelViewMatrix*vec4(v,1.);}`,
-    fragmentShader: `varying vec3 p;uniform float time;uniform vec3 color;void main(){float ripple=sin(p.x*2.+sin(p.y*.8+time)*2.+time)*sin(p.y*2.1-time*.7);float glint=pow(max(0.,ripple),12.);vec3 c=color+vec3(.14,.25,.22)*ripple*.25+vec3(.6,.85,.8)*glint*.33;gl_FragColor=vec4(c,1.);}`,
+    vertexShader: `varying vec3 p; uniform float time; void main(){vec3 v=position;v.z+=sin(v.x*.75+time)*.055+cos(v.y*.8+time*.7)*.045;vec4 world=modelMatrix*vec4(v,1.);p=world.xyz;gl_Position=projectionMatrix*viewMatrix*world;}`,
+    fragmentShader: `varying vec3 p;uniform float time;uniform vec3 color;
+    void main(){
+      float a=p.x*.75+time,b=p.z*.8+time*.7;
+      vec3 n=normalize(vec3(-cos(a)*.085,1.,sin(b)*.065));
+      vec3 view=normalize(cameraPosition-p);float fresnel=pow(1.-max(0.,dot(n,view)),4.);
+      float ripple=sin(p.x*2.+sin(p.z*.8+time)*2.+time)*sin(p.z*2.1-time*.7);
+      float glint=pow(max(0.,dot(reflect(normalize(vec3(-.4,-1.,.2)),n),view)),96.);
+      vec3 c=mix(color*(.8+ripple*.08),vec3(.42,.62,.71),fresnel*.75)+vec3(1.,.86,.56)*glint*.55;
+      gl_FragColor=vec4(c,1.);
+      #include <tonemapping_fragment>
+      #include <colorspace_fragment>
+    }`,
   });
   const sea = mesh(root, new T.PlaneGeometry(w, d, 80, 80), mat, x, y, z); sea.rotation.x = -Math.PI / 2; sea.userData.dynamic = true; sea.castShadow = false; return mat;
 }
@@ -59,14 +70,18 @@ function particles(root: T.Group, color: string, count: number, random: () => nu
 }
 function placeCast(root: T.Group, world: number, x: number, z: number) {
   const names = [['luffy', 'zoro'], ['tanjiro', 'nezuko'], ['levi', 'mikasa']][world];
-  names.forEach((id, i) => { const figure = character(id); figure.position.set(x + (i - .5) * 1.5, .08, z); figure.rotation.y = i ? -.25 : .25; root.add(figure); });
+  const controller=new AbortController();root.userData.abortAssets=()=>controller.abort();
+  names.forEach((id,i)=>{void loadCharacter(id,controller.signal).then(figure=>{
+    if(controller.signal.aborted){disposeCharacter(figure);return;}
+    figure.position.set(x+(i-.5)*1.5,.08,z);figure.rotation.y=i?-.25:.25;root.add(figure);root.userData.onAsset?.();
+  }).catch(()=>{/* Decorative figures never block walking. The studio provides retry. */});});
 }
 function seaWorld(): Environment {
   const root = new T.Group(), obstacles: Obstacle[] = [], random = seeded(440);
   root.add(sky('#28639a', '#c4e1dd')); lights(root, 0);
-  const wood = material('#c69a64'); wood.map = surface('wood');
+  const wood = texturedMaterial('#c69a64','wood');
   const darkWood = material('#65452e'), trim = material('#d8b96e', .5), cream = material('#f4e8c6'), red = material('#a83832'), leaf = material('#386f53');
-  const sand = material('#e1c999'); sand.map = surface('sand');
+  const sand = texturedMaterial('#e1c999','sand');
   const ocean = water(root, '#147d91', 0, 0, 180, 180, -1.05);
   // The ship is a complete volume with a curved hull, walkable deck, rails, rigging and sails.
   const hull = mesh(root, new T.CylinderGeometry(1, .8, 2.2, 32), darkWood, 0, -1.1, 0); hull.scale.set(4.1, 1, 10.5);
@@ -135,7 +150,7 @@ function nightWorld(): Environment {
   const root = new T.Group(), obstacles: Obstacle[] = [], random = seeded(221);
   root.add(sky('#090e2e', '#45416a')); lights(root, 1);
   sphere(root, new T.MeshBasicMaterial({ color: '#f5e9ce' }), -25, 35, -65, 3);
-  const ground = material('#293e3e'), stone = material('#87868b'); stone.map = surface('stone');
+  const ground = material('#293e3e'), stone = texturedMaterial('#87868b','stone');
   const bark = material('#4d393e'), red = material('#973e46'), roofmat = material('#252c42'), wood = material('#816250');
   box(root, ground, 0, -.22, 0, 65, .4, 70);
   box(root, stone, 0, -.02, -2, 4.2, .12, 52);
@@ -192,8 +207,8 @@ const creamMaterial = () => material('#dbbd9f');
 function cityWorld(): Environment {
   const root = new T.Group(), obstacles: Obstacle[] = [], random = seeded(91);
   root.add(sky('#697387', '#e5b48a')); lights(root, 2);
-  const stone = material('#b5ad95'); stone.map = surface('stone');
-  const paving = material('#b0a28e'); paving.map = surface('stone');
+  const stone = texturedMaterial('#b5ad95','stone');
+  const paving = texturedMaterial('#b0a28e','stone');
   const plaster = [material('#d8c8ac'), material('#c8b69e'), material('#e1d4ba')], timber = material('#584538'), tile = material('#934b39'), glass = material('#647e86', .3);
   box(root, paving, 0, -.3, 0, 62, .6, 70);
   // Tall outer wall, open arch gateway and parapet; its top is reachable by a long ramp.

@@ -40,6 +40,12 @@ export function surface(kind: 'wood' | 'stone' | 'sand') {
   const texture = new T.CanvasTexture(c); texture.colorSpace = T.SRGBColorSpace; texture.wrapS = texture.wrapT = T.RepeatWrapping; texture.repeat.set(4, 4); texture.anisotropy = 4;
   return texture;
 }
+export function texturedMaterial(color:string,kind:'wood'|'stone'|'sand') {
+  const m=material(color,kind==='sand'?.96:.82);m.map=surface(kind);
+  m.bumpMap=m.map.clone();m.bumpMap.colorSpace=T.NoColorSpace;m.bumpMap.needsUpdate=true;
+  m.bumpScale=kind==='wood'?.045:kind==='stone'?.055:.018;
+  return m;
+}
 export function sky(top: string, bottom: string) {
   const c = document.createElement('canvas'); c.width = 16; c.height = 256;
   const ctx = c.getContext('2d')!, gradient = ctx.createLinearGradient(0, 0, 0, 256);
@@ -48,8 +54,8 @@ export function sky(top: string, bottom: string) {
   const dome = new T.Mesh(new T.SphereGeometry(105, 32, 24), new T.MeshBasicMaterial({ map: texture, side: T.BackSide, depthWrite: false })); dome.userData.dynamic = true; return dome;
 }
 export function lights(root: T.Group, world: number) {
-  root.add(new T.HemisphereLight(world === 1 ? '#a2b8ff' : '#ddf4ff', world === 1 ? '#352340' : '#70604a', world === 1 ? 1.6 : 2.1));
-  const sun = new T.DirectionalLight(world === 1 ? '#a2b5ff' : '#fff0ca', world === 1 ? 2.2 : 3.2);
+  root.add(new T.HemisphereLight(world === 1 ? '#a2b8ff' : '#ddf4ff', world === 1 ? '#352340' : '#70604a', world === 1 ? 1.2 : 1.4));
+  const sun = new T.DirectionalLight(world === 1 ? '#a2b5ff' : '#fff0ca', world === 1 ? 2.0 : 2.7);
   sun.position.set(-16, 30, 12); sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024);
   Object.assign(sun.shadow.camera, { left: -38, right: 38, top: 38, bottom: -38, near: 1, far: 90 }); sun.shadow.bias = -.0005; sun.shadow.normalBias = .035; root.add(sun);
   const rim = new T.DirectionalLight(world === 1 ? '#d795ff' : '#63c7e5', .7); rim.position.set(15, 8, -16); root.add(rim);

@@ -12,7 +12,7 @@ const hold = async (key, code, condition) => {
 try {
   const failures = [], warnings = [], requests=new Map();
   s.listeners.set('Network.requestWillBeSent',p=>requests.set(p.requestId,p.request.url));
-  s.listeners.set('Network.loadingFailed', p => failures.push({error:p.errorText,url:requests.get(p.requestId)}));
+  s.listeners.set('Network.loadingFailed',p=>{const url=requests.get(p.requestId);if(p.canceled&&p.errorText==='net::ERR_ABORTED'&&/\/models\/[^/]+\.glb$/.test(url??''))return;failures.push({error:p.errorText,url});});
   s.listeners.set('Runtime.consoleAPICalled', p => { if (p.type === 'error') warnings.push(p.args.map(a => a.value).join(' ')); });
   await s.navigate();
   await s.evaluate('localStorage.removeItem("anime-worlds-discoveries-v1")'); await s.navigate();
@@ -54,7 +54,7 @@ try {
     await s.click('#model-zoom-in');assert.notEqual(await s.evaluate('document.querySelector("#character-art-stage").dataset.view'),portraitView);
     await s.key('ArrowLeft');await s.click('#model-reset');
     await s.click('.gallery-presentation [data-presentation="3d"]');
-    await s.until('Number(document.querySelector("canvas").dataset.triangles)>10000');
+    await s.until('document.querySelector("canvas").dataset.modelState==="ready"',25000);
     await s.key('Escape');
     await s.until('Number(document.querySelector("canvas").dataset.triangles) > 15000');
     await s.shot('3d-'+name);
@@ -95,7 +95,7 @@ try {
     await s.click('#gallery-open'); await s.until('document.querySelector("#app").classList.contains("is-gallery")');
     for (let model = 0; model < 2; model++) {
       await s.click(`[data-character="${model}"]`);
-      await s.until(`document.querySelector('#app').dataset.character === '${models[model]}' && Number(document.querySelector('canvas').dataset.triangles)>10000`);
+      await s.until(`document.querySelector('#app').dataset.character === '${models[model]}' && document.querySelector('canvas').dataset.modelAsset==='${models[model]}' && document.querySelector('canvas').dataset.modelState==='ready'`);
       await wait(250); await s.shot(`model-${models[model]}`);
     }
     await s.until('!!document.querySelector("canvas").dataset.modelView');
@@ -151,6 +151,7 @@ try {
     await s.click('[data-scene="0"]');
     if (world === 1) await s.shot('3d-mobile-demon-slayer');
     await s.click('#gallery-open'); await s.until('document.querySelector("#app").classList.contains("is-gallery")');
+    await s.until('document.querySelector("canvas").dataset.modelState==="ready"',25000);
     if (world === 1) await s.shot('3d-mobile-gallery');
     await s.click('[data-character="1"]'); await s.click('#model-zoom-out'); await s.click('#gallery-close'); await s.back();
   }
@@ -168,7 +169,7 @@ try {
   assert.equal(await s.evaluate('Number(document.querySelector("canvas").dataset.modelRotation)'), 0, 'reduced motion stops automatic model spin');
   await s.key('ArrowRight'); await s.key('Escape'); await s.back();
   assert.equal(s.errors.length, 0, JSON.stringify(s.errors)); assert.equal(failures.length, 0, JSON.stringify(failures)); assert.equal(warnings.length, 0, JSON.stringify(warnings));
-  console.log('PASS mobile movement + simultaneous touch look, gallery, landscape, retina, reduced motion, no console/resource errors');
+  console.log('PASS mobile movement + simultaneous touch look, gallery, landscape, retina, reduced motion, no unexpected console/resource errors');
 } finally { await s.close(); }
 
 const b = await session();

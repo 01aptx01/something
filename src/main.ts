@@ -341,7 +341,7 @@ async function enterWorld(index: number) {
     await new Promise(resolve => window.setTimeout(resolve, reducedMotion ? 0 : 420));
     if (request !== navigationToken) return;
     clearWorld();
-    immersive = new ImmersiveWorld(index, scene, camera, canvas, () => reducedMotion, () => { renderer.shadowMap.needsUpdate = true; },scene=>exploration.setScene(scene));
+    immersive = new ImmersiveWorld(index, scene, camera, canvas, () => reducedMotion, () => { renderer.shadowMap.needsUpdate = true; },scene=>exploration.setScene(scene),renderer);
     worldLayer.add(immersive.root);
     renderer.shadowMap.needsUpdate = true;
     activeWorld = index;
@@ -567,5 +567,6 @@ function animate() {
   canvas.dataset.triangles = String(renderer.info.render.triangles);
   canvas.dataset.draws = String(renderer.info.render.calls);
   canvas.dataset.geometries = String(renderer.info.memory.geometries);
+  canvas.dataset.textures = String(renderer.info.memory.textures);
 }
 animate();

@@ -2,8 +2,8 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   build: {
-    // Three's WebGL renderer is about 509 kB minified (129 kB gzip) at this version.
-    chunkSizeWarningLimit: 550,
+    // Renderer plus local PMREM studio reflections: ~553 kB minified. Models and GLTFLoader load separately.
+    chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
         manualChunks: {

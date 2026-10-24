@@ -88,3 +88,15 @@
  .character-navigation { left:20px; right:auto; bottom:94px; top:auto; gap:9px; }.character-navigation button { min-height:36px; width:36px; }
  #app[data-presentation=anime] .model-tools, .model-tools { left:auto; right:20px; transform:none; bottom:20px; }.model-tools button { font-size:10px; padding:8px; }.gallery-help,.model-credit { display:none; }
 }
+/* Sculptures: keep the model inside a dedicated visual area at every size. */
+#model-status { position:absolute; left:64%; top:48%; transform:translate(-50%,-50%); padding:18px 24px; border:1px solid #ffffff24; border-radius:8px; background:#101827ed; color:#dce8f4; pointer-events:auto; text-align:center; font-size:12px; z-index:3; }
+#model-status[hidden],#model-retry[hidden] { display:none; }#model-status button { display:block; margin:12px auto 0; }
+.sculpture-tools { position:absolute; left:64%; bottom:145px; transform:translateX(-50%); display:flex; align-items:center; gap:10px; pointer-events:auto; }.sculpture-tools>div { display:flex; gap:3px; }.sculpture-tools button { font-size:10px; padding:7px 12px; min-height:36px; }.sculpture-tools button[aria-pressed=true] { color:var(--world-accent); border-color:var(--world-accent); background:#233044ed; }
+#app[data-presentation=anime] .sculpture-tools,#app[data-presentation=anime] #model-status { display:none; }
+#app[data-presentation='3d'] .model-tools,#app[data-presentation='3d'] .gallery-help { left:64%; }
+@media(max-width:650px) {
+ #model-status { left:50%; width:calc(100% - 50px); top:46%; }.sculpture-tools { left:50%; bottom:215px; gap:4px; width:calc(100% - 32px); justify-content:center; }.sculpture-tools button { font-size:9px; padding:6px 8px; min-height:34px; }#app[data-presentation='3d'] .model-tools,#app[data-presentation='3d'] .gallery-help { left:50%; }#app[data-presentation='3d'] .model-credit { font-size:7px; max-width:calc(100% - 28px); white-space:normal; text-align:center; }
+}
+@media(max-height:580px) and (min-width:651px) {
+ .sculpture-tools { left:auto; right:20px; top:125px; bottom:auto; transform:none; flex-direction:column; align-items:flex-end; gap:6px; }.sculpture-tools button { font-size:9px; padding:6px 8px; min-height:32px; }#app[data-presentation='3d'] .model-tools { left:auto; }#model-status { left:54%; top:50%; }
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "id": "luffy",
+    "file": "luffy.glb",
+    "bytes": 3322220,
+    "triangles": 140468,
+    "materials": 14
+  },
+  {
+    "id": "zoro",
+    "file": "zoro.glb",
+    "bytes": 2958560,
+    "triangles": 126371,
+    "materials": 10
+  },
+  {
+    "id": "tanjiro",
+    "file": "tanjiro.glb",
+    "bytes": 3034404,
+    "triangles": 128342,
+    "materials": 15
+  },
+  {
+    "id": "nezuko",
+    "file": "nezuko.glb",
+    "bytes": 2615800,
+    "triangles": 109706,
+    "materials": 13
+  },
+  {
+    "id": "levi",
+    "file": "levi.glb",
+    "bytes": 3333588,
+    "triangles": 136864,
+    "materials": 11
+  },
+  {
+    "id": "mikasa",
+    "file": "mikasa.glb",
+    "bytes": 3057044,
+    "triangles": 124486,
+    "materials": 11
+  }
+]

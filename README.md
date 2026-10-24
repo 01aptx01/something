@@ -2,6 +2,30 @@
 
 ประสบการณ์ Three.js ที่เปิดด้วย **ภาพอนิเมะรายละเอียดสูงแบบเดิม** เป็นค่าเริ่มต้น เลือกสำรวจได้ 9 ซีน พร้อมภาพตัวละคร 6 ตัวให้ซูมและเลื่อนชม และยังสลับไปเดินสำรวจฉาก 3D หรือหมุนโมเดลรอบตัวได้
 
+## โมเดล 3D ชุดใหม่
+
+ปั้นแฟนโมเดลทั้ง 6 คนใหม่ใน Blender จากฐานสัดส่วนมนุษย์ MakeHuman CC0 เพิ่มใบหน้า หู มือและนิ้ว ผมหลายชั้น เสื้อผ้าโค้งที่มีรอยพับ ลายผ้า ดวงตาที่มีม่านตา และอุปกรณ์เฉพาะตัว ใช้โมเดลเดียวกันทั้งในโลกและห้องแสดง
+
+- ห้องแสดงมีแสงสะท้อน วัสดุ PBR เงาใต้เท้า และแสงให้เลือก 3 แบบ
+- เลือกมุมเต็มตัว / ใบหน้า / ด้านหลัง แล้วหมุนและซูมต่อได้ กล้องจัดกรอบตามพื้นที่บนมือถือและแนวนอน
+- โหลด GLB และตัวโหลดเมื่อเลือก 3D มีสถานะโหลด ลองใหม่ และยกเลิกคำขอเก่าเมื่อเปลี่ยนตัวละคร
+- ฉากทั้งสามปรับผิวไม้ หิน ทราย ให้มี bump detail และเพิ่มแสงสะท้อนตามมุมมองบนผิวน้ำ
+
+เปิดโลก → **ชมตัวละคร** → **โมเดล 3D** แล้วเลือกเต็มตัว ใบหน้า ด้านหลัง หรือเปลี่ยนแสงได้ทันที
+
+![โมเดลทันจิโร่ชุดใหม่ในห้องแสดง](docs/screenshots/model-tanjiro.png)
+
+| ตัวละคร | เต็มตัว | รายละเอียดใบหน้า | ด้านหลัง |
+| --- | --- | --- | --- |
+| ลูฟี่ | [ดู](docs/screenshots/model-luffy.png) | [ดู](docs/screenshots/model-face-luffy.png) | [ดู](docs/screenshots/model-back-luffy.png) |
+| โซโล | [ดู](docs/screenshots/model-zoro.png) | [ดู](docs/screenshots/model-face-zoro.png) | [ดู](docs/screenshots/model-back-zoro.png) |
+| ทันจิโร่ | [ดู](docs/screenshots/model-tanjiro.png) | [ดู](docs/screenshots/model-face-tanjiro.png) | [ดู](docs/screenshots/model-back-tanjiro.png) |
+| เนซึโกะ | [ดู](docs/screenshots/model-nezuko.png) | [ดู](docs/screenshots/model-face-nezuko.png) | [ดู](docs/screenshots/model-back-nezuko.png) |
+| รีไวล์ | [ดู](docs/screenshots/model-levi.png) | [ดู](docs/screenshots/model-face-levi.png) | [ดู](docs/screenshots/model-back-levi.png) |
+| มิคาสะ | [ดู](docs/screenshots/model-mikasa.png) | [ดู](docs/screenshots/model-face-mikasa.png) | [ดู](docs/screenshots/model-back-mikasa.png) |
+
+[มือถือ](docs/screenshots/sculpture-390x844.png) · [จอเล็ก 320 พิกเซล](docs/screenshots/sculpture-320x740.png) · [แนวนอน](docs/screenshots/sculpture-844x390.png) · [ตัวอย่างแสงจันทร์](docs/screenshots/studio-light-1.png) · [ที่มาและสิทธิ์ของฐานโมเดล](scripts/model-source/README.md)
+
 ## เก็บงานทุกโลก
 
 - แถบเลือกซีนมีภาพตัวอย่าง ปุ่มก่อนหน้า/ถัดไป และจำนวนจุดที่ค้นพบของแต่ละซีน
@@ -49,7 +73,7 @@
 
 ![ภาพอนิเมะลูฟี่ในหน้าชมตัวละคร](docs/screenshots/portrait-luffy.png)
 
-เริ่มด้วยภาพอนิเมะตัวละครเต็มตัว เลือกทีละคน ลากเลื่อน ซูมด้วยล้อเมาส์/จีบจอหรือปุ่ม และเลือกเคลื่อนไหวเบา ๆ ได้ ปุ่ม “โมเดล 3D” เปิดโมเดลเดิมเพื่อหมุนรอบตัว เมื่อกลับไปสำรวจจะคืนตำแหน่งเดิม
+เริ่มด้วยภาพอนิเมะตัวละครเต็มตัว เลือกทีละคน ลากเลื่อน ซูมด้วยล้อเมาส์/จีบจอหรือปุ่ม และเลือกเคลื่อนไหวเบา ๆ ได้ ปุ่ม “โมเดล 3D” เปิดแฟนโมเดลชุดใหม่เพื่อหมุนรอบตัวและเลือกมุมรายละเอียด เมื่อกลับไปสำรวจจะคืนตำแหน่งเดิม
 
 | One Piece | Demon Slayer | Attack on Titan |
 | --- | --- | --- |
@@ -62,7 +86,7 @@
 
 [ชมตัวละครบนมือถือ](docs/screenshots/mobile-gallery.png) · [ฉากแนวนอน](docs/screenshots/landscape-world.png) · [ชมตัวละครแนวนอน](docs/screenshots/landscape-gallery.png) · [สมุดสำรวจ](docs/screenshots/field-notes.png) · [ซ่อน UI](docs/screenshots/cinematic.png) · [ฮับพอร์ทัล](docs/screenshots/hub.png)
 
-ดู [ตัวอย่างโหมดเดิน 3D](docs/screenshots/3d-one-piece.png) และ [โมเดลรอบตัว](docs/screenshots/model-luffy.png) ได้จากปุ่มสลับโหมด
+ดู [ตัวอย่างโหมดเดิน 3D](docs/screenshots/3d-one-piece.png), [ตัวละครใหม่ที่อยู่ในโลก](docs/screenshots/3d-one-piece-action.png) และ [โมเดลรอบตัว](docs/screenshots/model-luffy.png) ได้จากปุ่มสลับโหมด
 
 ## การควบคุม
 
@@ -113,6 +137,8 @@ npm run test:navigation  # ขอบเขตเดินและเส้น�
 npm run test:journal     # ข้อมูลเก่า ความคืบหน้า และกรณี storage ใช้ไม่ได้ 4 ชุด
 npm run test:viewport    # เลื่อนทั่วภาพ ขอบว่าง และขอบเขตภาพตัวละคร 4 ชุด
 npm run test:polish      # ใช้ Chromium ตรวจคลิกจริง PNG คุณภาพภาพ pinch และจอเล็ก
+npm run test:models      # ตรวจ GLB ทั้ง 6: geometry, normals, ขนาด และ texture
+npm run test:models:browser # โมเดล/มุมชม/แสง/มือถือ/โหลดผิดพลาด/ลองใหม่/คำขอเก่า
 ```
 
 การทดสอบ TypeScript แบบไม่ build ใช้ Node.js 22.18+ หรือ 24
@@ -139,9 +165,11 @@ APP_URL=http://127.0.0.1:4173 SCREENSHOT_DIR=/tmp/anime-checks npm run test:brow
 
 ภาพอนิเมะทั้งฉากและภาพตัวละครเป็นแฟนอาร์ต AI ที่สร้างขึ้นสำหรับโปรเจกต์นี้ ภาพสถานที่ใหม่มีขนาดต้นฉบับ 1672×941, ภาพตัวละคร 1024×1536 และไฟล์ใหม่ทั้งหมดประมาณ 6 MB โหลดเฉพาะซีน/ตัวละครที่เลือก
 
-ฉากและโมเดลในโหมด 3D สร้างด้วย Three.js ใน [src/immersive](src/immersive) วัสดุไม้ หิน ทราย และท้องฟ้าสร้างในเครื่อง จึงไม่ต้องโหลดโมเดลหรือเรียก CDN ภายนอก ดูรายการและข้อจำกัดใน [asset manifest](docs/ASSETS.md)
+ฉาก 3D สร้างด้วย Three.js ใน [src/immersive](src/immersive) วัสดุไม้ หิน ทราย และท้องฟ้าสร้างในเครื่อง ส่วนตัวละครโหลดจาก GLB ใน `public/models` พร้อม texture ที่ฝังในไฟล์ ไม่เรียก CDN ภายนอก ดูที่มา ขนาด และข้อจำกัดใน [asset manifest](docs/ASSETS.md)
 
-รายละเอียดภาพเดิม ภาพสถานที่และภาพตัวละคร พร้อม manifest อยู่ใน [public/artwork/README.md](public/artwork/README.md) ภาพวาดไม่ใช่เฟรมหรือโมเดลทางการจากอนิเมะ โมเดล 3D เดิมเป็นงาน stylized ไม่มี skeletal animation และไม่ใช่โมเดลทางการหรือโมเดลสมจริงระดับเกม ชื่อเรื่อง/ตัวละครเป็นของผู้ถือสิทธิ์ต้นฉบับ
+การสร้างโมเดลซ้ำใช้ Blender 4.3+ และ `npm run models:build` โดยมี source และ license ของฐานสัดส่วนเก็บใน repository แล้ว การเปิดเว็บตามปกติไม่ต้องติดตั้ง Blender
+
+รายละเอียดภาพเดิม ภาพสถานที่และภาพตัวละคร พร้อม manifest อยู่ใน [public/artwork/README.md](public/artwork/README.md) ภาพวาดไม่ใช่เฟรมหรือโมเดลทางการจากอนิเมะ โมเดล 3D ใหม่เป็นแฟนโมเดลที่ใช้สัดส่วนมนุษย์และปรับลุคอนิเมะ มี geometry รอบตัวจริง แต่ยังเป็นประติมากรรมท่าคงที่ ไม่มี skeletal animation และไม่ใช่โมเดลทางการ ชื่อเรื่อง/ตัวละครเป็นของผู้ถือสิทธิ์ต้นฉบับ
 
 ดู [หน้าวิธีเล่น](docs/screenshots/controls-guide.png) · [หน้าจอมือถือ](docs/screenshots/mobile-immersive.png)
 
