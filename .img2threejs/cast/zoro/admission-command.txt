@@ -1,0 +1,2 @@
+REJECTED  (reference)  pHash=None
+  - cannot decode image as a usable reference: FileNotFoundError: [Errno 2] No such file or directory: '/workspace/something/docs/references/user-cast/zoro.png'

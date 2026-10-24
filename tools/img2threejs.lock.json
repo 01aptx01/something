@@ -1,0 +1,10 @@
+{
+  "repository": "https://github.com/img2threejs/img2threejs.git",
+  "revision": "954cd5845e90efd045694bab725d68a9863c20e0",
+  "skillVersion": "2.0.0",
+  "license": "Apache-2.0",
+  "checkout": ".tools/img2threejs",
+  "skillLink": ".agents/skills/img2threejs",
+  "installMode": "project-local manual checkout and symlink",
+  "instructions": "https://github.com/img2threejs/img2threejs/blob/954cd5845e90efd045694bab725d68a9863c20e0/docs/INSTALL.md#5-manual-install-no-cli"
+}

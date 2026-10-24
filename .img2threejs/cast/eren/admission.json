@@ -1,0 +1,16 @@
+{
+  "admitted": false,
+  "reasons": [
+    "cannot decode image as a usable reference: FileNotFoundError: [Errno 2] No such file or directory: '/workspace/something/docs/references/user-cast/eren.png'"
+  ],
+  "provenance": {
+    "viewpoint": "reference",
+    "sourcePath": "/workspace/something/docs/references/user-cast/eren.png",
+    "width": 0,
+    "height": 0,
+    "foregroundCoverage": 0.0,
+    "largestComponentFraction": 0.0,
+    "pHash": null,
+    "duplicateOfHash": null
+  }
+}

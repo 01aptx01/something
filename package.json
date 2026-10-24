@@ -16,7 +16,12 @@
     "test:models": "node --test scripts/models.test.mjs",
     "test:models:browser": "node scripts/models-smoke.mjs",
     "test:character-regions": "node --experimental-strip-types --test scripts/character-regions.test.mjs",
-    "test:character-entry": "node scripts/character-entry-smoke.mjs"
+    "test:character-entry": "node scripts/character-entry-smoke.mjs",
+    "skill:install": "node scripts/setup-img2threejs.mjs",
+    "skill:check": "node scripts/setup-img2threejs.mjs --check",
+    "skill:cast:init": "node scripts/img2threejs-cast.mjs init",
+    "skill:cast:status": "node scripts/img2threejs-cast.mjs status",
+    "skill:cast:admit": "node scripts/img2threejs-cast.mjs admit"
   },
   "dependencies": {
     "three": "^0.180.0"

@@ -5,3 +5,6 @@ dist/
 # Blender asset build Python cache
 __pycache__/
 *.pyc
+
+# Reproducible project-local third-party skill checkout
+.tools/

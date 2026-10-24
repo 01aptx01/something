@@ -1,0 +1,120 @@
+{
+  "id": "nezuko",
+  "name": "Nezuko Kamado",
+  "imageOrder": 2,
+  "coverage": "head to lower torso; legs and feet cropped",
+  "view": "near-front with right hand raised in a wave",
+  "macro": [
+    "continuous head and face",
+    "long hair shell and layered masses",
+    "raised right arm and five-finger hand",
+    "kimono torso and sleeves",
+    "dark outer haori",
+    "wide obi",
+    "mouth bamboo"
+  ],
+  "meso": [
+    "centre-part hairline and long side masses",
+    "pink ribbon loops",
+    "white crossed collar",
+    "wide draped sleeves",
+    "red-white checked obi panels",
+    "yellow-orange obi cord and knot",
+    "bamboo node bands and cord"
+  ],
+  "micro": [
+    "large pink irises",
+    "dark lash outlines and small highlights",
+    "separate raised fingers",
+    "pink asanoha line pattern",
+    "bamboo end caps and nodes",
+    "contrasting kimono collar edge",
+    "hair edge highlights",
+    "fabric fold lines"
+  ],
+  "palette": [
+    "black/dark brown hair with warm edge highlights",
+    "pink kimono",
+    "white collar",
+    "black haori",
+    "red-white checker obi",
+    "yellow-orange cord",
+    "pale green bamboo"
+  ],
+  "attachments": [
+    "bamboo tied across mouth",
+    "ribbon anchored to side hair",
+    "collar overlaps kimono",
+    "obi wraps kimono at waist",
+    "haori sleeves connect to shoulder shell"
+  ],
+  "materials": [
+    "opaque skin",
+    "matte patterned kimono cloth",
+    "dark cloth haori",
+    "woven obi",
+    "bamboo stalk"
+  ],
+  "unknowns": [
+    "full-body height and leg proportions",
+    "feet and footwear",
+    "lower kimono silhouette",
+    "rear hairstyle and obi knot",
+    "source-image alpha and resolution"
+  ],
+  "schemaVersion": 1,
+  "observationSource": "User-provided inline image, visually inspected in chat; original file bytes unavailable in this workspace.",
+  "pixelEvidenceAvailable": false,
+  "pixelMeasurements": null,
+  "sourceSha256": null,
+  "classification": {
+    "primaryDomain": "character",
+    "formLanguage": [
+      "organic",
+      "layered-shell",
+      "articulated",
+      "fabric-like"
+    ],
+    "complexity": "complex"
+  },
+  "suitability": {
+    "verdict": "conditional",
+    "reason": "Visible identity can support a stylized reconstruction; original local image is required for reference admission and measured likeness. Hidden regions are unmeasured.",
+    "scope": "visible regions supported; cropped/hidden regions remain inferred"
+  },
+  "proposedQualityContract": {
+    "style": "match the supplied anime illustration or figurine; do not substitute a generic humanoid",
+    "identityFeaturesMustPass": [
+      "large pink irises",
+      "dark lash outlines and small highlights",
+      "separate raised fingers",
+      "pink asanoha line pattern",
+      "bamboo end caps and nodes",
+      "contrasting kimono collar edge",
+      "hair edge highlights",
+      "fabric fold lines"
+    ],
+    "requiredViews": [
+      "reference-match",
+      "orbit +35",
+      "orbit -35",
+      "profile 90",
+      "rear 135",
+      "rear 180",
+      "head hero",
+      "head three-quarter"
+    ],
+    "topology": "continuous head/face volume; fitted garment shells; hair rooted to scalp; independently named accessory assemblies",
+    "failureConditions": [
+      "missing original reference pixels",
+      "unmeasured or fabricated proportions",
+      "generic replacement face or hairstyle",
+      "image billboard presented as a 3D body",
+      "floating equipment or harness",
+      "identity-defining detail absent",
+      "critical feature or deterministic gate fails"
+    ],
+    "implementationAuthorizedAfter": "reference admission, measured anatomy/camera and strict spec validation",
+    "confidencePolicy": "Visible features are observations. Hidden backs, cropped limbs and physical material values are explicitly inferred; no numerical likeness score until rendered evidence exists."
+  }
+}

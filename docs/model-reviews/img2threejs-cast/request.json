@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "requestDate": "2026-10-24",
+  "skillRevision": "954cd5845e90efd045694bab725d68a9863c20e0",
+  "status": "awaiting-original-reference-files",
+  "pipelineProfile": "character",
+  "existingModels": "Preserved. No new procedural model has been built or substituted for this request.",
+  "productionIntegration": "New Eren entry will be added separately from Levi only after a model is built and reviewed.",
+  "targets": [
+    {
+      "id": "zoro",
+      "name": "Roronoa Zoro",
+      "imageOrder": 1,
+      "coverage": "full-body",
+      "expectedReference": "docs/references/user-cast/zoro.png",
+      "analysis": "docs/model-reviews/img2threejs-cast/zoro-analysis.json",
+      "state": ".img2threejs/cast/zoro/state.json"
+    },
+    {
+      "id": "nezuko",
+      "name": "Nezuko Kamado",
+      "imageOrder": 2,
+      "coverage": "head to lower torso; legs and feet cropped",
+      "expectedReference": "docs/references/user-cast/nezuko.png",
+      "analysis": "docs/model-reviews/img2threejs-cast/nezuko-analysis.json",
+      "state": ".img2threejs/cast/nezuko/state.json"
+    },
+    {
+      "id": "eren",
+      "name": "Eren Yeager",
+      "imageOrder": 3,
+      "coverage": "portrait: head, shoulders and upper chest only",
+      "expectedReference": "docs/references/user-cast/eren.png",
+      "analysis": "docs/model-reviews/img2threejs-cast/eren-analysis.json",
+      "state": ".img2threejs/cast/eren/state.json"
+    },
+    {
+      "id": "tanjiro",
+      "name": "Tanjiro Kamado",
+      "imageOrder": 4,
+      "coverage": "full-body",
+      "expectedReference": "docs/references/user-cast/tanjiro.png",
+      "analysis": "docs/model-reviews/img2threejs-cast/tanjiro-analysis.json",
+      "state": ".img2threejs/cast/tanjiro/state.json"
+    },
+    {
+      "id": "mikasa",
+      "name": "Mikasa Ackerman",
+      "imageOrder": 5,
+      "coverage": "full-body physical figurine",
+      "expectedReference": "docs/references/user-cast/mikasa.png",
+      "analysis": "docs/model-reviews/img2threejs-cast/mikasa-analysis.json",
+      "state": ".img2threejs/cast/mikasa/state.json"
+    }
+  ]
+}

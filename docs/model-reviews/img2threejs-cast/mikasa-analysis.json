@@ -1,0 +1,134 @@
+{
+  "id": "mikasa",
+  "name": "Mikasa Ackerman",
+  "imageOrder": 5,
+  "coverage": "full-body physical figurine",
+  "view": "front three-quarter, both hands holding ODM grips",
+  "macro": [
+    "continuous head and face",
+    "asymmetric black bob",
+    "neck scarf",
+    "cropped jacket",
+    "light shirt and trousers",
+    "brown hip wrap/skirt",
+    "body harness",
+    "ODM gear",
+    "twin blades",
+    "knee-high boots"
+  ],
+  "meso": [
+    "long fringe partly covering one eye",
+    "wrapped scarf collar and hanging tail",
+    "jacket collar, lapels and pockets",
+    "wing insignia patches",
+    "layered hip panels",
+    "waist and thigh bands",
+    "gas cylinders and blade magazines",
+    "hand grip housings",
+    "boot shafts and heel/sole blocks"
+  ],
+  "micro": [
+    "grey eyes and dark lash rims",
+    "stitched jacket edges",
+    "pocket flap buttons",
+    "metal waist and thigh buckles",
+    "paired blade cartridges",
+    "ODM vents and housing fasteners",
+    "hose connections",
+    "individual grasping fingers",
+    "long straight blade edges and tapered tips",
+    "trouser creases",
+    "boot seam and upper rim"
+  ],
+  "palette": [
+    "black hair",
+    "burgundy scarf",
+    "ochre-brown jacket",
+    "white-grey shirt and trousers",
+    "dark brown harness and hip wrap",
+    "dark grey ODM",
+    "silver blades and buckles",
+    "brown boots"
+  ],
+  "attachments": [
+    "scarf wraps neck and overlaps chest",
+    "hip wrap overlaps trousers",
+    "harness bands follow trouser surface",
+    "grips sit inside curled hands",
+    "ODM housings suspended at hips",
+    "boots enclose trouser cuffs"
+  ],
+  "materials": [
+    "painted figurine appearance; intended model treatment follows the image",
+    "opaque skin",
+    "cloth jacket and scarf",
+    "leather harness and boots",
+    "metal blades and buckles",
+    "dark equipment housings"
+  ],
+  "unknowns": [
+    "rear hair silhouette and harness routing",
+    "hidden ODM hardware and hoses",
+    "figurine material highlights versus painted albedo",
+    "back insignia details",
+    "original file was 1601x1601 but chat display was resized to 1600x1600; original pixels unavailable"
+  ],
+  "schemaVersion": 1,
+  "observationSource": "User-provided inline image, visually inspected in chat; original file bytes unavailable in this workspace.",
+  "pixelEvidenceAvailable": false,
+  "pixelMeasurements": null,
+  "sourceSha256": null,
+  "classification": {
+    "primaryDomain": "character",
+    "formLanguage": [
+      "organic",
+      "layered-shell",
+      "articulated",
+      "fabric-like"
+    ],
+    "complexity": "complex"
+  },
+  "suitability": {
+    "verdict": "conditional",
+    "reason": "Visible identity can support a stylized reconstruction; original local image is required for reference admission and measured likeness. Hidden regions are unmeasured.",
+    "scope": "visible regions supported; cropped/hidden regions remain inferred"
+  },
+  "proposedQualityContract": {
+    "style": "match the supplied anime illustration or figurine; do not substitute a generic humanoid",
+    "identityFeaturesMustPass": [
+      "grey eyes and dark lash rims",
+      "stitched jacket edges",
+      "pocket flap buttons",
+      "metal waist and thigh buckles",
+      "paired blade cartridges",
+      "ODM vents and housing fasteners",
+      "hose connections",
+      "individual grasping fingers",
+      "long straight blade edges and tapered tips",
+      "trouser creases",
+      "boot seam and upper rim"
+    ],
+    "requiredViews": [
+      "reference-match",
+      "orbit +35",
+      "orbit -35",
+      "profile 90",
+      "rear 135",
+      "rear 180",
+      "head hero",
+      "head three-quarter"
+    ],
+    "topology": "continuous head/face volume; fitted garment shells; hair rooted to scalp; independently named accessory assemblies",
+    "failureConditions": [
+      "missing original reference pixels",
+      "unmeasured or fabricated proportions",
+      "generic replacement face or hairstyle",
+      "image billboard presented as a 3D body",
+      "floating equipment or harness",
+      "identity-defining detail absent",
+      "critical feature or deterministic gate fails"
+    ],
+    "implementationAuthorizedAfter": "reference admission, measured anatomy/camera and strict spec validation",
+    "confidencePolicy": "Visible features are observations. Hidden backs, cropped limbs and physical material values are explicitly inferred; no numerical likeness score until rendered evidence exists."
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "id": "zoro",
+  "name": "Roronoa Zoro",
+  "imageOrder": 1,
+  "coverage": "full-body",
+  "view": "near-front three-quarter, asymmetric sword pose",
+  "macro": [
+    "continuous angular head/face volume",
+    "short spiked scalp shell",
+    "muscular torso and neck",
+    "arms with individual hands",
+    "legs and boots",
+    "long split green robe",
+    "waist sash",
+    "three sword assemblies"
+  ],
+  "meso": [
+    "raised right forearm and sword grip near shoulder",
+    "lowered left hand with drawn katana",
+    "open lapels framing chest",
+    "pleated haramaki",
+    "wrapped sash and long hanging tail",
+    "hip scabbard cluster",
+    "boot shafts and soles"
+  ],
+  "micro": [
+    "closed left eye and vertical scar",
+    "grinning open mouth with teeth",
+    "three left-ear gold hoops",
+    "diagonal stitched chest scar",
+    "sleeve ties",
+    "robe front toggles",
+    "crossed diamond grip wraps",
+    "guard and pommel hardware",
+    "curved blade bevel and edge",
+    "scabbard fittings"
+  ],
+  "palette": [
+    "green hair",
+    "desaturated dark green robe",
+    "bright green haramaki",
+    "purple-magenta sash",
+    "black boots",
+    "gold-tone guards",
+    "silver blade"
+  ],
+  "attachments": [
+    "hair roots on scalp",
+    "ear hoops on left ear",
+    "sash wraps waist; tail overlaps robe",
+    "raised sword embedded in hand grip",
+    "scabbards suspended from waist",
+    "boot shafts overlap trouser cuffs"
+  ],
+  "materials": [
+    "opaque skin",
+    "matte cloth robe and sash",
+    "low-gloss boots",
+    "metal blade and guards",
+    "wrapped sword grips"
+  ],
+  "unknowns": [
+    "rear robe seams and folds",
+    "hidden scabbard attachments",
+    "back of head",
+    "exact dimensions and source-image alpha channel"
+  ],
+  "schemaVersion": 1,
+  "observationSource": "User-provided inline image, visually inspected in chat; original file bytes unavailable in this workspace.",
+  "pixelEvidenceAvailable": false,
+  "pixelMeasurements": null,
+  "sourceSha256": null,
+  "classification": {
+    "primaryDomain": "character",
+    "formLanguage": [
+      "organic",
+      "layered-shell",
+      "articulated",
+      "fabric-like"
+    ],
+    "complexity": "complex"
+  },
+  "suitability": {
+    "verdict": "conditional",
+    "reason": "Visible identity can support a stylized reconstruction; original local image is required for reference admission and measured likeness. Hidden regions are unmeasured.",
+    "scope": "visible regions supported; cropped/hidden regions remain inferred"
+  },
+  "proposedQualityContract": {
+    "style": "match the supplied anime illustration or figurine; do not substitute a generic humanoid",
+    "identityFeaturesMustPass": [
+      "closed left eye and vertical scar",
+      "grinning open mouth with teeth",
+      "three left-ear gold hoops",
+      "diagonal stitched chest scar",
+      "sleeve ties",
+      "robe front toggles",
+      "crossed diamond grip wraps",
+      "guard and pommel hardware",
+      "curved blade bevel and edge",
+      "scabbard fittings"
+    ],
+    "requiredViews": [
+      "reference-match",
+      "orbit +35",
+      "orbit -35",
+      "profile 90",
+      "rear 135",
+      "rear 180",
+      "head hero",
+      "head three-quarter"
+    ],
+    "topology": "continuous head/face volume; fitted garment shells; hair rooted to scalp; independently named accessory assemblies",
+    "failureConditions": [
+      "missing original reference pixels",
+      "unmeasured or fabricated proportions",
+      "generic replacement face or hairstyle",
+      "image billboard presented as a 3D body",
+      "floating equipment or harness",
+      "identity-defining detail absent",
+      "critical feature or deterministic gate fails"
+    ],
+    "implementationAuthorizedAfter": "reference admission, measured anatomy/camera and strict spec validation",
+    "confidencePolicy": "Visible features are observations. Hidden backs, cropped limbs and physical material values are explicitly inferred; no numerical likeness score until rendered evidence exists."
+  }
+}
