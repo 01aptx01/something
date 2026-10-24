@@ -1,0 +1,100 @@
+{
+  "errors": [
+    "ANCHOR_DECLARED: attachment 'raised-grip' is worn/held/hung but declares no attachment.anchor",
+    "ANCHOR_DECLARED: attachment 'raised-sheath' is worn/held/hung but declares no attachment.anchor",
+    "ANCHOR_DECLARED: attachment 'hip-grip' is worn/held/hung but declares no attachment.anchor",
+    "ANCHOR_DECLARED: attachment 'hip-sheath' is worn/held/hung but declares no attachment.anchor",
+    "ANCHOR_DECLARED: attachment 'low-grip' is worn/held/hung but declares no attachment.anchor",
+    "ANCHOR_DECLARED: attachment 'blade' is worn/held/hung but declares no attachment.anchor",
+    "ANCHOR_DECLARED: attachment 'sword-guards' is worn/held/hung but declares no attachment.anchor",
+    "ANCHOR_DECLARED: attachment 'guard-1' is worn/held/hung but declares no attachment.anchor",
+    "ANCHOR_DECLARED: attachment 'guard-2' is worn/held/hung but declares no attachment.anchor"
+  ],
+  "warnings": [],
+  "attachments": [
+    {
+      "component": "raised-grip",
+      "anchor": null,
+      "anchorKind": null,
+      "distance": null,
+      "maxOffset": null,
+      "offsetRule": null,
+      "withinLimit": null
+    },
+    {
+      "component": "raised-sheath",
+      "anchor": null,
+      "anchorKind": null,
+      "distance": null,
+      "maxOffset": null,
+      "offsetRule": null,
+      "withinLimit": null
+    },
+    {
+      "component": "hip-grip",
+      "anchor": null,
+      "anchorKind": null,
+      "distance": null,
+      "maxOffset": null,
+      "offsetRule": null,
+      "withinLimit": null
+    },
+    {
+      "component": "hip-sheath",
+      "anchor": null,
+      "anchorKind": null,
+      "distance": null,
+      "maxOffset": null,
+      "offsetRule": null,
+      "withinLimit": null
+    },
+    {
+      "component": "low-grip",
+      "anchor": null,
+      "anchorKind": null,
+      "distance": null,
+      "maxOffset": null,
+      "offsetRule": null,
+      "withinLimit": null
+    },
+    {
+      "component": "blade",
+      "anchor": null,
+      "anchorKind": null,
+      "distance": null,
+      "maxOffset": null,
+      "offsetRule": null,
+      "withinLimit": null
+    },
+    {
+      "component": "sword-guards",
+      "anchor": null,
+      "anchorKind": null,
+      "distance": null,
+      "maxOffset": null,
+      "offsetRule": null,
+      "withinLimit": null
+    },
+    {
+      "component": "guard-1",
+      "anchor": null,
+      "anchorKind": null,
+      "distance": null,
+      "maxOffset": null,
+      "offsetRule": null,
+      "withinLimit": null
+    },
+    {
+      "component": "guard-2",
+      "anchor": null,
+      "anchorKind": null,
+      "distance": null,
+      "maxOffset": null,
+      "offsetRule": null,
+      "withinLimit": null
+    }
+  ],
+  "unmeasuredAttachments": [],
+  "attachmentCount": 9,
+  "passed": false
+}

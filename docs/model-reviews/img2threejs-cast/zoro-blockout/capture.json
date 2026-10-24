@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "character": "zoro",
+    "stage": "blockout",
+    "accepted": false,
+    "source": "img2threejs-procedural",
+    "parts": 80
+  },
+  "info": {
+    "triangles": 122776,
+    "drawCalls": 40,
+    "geometries": 81
+  },
+  "errors": [],
+  "renderer": "Chromium WebGL / plain renderer; no bloom or depth of field",
+  "viewports": [
+    697,
+    1050
+  ],
+  "sourceUrl": "http://127.0.0.1:5173/sculpt-lab.html?capture=1"
+}

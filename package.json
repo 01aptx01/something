@@ -23,7 +23,11 @@
     "skill:cast:status": "node scripts/img2threejs-cast.mjs status",
     "skill:cast:admit": "node scripts/img2threejs-cast.mjs admit",
     "models:eren": "blender -b --python-exit-code 1 --python scripts/sculpt-eren.py",
-    "test:eren:browser": "node scripts/eren-smoke.mjs"
+    "test:eren:browser": "node scripts/eren-smoke.mjs",
+    "sculpt:zoro:build": "node scripts/sculpt-zoro.mjs",
+    "sculpt:zoro:capture": "node scripts/capture-sculpt.mjs",
+    "sculpt:zoro:geometry": "node --experimental-strip-types scripts/inspect-sculpt-geometry.mjs",
+    "test:sculpt:browser": "node scripts/sculpt-studio-smoke.mjs"
   },
   "dependencies": {
     "three": "^0.180.0"

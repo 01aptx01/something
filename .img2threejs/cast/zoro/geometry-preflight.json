@@ -1,0 +1,11 @@
+{
+  "source": "actual emitted Three.js BufferGeometry",
+  "parts": 80,
+  "triangles": 228072,
+  "headRingCount": 33,
+  "hairPointCount": 13622,
+  "unmeasuredAttachments": [
+    "all: anchor gate not yet run"
+  ],
+  "staticOnly": true
+}

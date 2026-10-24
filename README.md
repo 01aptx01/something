@@ -16,17 +16,19 @@
 
 ที่มา เครดิต และสถานะของแต่ละโมเดล: [manifest](public/models/manifest.json) · [ผลตรวจไฟล์ต้นฉบับก่อนนำเข้า](docs/model-reviews/uploaded-luffy/README.md)
 
-## img2threejs และภาพอ้างอิงชุดใหม่
+## img2threejs: ตัวอย่างโมเดลที่สร้างด้วย Three.js
 
-ติดตั้งสกิล `img2threejs 2.0.0` แบบ project-local และล็อก revision ไว้แล้ว ใช้ `npm run skill:install` หลัง clone และ `npm run skill:check` เพื่อตรวจการติดตั้ง
+ใช้สกิล `img2threejs 2.0.0` ที่ล็อก revision ไว้ สร้าง **factory โซโลด้วยโค้ด Three.js จริง** ผ่าน reference admission, landmark/spec authoring, strict validation และตัวสร้าง factory ของสกิล โดยไม่ได้อ่าน geometry จาก Blender หรือ GLB เดิม
 
-**เพิ่มโมเดลตามภาพให้แล้วครบรายชื่อ**: เอเรนเต็มตัวเป็นทหารฝึกหัดผมสั้นตามภาพล่าสุด และปรับชุด/อุปกรณ์ของโซโล ทันจิโร่ เนซึโกะ และมิคาสะ ใช้งานได้ทันทีในโปรเจกต์ รวมเป็นโมเดล 3D 7 คน
+เปิด **`/sculpt-lab.html`** บนเซิร์ฟเวอร์เดียวกับเว็บหลัก เพื่อเทียบภาพอ้างอิง หมุนดูหน้า/ข้าง/หลัง ซูมใบหน้า ดูโครงตาข่าย แตะเลือกและแยกชิ้นส่วน มีภาพเรนเดอร์จาก Chromium จริงครบ 9 มุม พร้อมภาพปิด material maps
 
-เอเรนอยู่ในโลก Attack on Titan เลือกปุ่ม **เอเรน เยเกอร์** จากฉาก หรือเลือกคนที่ 3 ในห้องตัวละคร เอเรนมีเฉพาะโมเดล 3D จึงไม่ร้องขอภาพอนิเมะที่ยังไม่มี รีไวล์และมิคาสะยังอยู่ครบ รวมเอเรนในโหมดเดิน 3D ด้วย
+**สถานะ: แบบร่าง blockout ยังไม่ผ่านคุณภาพ และยังไม่ได้แทนโมเดลในฉาก** มี 80 ชิ้นส่วน คะแนนเงาร่าง IoU จากสามรอบคือ `0.7681 → 0.8040 → 0.8035` ต่ำกว่าเกณฑ์ `0.85` สกิลหยุดที่ขีดจำกัดรอบแก้ `3/3` การตรวจ scalp และจุดยึดดาบ 9 จุดผ่าน แต่การตรวจผิวยังระบุ 5 vertices ที่ต้องแก้ และยังไม่มีผลผ่าน AI likeness, material projection หรือ animation readiness
 
-ชุดนี้ปั้นด้วย Blender toolkit ของโปรเจกต์จากภาพที่มองเห็น ตามคำสั่งให้เพิ่มทันที ใช้ท่ายืนสำหรับหมุนชม สัดส่วน/ท่าทางบางส่วนเป็นการตีความ ไม่ได้อ้างคะแนนเทียบพิกเซลหรือผลผ่าน factory gates ของ img2threejs ที่ยังไม่มี source pixels ให้ตรวจ
+[ภาพด้านหน้า](docs/model-reviews/img2threejs-cast/zoro-blockout-v2/front.png) · [มุมเฉียง](docs/model-reviews/img2threejs-cast/zoro-blockout-v2/positive.png) · [ด้านข้าง](docs/model-reviews/img2threejs-cast/zoro-blockout-v2/right.png) · [ด้านหลัง](docs/model-reviews/img2threejs-cast/zoro-blockout-v2/rear.png) · [ใบหน้า](docs/model-reviews/img2threejs-cast/zoro-blockout-v2/head.png) · [รายงานและขั้นตอนทำต่อ](docs/model-reviews/img2threejs-cast/README.md)
 
-[ภาพและรายละเอียดชุดส่งมอบ](docs/model-reviews/visual-reference-cast/README.md) · [การติดตั้งสกิลและสถานะการตรวจ](docs/model-reviews/img2threejs-cast/README.md)
+หลัง clone ใช้ `npm run skill:install` และ `npm run skill:check` คำสั่ง `npm run sculpt:zoro:build` ตรวจ local state ก่อนสร้างเสมอ และคืน exit `3` เมื่อสกิลหยุด โดยไม่รีเซ็ต gate หรือเพิ่มจำนวนรอบเอง
+
+โมเดล GLB 7 คนที่เปิดจากฉากยังเป็นชุดเดิม: ลูฟี่ที่อัปโหลด และงาน Blender ของโซโล ทันจิโร่ เนซึโกะ รีไวล์ มิคาสะ และเอเรน เอเรนใช้ชุดทหารฝึกตามภาพเต็มตัวล่าสุด โมเดลเหล่านี้ไม่ได้เป็นผลจาก img2threejs และไม่ได้ใช้ผลตรวจของ prototype นี้รับรองคุณภาพ
 
 ## โมเดล 3D ชุดใหม่
 

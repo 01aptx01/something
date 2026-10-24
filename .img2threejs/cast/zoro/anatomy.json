@@ -1,0 +1,199 @@
+{
+  "sourceImage": "/workspace/something/docs/references/user-cast/zoro.png",
+  "overlayImage": "/workspace/something/.img2threejs/cast/zoro/landmarks.png",
+  "overlayLegend": {
+    "C": "center symmetry axis",
+    "1..N": "head-unit horizontal ticks (blue, dashed)",
+    "H": "hairline guide (default fraction of the first head-unit band)",
+    "E": "eye line guide",
+    "N": "nose base guide",
+    "M": "mouth line guide",
+    "S": "shoulder line guide (default fraction, adjust to observed pose)",
+    "P": "hip line guide (default fraction, adjust to observed pose)",
+    "grayDashed": "rule-of-thirds compositional grid"
+  },
+  "anatomy": {
+    "styleHeads": 8.57,
+    "proportions": {
+      "headUnit": 0.11047619047619048,
+      "torso": 2.456896551724138,
+      "legs": 4.956896551724138,
+      "shoulderWidth": 1.7327586206896552,
+      "hipWidth": 1.6724137931034482
+    },
+    "pose": {
+      "type": "contrapposto; raised right elbow and hand holding sword at shoulder; left arm down",
+      "jointAngles": {
+        "neck": [
+          0,
+          0,
+          0
+        ],
+        "leftShoulder": [
+          0,
+          0,
+          12
+        ],
+        "rightShoulder": [
+          0,
+          0,
+          -125
+        ],
+        "leftElbow": [
+          0,
+          0,
+          -7
+        ],
+        "rightElbow": [
+          0,
+          0,
+          137
+        ],
+        "leftWrist": [
+          0,
+          0,
+          0
+        ],
+        "rightWrist": [
+          0,
+          0,
+          0
+        ],
+        "leftHip": [
+          0,
+          0,
+          4
+        ],
+        "rightHip": [
+          0,
+          0,
+          -4
+        ],
+        "leftKnee": [
+          0,
+          0,
+          0
+        ],
+        "rightKnee": [
+          0,
+          0,
+          0
+        ],
+        "leftAnkle": [
+          0,
+          0,
+          0
+        ],
+        "rightAnkle": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "faceLandmarks": {
+      "hairline": 0.24,
+      "eyeLine": 0.5775862068965517,
+      "eyeSpacing": 0.22,
+      "noseBase": 0.75,
+      "mouthLine": 0.8275862068965517,
+      "earTop": 0.48,
+      "earBottom": 0.77
+    },
+    "features": [
+      "closed anatomical left eye with vertical scar",
+      "narrow open right eye, clenched teeth grin",
+      "three earrings on anatomical left ear",
+      "short green crown with irregular tapered tips"
+    ],
+    "confidence": 0.85,
+    "applies": true,
+    "source": "agent-measured-admitted-image",
+    "evidenceRef": "full-object",
+    "measurementEvidence": {
+      "imageSize": [
+        697,
+        1050
+      ],
+      "crown": [
+        264,
+        44
+      ],
+      "chin": [
+        274,
+        160
+      ],
+      "neckBase": [
+        270,
+        175
+      ],
+      "hip": [
+        284,
+        460
+      ],
+      "floorY": 1035,
+      "headBounds": [
+        217,
+        44,
+        309,
+        160
+      ],
+      "rightEye": [
+        250,
+        110
+      ],
+      "leftEye": [
+        285,
+        112
+      ],
+      "shoulderRight": [
+        159,
+        188
+      ],
+      "elbowRight": [
+        91,
+        233
+      ],
+      "wristRight": [
+        152,
+        116
+      ],
+      "shoulderLeft": [
+        347,
+        190
+      ],
+      "elbowLeft": [
+        386,
+        353
+      ],
+      "wristLeft": [
+        421,
+        501
+      ],
+      "rightKnee": [
+        191,
+        758
+      ],
+      "leftKnee": [
+        354,
+        762
+      ],
+      "rightAnkle": [
+        175,
+        943
+      ],
+      "leftAnkle": [
+        377,
+        945
+      ],
+      "units": "source pixels; joint centres estimated under loose cloth",
+      "torsoDefinition": "neck-base to hip; crown-to-hip is 3.59 HU, not the spine segment length",
+      "depth": {
+        "method": "inference only",
+        "confidence": 0.4,
+        "note": "No profile/back reference. Preserve volume and validate meaningful orbits; do not claim measured depth."
+      }
+    }
+  },
+  "authoringInstruction": "Open overlayImage and read the reference against its head-unit ticks, thirds grid, face-line guides, shoulder/hip lines, and center axis. Replace every null/placeholder value in anatomy with normalized coordinates or joint angles actually observed; the drawn guide lines are generic starting positions, not measurements."
+}

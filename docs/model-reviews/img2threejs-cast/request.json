@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "requestDate": "2026-10-24",
   "skillRevision": "954cd5845e90efd045694bab725d68a9863c20e0",
-  "status": "implemented-via-user-authorized-visual-route",
+  "status": "stopped-at-zoro-blockout",
   "pipelineProfile": "character",
-  "existingModels": "Five visual-reference additions/revisions implemented as project Blender sculpts; Luffy and Levi preserved.",
+  "existingModels": "Existing Blender models are retained while independently reconstructed Three.js factories pass img2threejs review.",
   "productionIntegration": "Eren is a separate third Attack on Titan character, model-only in gallery, with name-button entry and a world NPC.",
   "targets": [
     {
@@ -28,8 +28,8 @@
     {
       "id": "eren",
       "name": "Eren Yeager",
-      "imageOrder": 3,
-      "coverage": "portrait: head, shoulders and upper chest only",
+      "imageOrder": 6,
+      "coverage": "full-body young Training Corps cadet; latest inline reference supersedes adult portrait",
       "expectedReference": "docs/references/user-cast/eren.png",
       "analysis": "docs/model-reviews/img2threejs-cast/eren-analysis.json",
       "state": ".img2threejs/cast/eren/state.json"
@@ -54,10 +54,17 @@
     }
   ],
   "executionRoute": {
-    "implementation": "scripts/sculpt-reference-cast.py and scripts/sculpt-eren.py",
-    "userInstruction": "เพิ่มให้เลยสิ with a new full-body young Eren reference",
-    "referenceGrounding": "agent vision of inline images; neutral-pose interpretation",
-    "img2threejsAcceptance": "unevaluated; original reference admission checklists are retained without fabricated passes",
-    "measuredPixelFidelity": null
-  }
+    "implementation": "Official img2threejs v2 forge pipeline and independently authored procedural Three.js factories",
+    "userInstruction": "ไม่สิ ใช้สกิลนั้นอะ; ทำต่อ",
+    "img2threejsAcceptance": "Zoro factory generated, strict spec passed; Tier 1 and self-intersection not passed. Official state hard-stopped at 3/3 corrections; no production replacement.",
+    "measuredPixelFidelity": {
+      "metric": "silhouette IoU only; not likeness",
+      "zoro": [
+        0.7681,
+        0.804,
+        0.8035
+      ]
+    }
+  },
+  "unresolvedInputs": "Primary reference bytes for Nezuko, young full-body Eren, Tanjiro and Mikasa are not mounted. Supporting neutral/alternate artwork is labeled separately and does not replace those primary inputs."
 }

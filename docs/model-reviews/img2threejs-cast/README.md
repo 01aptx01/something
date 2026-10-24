@@ -1,65 +1,85 @@
-# img2threejs — ภาพอ้างอิงชุดใหม่ 24 ตุลาคม 2026
+# img2threejs: procedural reconstruction
 
-สถานะปัจจุบัน: **ผู้ใช้ยืนยันให้เพิ่มจากภาพที่เห็น โมเดลทั้ง 5 คนจึงสร้าง/ปรับเพิ่มผ่าน Blender toolkit ของโปรเจกต์แล้ว** เอเรนเป็นโมเดลเต็มตัววัยทหารฝึกหัดตามภาพล่าสุด แยกจากรีไวล์ ดู [ภาพและรายละเอียดชุดส่งมอบ](../visual-reference-cast/README.md)
+ใช้ [img2threejs 2.0.0 ที่ล็อก revision](https://github.com/img2threejs/img2threejs/blob/954cd5845e90efd045694bab725d68a9863c20e0/SKILL.md) สร้าง factory ด้วยโค้ด Three.js จริงแล้วสำหรับโซโล งานนี้ยังเป็น **blockout ที่ไม่ผ่านคุณภาพ** และยังไม่ได้แทนโมเดล GLB ในฉาก
 
-สถานะเฉพาะ pipeline ของ img2threejs: `reference-admission` ของภาพชุดแรกยังไม่ได้ประเมินผ่าน เพราะไม่มี source pixels ใน workspace ไม่ได้แก้ checklist ให้ผ่านหรืออ้างว่า Blender output เป็น factory ที่สกิลรับรอง การวิเคราะห์และ admission reports ด้านล่างเป็นหลักฐานจากรอบ intake เดิม ซึ่งเอเรนตอนนั้นเป็นภาพ portrait เวอร์ชันผมมวย ต่างจากภาพเต็มตัวผมสั้นล่าสุด
-
-
-## ติดตั้งและเรียกใช้
-
-ติดตั้งแบบ project-local ตามแนวทาง checkout ร่วมและ symlink ของ upstream โดยไม่แก้การตั้งค่าสกิลส่วนกลางของคลาวด์
-
-- Repository: https://github.com/img2threejs/img2threejs
-- Skill version: `2.0.0`
-- Revision: `954cd5845e90efd045694bab725d68a9863c20e0`
-- License: Apache-2.0; ตัว installer ไม่เปลี่ยนสิทธิ์ของภาพตัวละครต้นฉบับ
-- Checkout: `.tools/img2threejs` (ไม่ commit ตัวรีโปภายนอก)
-- Codex project skill: `.agents/skills/img2threejs` → `../../.tools/img2threejs`
-- Lock: [tools/img2threejs.lock.json](../../../tools/img2threejs.lock.json)
+## เปิดตัวอย่าง
 
 ```bash
-npm run skill:install       # ดาวน์โหลด commit ที่ล็อกไว้และสร้าง symlink
-npm run skill:check         # ตรวจ revision, link, SKILL.md และ character profile
-npm run skill:cast:status   # เรียก forge/next.py ของทุกตัว
+npm ci
+npm run dev
+# เปิด http://localhost:5173/sculpt-lab.html
 ```
 
-ใช้ profile `character` ที่มีในสกิลอยู่แล้ว ไม่ได้ติดตั้ง paid service หรือ plugin เพิ่ม การติดตั้งซ้ำไม่เปลี่ยน checkout ที่ถูกล็อก และจะปฏิเสธการทับสกิลที่ไม่ใช่ของ installer นี้
+`npm run build` รวมหน้า Studio ใน `dist/sculpt-lab.html` แล้ว ใช้ `npm run preview` เพื่อเปิด build จริง ส่วนเว็บหลักอยู่ที่ `/`
 
-สกิลนี้เป็นกระบวนการปั้นด้วยโค้ด Three.js พร้อมตรวจคุณภาพ ไม่ใช่คำสั่งที่ติดตั้งแล้วสร้าง mesh ได้ทันที รายละเอียด upstream: [SKILL.md](https://github.com/img2threejs/img2threejs/blob/954cd5845e90efd045694bab725d68a9863c20e0/SKILL.md)
+Studio มีภาพอ้างอิงข้างโมเดล หมุน/ซูม เลือกหน้า/มุมเฉียง/ข้าง/หลัง/ใบหน้า โครงตาข่าย การแตะเลือกชิ้นส่วน การแยกชิ้นส่วนและคืนมุมมอง หน้าแสดงสถานะว่าเป็นแบบร่างอย่างชัดเจน
 
-## วิเคราะห์จากภาพที่เห็นจริง
+[หน้าจอ desktop](studio-ui/sculpt-studio-desktop.png) · [มือถือ 390px](studio-ui/sculpt-studio-390.png) · [มือถือ 320px](studio-ui/sculpt-studio-320.png)
 
-ยังไม่มีตัวเลขวัดสัดส่วน, SHA ของภาพ หรือคะแนนความเหมือน ทุกค่าเหล่านี้รอไฟล์ต้นฉบับ ห้ามใช้ภาพเก่าของโปรเจกต์หรือภาพวาดใหม่แทนต้นฉบับแล้วอ้างว่าเป็นหลักฐานเดียวกัน
+## ผลตรวจ
 
-| ตัวละคร | สิ่งที่ต้องสร้างตามภาพ | ขอบเขตที่ภาพรองรับ | บันทึกภาพ |
-| --- | --- | --- | --- |
-| โซโล | ท่ายกดาบ มือกำด้าม เสื้อคลุมเขียวเปิดอก แผลตา/หน้าอก ต่างหูสามห่วง ฮารามากิ ผ้าคาดเอวม่วงแดงชายยาว ดาบ/ฝักสามชุด | เต็มตัว ภาพมุมด้านหน้าเอียง | [การวิเคราะห์](zoro-analysis.json) |
-| เนซึโกะ | ใบหน้า/ตาชมพู ผมยาวและโบ มือยกโบก กิโมโนอาซาโนะฮะ ฮาโอริ โอบิแดงขาว เชือกเหลืองส้ม ไม้ไผ่ | ศีรษะถึงช่วงลำตัว เท้าและช่วงล่างถูกตัด | [การวิเคราะห์](nezuko-analysis.json) |
-| เอเรน | ใบหน้าและกราม ผมรวบมวย ปอยผม ตาเทาเขียว รอยแดงใต้ตา ฮู้ด เสื้อคอผูกเชือก | ศีรษะ/อกเท่านั้น ยังไม่มีภาพเต็มตัว | [การวิเคราะห์](eren-analysis.json) |
-| ทันจิโร่ | ท่าเดิน มือจับสายสะพาย ผมดำแดง แผลหน้าผาก ต่างหู ลายฮาโอริ ชุดนักล่าอสูร กล่องไม้ด้านหลัง ดาบ ผ้าพันขาและรองเท้า | เต็มตัวมุมสามส่วน | [การวิเคราะห์](tanjiro-analysis.json) |
-| มิคาสะ | ผมบ๊อบปิดตาบางส่วน ผ้าพันคอแดง แจ็กเก็ตสีเหลืองน้ำตาล กระเป๋า/ตรา กระโปรงสะโพก สายรัดแนบกางเกง ODM ดาบคู่ มือกำด้าม และบูต | ฟิกเกอร์เต็มตัว มุมด้านหน้าเอียง | [การวิเคราะห์](mikasa-analysis.json) |
+| ขั้น | ผลปัจจุบัน |
+| --- | --- |
+| reference admission | ผ่าน: public mirror ของภาพโซโลท่า/ชุดเดียวกับในแชต พร้อม URL/hash; ไม่อ้างว่า bytes ตรงกับ inline upload |
+| character contracts / landmarks | อ่านสัญญา character วัดพิกัดจากภาพที่รับจริง ระบุข้อจำกัดความลึก |
+| local spec search | BM25 `core_3d` สำหรับ anatomy, cloth, skin, hair และวัสดุ |
+| assessment / inventory | complex, รายละเอียด 15 กลุ่ม, component tree 80 ชิ้น |
+| strict spec validation | ผ่าน เป็นการตรวจ spec ไม่ใช่การรับรองความเหมือน |
+| factory generation | เรียก `generate_threejs_factory.py --pass-id blockout` จริง ไม่มี Blender หรือ GLB geometry ในเส้นทางนี้ |
+| browser capture | Chromium/WebGL จริง 9 มุมและภาพ unlit ปิด material maps ไม่มี bloom/DOF |
+| silhouette IoU | `0.7681 → 0.8040 → 0.8035` ยังต่ำกว่า `0.85` |
+| multi-angle / turntable | ไม่พบ silhouette collapse; ครบ 0/90/180/270 องศา อนุญาตช่องว่างระหว่างแขน/ดาบกับลำตัวที่มีอยู่จริง |
+| scalp exposure | ผ่าน 640 samples เฉพาะ band เหนือ hairline `v=0.73..1`; ไม่รับรองทรงผมหรือความเหมือน |
+| attachment anchors | ผ่าน 9 จุดจาก centroid ของ geometry จริง ไม่มี unmeasured attachment |
+| self-intersection | ยังไม่ผ่าน: 5 vertices ถูกระบุว่าอยู่ในผิว, 507 undecided จาก 89,606 samples; ไม่ได้ตรวจทุก vertex |
+| AI likeness / later passes | ยังไม่ทำ เพราะ Tier 1 ไม่ผ่าน |
+| texture projection | de-lit source และ descriptor เท่านั้น ยังไม่ได้ bake ใน runtime หรือผ่าน material pass |
+| animation readiness | ยังไม่มี moving rig หรือผลทดสอบ animation ของ prototype |
 
-แต่ละ JSON แยก macro/meso/micro, จุดยึด, สี, กลุ่มวัสดุ, สิ่งที่ซ่อนอยู่ และเกณฑ์คุณภาพที่เสนอไว้ สันจมูก/ใบหน้าต้องเป็นผิวต่อเนื่อง ผมต้องยึดกับ scalp สายรัด/อุปกรณ์ต้องแนบชุด และท่าทางต้องตรงภาพ การปั้นหลังศีรษะหรือรายละเอียดที่ภาพไม่เห็นจะต้องระบุว่าอนุมาน
+IoU วัดพื้นที่เงาร่าง ไม่ใช่เปอร์เซ็นต์ความเหมือนของใบหน้า ผลตรวจโครงสร้างไม่รับรองความสวยหรือสมจริง ด้านข้าง/หลังอนุมานจากภาพเดียว ความมั่นใจด้านความลึก `0.4`
 
-## ไฟล์สำหรับการวัดเทียบพิกเซลเพิ่มเติม
+[สถานะสรุป](../../../.img2threejs/cast/zoro/status.json) · [state](../../../.img2threejs/cast/zoro/state.json) · [spec](../../../.img2threejs/cast/zoro/character-sculpt-spec.json) · [factory](../../../src/sculpt/createZoroModel.ts) · [หลักฐานวัสดุสีแบนจากภาพ cel](../../../.img2threejs/cast/zoro/material-evidence.json)
 
-แนบต้นฉบับทั้ง 5 รูปเป็นไฟล์ PNG/JPG หรือรวม ZIP ก็ได้ เมื่อรับได้แล้วจะวางไฟล์เดิมโดยรักษา bytes ที่ [docs/references/user-cast](../../references/user-cast/README.md) และบันทึก hash/dimensions จากไฟล์จริง หากใช้ JPG ให้แก้ `expectedReference` ใน [request.json](request.json) ให้ตรงชื่อจริง
+## ภาพตรวจล่าสุด
+
+[ด้านหน้า](zoro-blockout-v2/front.png) · [มุมเฉียง](zoro-blockout-v2/positive.png) · [มุม -35°](zoro-blockout-v2/negative.png) · [ข้าง 90°](zoro-blockout-v2/right.png) · [ข้าง 270°](zoro-blockout-v2/left.png) · [หลัง 135°](zoro-blockout-v2/rear-three-quarter.png) · [หลัง 180°](zoro-blockout-v2/rear.png) · [ใบหน้า](zoro-blockout-v2/head.png) · [ใบหน้าเฉียง](zoro-blockout-v2/head-positive.png) · [ปิด maps / unlit](zoro-blockout-v2/map-stripped.png)
+
+หลักฐานก่อนแก้เก็บใน [รอบเริ่มต้น](zoro-blockout/front.png) และ [แก้ครั้งแรก](zoro-blockout-v1/front.png) ไม่เขียนทับภาพที่ reviewHistory อ้างถึง
+
+## เหตุผลที่หยุด
+
+`forge/next.py` คืน exit `3`, `status=stopped`, `max-correction-loops-reached:blockout:3/3` หลังการตรวจล่าสุด คะแนนเงาร่างหยุดดีขึ้นและยังไม่ผ่าน จึงไม่ปลดล็อก pass ถัดไป
+
+สกิลกำหนดว่า **“Exit code 3 or `status=stopped` is a hard stop: report the reason and request input.”** และ **“Obey a hard stop; never continue from memory.”** ต้องรับคำยืนยันจากผู้ใช้ก่อนเปลี่ยนขอบเขตรอบแก้ ไม่มีการรีเซ็ต state เพิ่ม limit หรือปลอมผลผ่านในงานนี้
+
+หลังได้รับคำยืนยัน ยังต้องแก้ silhouette และการประกอบผิว skirt/sash/head ตรวจ Tier 1/self-intersection ใหม่ แล้วจึงเก็บใบหน้า รายละเอียดชุด วัสดุ projection แสงและ interaction ตาม pass ที่ปลดล็อก งานปัจจุบันยังไม่เทียบคุณภาพกับ GLB ลูฟี่ของผู้ใช้
+
+## ตัวละครอื่น
+
+| ตัวละคร | ภาพหลัก | สถานะ factory ใหม่ |
+| --- | --- | --- |
+| โซโล | เสื้อคลุมเขียว ผ้าม่วง มือขวายกจับดาบ | blockout หยุดตาม gate |
+| เนซึโกะ | ภาพโบกมือ กิโมโนชมพู ช่วงล่างถูกตัด | ยังไม่ได้สร้าง: primary bytes ไม่อยู่ใน filesystem |
+| เอเรน | **เต็มตัวทหารฝึก ผมสั้น ที่ส่งล่าสุด** | ยังไม่ได้สร้าง: วิเคราะห์ใหม่แทน adult portrait แล้ว แต่ยังไม่มี primary bytes |
+| ทันจิโร่ | ภาพเดิน มือจับสายสะพาย กล่องไม้ | ยังไม่ได้สร้าง: ยังไม่มี primary bytes |
+| มิคาสะ | ฟิกเกอร์ แจ็กเก็ตน้ำตาล ODM ดาบคู่ | ยังไม่ได้สร้าง: ยังไม่มี primary bytes |
+
+พบ [ภาพเสริมเต็มตัว](../../references/supporting-cast/sources.json) ของเนซึโกะและทันจิโร่จาก public repositories เป็นคนละท่า จึงระบุเป็น supporting reference และไม่ใช้แทนภาพหลักเพื่อปลดล็อก gate ไม่มีการนับ GLB เดิมว่าเป็นโมเดลจากสกิล
+
+## คำสั่ง
 
 ```bash
-npm run skill:cast:init     # สร้าง state ใหม่เมื่อยังไม่มี ไม่รีเซ็ตงานที่มีอยู่
-npm run skill:cast:admit    # รัน reference-admission ของ upstream
-npm run skill:cast:status  # ดูขั้นถัดไปตาม state จริง
+npm run skill:install
+npm run skill:check
+npm run skill:cast:status     # exit 3 สำหรับ hard stop พร้อมแสดงอีก 4 คนที่ขาด input
+npm run sculpt:zoro:build    # ตรวจ official state ก่อน ปฏิเสธการสร้างเมื่อหยุด
+npm run sculpt:zoro:geometry # ตรวจ frozen factory ส่งออก geometry และ normals จริง
+npm run sculpt:zoro:capture  # ต้องมี Vite และ Chromium CDP :9223
+APP_URL=http://127.0.0.1:4174 npm run test:sculpt:browser
 ```
 
-คำสั่ง init/status/admit คืน exit `2` ขณะต้นฉบับยังไม่พร้อม เป็นสถานะรอ input ไม่ใช่การตรวจผ่าน รายงานอย่างเป็นทางการอยู่ใน `.img2threejs/cast/<id>/admission.json`; checklist และ exact next command อยู่ใน `state.json` / `next-step.txt` ของแต่ละตัว
+ตัวช่วย author intake/spec ตรวจ `forge/next.py` ก่อนเขียนไฟล์เช่นกัน ให้ทำตาม exact next command ใน state การมี referenceCamera/de-lighting descriptor ไม่เท่ากับ solve กล้องหรือ bake texture สำเร็จ
 
-## ขั้นต่อสำหรับ factory ของ img2threejs เมื่อมีไฟล์ต้นฉบับ
+Build และ unit 22 รายการผ่านแล้ว Browser smoke ของ Studio บน production build ตรวจ assets, เปลี่ยนมุม/ใบหน้า, raycast เลือกชิ้นส่วน, wireframe, explode/reset, จอ 390/320px และ disposal ผ่าน การทดสอบเว็บไม่ใช่การผ่าน quality gates ของโมเดล
 
-1. ตรวจไฟล์/alpha/foreground และบันทึก provenance ของแต่ละภาพ
-2. วัด landmark และอัตราส่วนจริง แก้ข้อจำกัดภาพที่ตัดช่วงล่างก่อนกำหนดโมเดลเต็มตัว โดยเอเรนรองรับข้อเสนอแบบ bust จากภาพปัจจุบัน
-3. สร้าง assessment, detail inventory, quality contract และ sculpt spec เฉพาะคน แล้วผ่าน strict validation
-4. สร้าง TypeScript factory เป็น pass: blockout → structure → form → materials → lighting → interaction → optimization
-5. Capture จาก Three.js จริงทั้งมุมอ้างอิง มุมเอียง ด้านข้าง ด้านหลัง และใบหน้า ตรวจ hair coverage, attachment, chirality, self-intersection และเทียบภาพ
-6. จึงนำโมเดลที่ผ่านเข้า studio/ระบบแตะจากฉาก พร้อมเพิ่มเอเรนแยกจากรีไวล์ และอัปเดต README ด้วยภาพใหม่
-
-ยังไม่มี spec/factory ที่ผ่าน strict validation ของ img2threejs ส่วนโมเดล Blender, rig และภาพ render ที่ส่งมอบจากเส้นทาง visual interpretation แยกบันทึกไว้ในเอกสารชุดส่งมอบ ไม่ได้ใช้รายงาน gate ที่ล้มเหลวเป็นผลตรวจผ่าน
+Generated runtime อ้างอิง code ของ img2threejs ภายใต้ [Apache-2.0](../../../tools/licenses/img2threejs-APACHE-2.0.txt) ที่มา/สิทธิ์ภาพตัวละครแยกจาก license ของสกิล ดู provenance ของแต่ละภาพประกอบ

@@ -1,0 +1,18 @@
+{
+  "reader": "agent",
+  "contracts": [
+    "grimoire/character/reconstruction.md",
+    "grimoire/character/likeness_maximization.md",
+    "grimoire/character/structure_decomposition.md",
+    "grimoire/character/head_construction.md",
+    "grimoire/character/stylized_hair_threejs.md",
+    "grimoire/character/threejs_hair_parameter_contract.json",
+    "grimoire/intake/surface_topology.md",
+    "grimoire/intake/detail_inventory.md",
+    "grimoire/intake/quality_contract.md",
+    "grimoire/intake/local_spec_search.md",
+    "grimoire/review/gates_reference.md",
+    "grimoire/review/self_correction.md"
+  ],
+  "interpretation": "Head construction numeric example is an imp, not human canon. Use Zoro source pixels."
+}

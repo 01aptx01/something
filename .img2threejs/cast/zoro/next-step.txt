@@ -1,17 +1,6 @@
-LOCAL_STATE status=active step=reference-admission pass=none loop=0/3 total=0/6
-next command: python3 forge/stage1_intake/check_reference_admission.py ../../docs/references/user-cast/zoro.png --out admission.json --probe-out probe.json
+LOCAL_STATE status=stopped step=stopped pass=blockout loop=3/3 total=3/6
+STOP: max-correction-loops-reached:blockout:3/3
 pending mandatory steps:
-- reference-admission
-- character-contract-read
-- character-landmarks
-- local-spec-search
-- pre-spec-assessment
-- detail-inventory
-- projection-route
-- spec-authoring
-- material-evidence
-- material-spec-wiring
-- strict-validation
 - build-current-pass
 - render-capture
 - review-contract-read

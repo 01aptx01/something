@@ -1,16 +1,14 @@
 {
-  "admitted": false,
-  "reasons": [
-    "cannot decode image as a usable reference: FileNotFoundError: [Errno 2] No such file or directory: '/workspace/something/docs/references/user-cast/zoro.png'"
-  ],
+  "admitted": true,
+  "reasons": [],
   "provenance": {
     "viewpoint": "reference",
     "sourcePath": "/workspace/something/docs/references/user-cast/zoro.png",
-    "width": 0,
-    "height": 0,
-    "foregroundCoverage": 0.0,
-    "largestComponentFraction": 0.0,
-    "pHash": null,
+    "width": 697,
+    "height": 1050,
+    "foregroundCoverage": 0.351,
+    "largestComponentFraction": 1.0,
+    "pHash": 17362963893093339272,
     "duplicateOfHash": null
   }
 }

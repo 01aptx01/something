@@ -17,7 +17,7 @@ const run=(script,args)=>{
  return {code:p.status,text:(p.stdout??'')+(p.stderr??'')};
 };
 const checked=(script,args)=>{const p=run(script,args);if(p.code!==0)throw new Error(p.text);return p.text;};
-let blocked=false;
+let blocked=false,hardStopped=false;
 for(const target of request.targets){
  const state=path.join(root,target.state),dir=path.dirname(state);
  if(action==='init'&&!fs.existsSync(state)){
@@ -27,6 +27,10 @@ for(const target of request.targets){
  // The upstream gate runs before every start/resume; a hard stop cannot be bypassed.
  const next=run('forge/next.py',['--state',rel(target.state)]);
  fs.writeFileSync(path.join(dir,'next-step.txt'),next.text);
+ if(next.code===3){
+  console.log(`${target.id}: STOPPED — ${next.text.split('\n').find(line=>line.startsWith('STOP:'))??'upstream gate requires input'}`);
+  hardStopped=true;continue;
+ }
  if(next.code!==0)throw new Error(next.text);
  if(action==='init'){
   for(const step of ['image-analysis','reference-suitability']){
@@ -52,6 +56,7 @@ for(const target of request.targets){
  const current=JSON.parse(fs.readFileSync(state,'utf8'));
  const hasReference=fs.existsSync(path.join(root,target.expectedReference));
  if(!hasReference)blocked=true;
- console.log(`${target.id}: ${current.currentStep}; original reference ${hasReference?'present':'MISSING'}; ${target.expectedReference}`);
+ console.log(`${target.id}: ${current.currentStep}; reference file ${hasReference?'present':'MISSING'}; ${target.expectedReference}`);
 }
-if(blocked){console.error('INPUT REQUIRED: attach the original image files (or a ZIP). This intake command does not generate or replace models; no reference gate was bypassed.');process.exitCode=2;}
+if(hardStopped){console.error('UPSTREAM HARD STOP: a reconstruction reached its correction limit. No model was regenerated and no gate was bypassed.');process.exitCode=3;}
+else if(blocked){console.error('INPUT REQUIRED: remaining primary reference files are unreadable or missing. This intake command does not generate or replace models; no reference gate was bypassed.');process.exitCode=2;}

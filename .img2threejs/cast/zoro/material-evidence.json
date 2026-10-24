@@ -1,0 +1,154 @@
+{
+  "sourceImage": "docs/references/user-cast/zoro.png",
+  "sourceClass": "2D anime cel artwork",
+  "method": "agent inspection plus discrete colour histogram of bounded interior swatches",
+  "regions": [
+    {
+      "materialId": "skin",
+      "bbox": [
+        266,
+        83,
+        277,
+        99
+      ],
+      "crop": ".img2threejs/cast/zoro/material-crops/skin.png",
+      "dominantRgba": [
+        229,
+        193,
+        159,
+        255
+      ],
+      "dominantFraction": 0.2045,
+      "uniqueColors": 47
+    },
+    {
+      "materialId": "robe",
+      "bbox": [
+        146,
+        725,
+        170,
+        749
+      ],
+      "crop": ".img2threejs/cast/zoro/material-crops/robe.png",
+      "dominantRgba": [
+        69,
+        107,
+        86,
+        255
+      ],
+      "dominantFraction": 0.6302,
+      "uniqueColors": 91
+    },
+    {
+      "materialId": "sash",
+      "bbox": [
+        233,
+        435,
+        260,
+        450
+      ],
+      "crop": ".img2threejs/cast/zoro/material-crops/sash.png",
+      "dominantRgba": [
+        98,
+        41,
+        56,
+        255
+      ],
+      "dominantFraction": 0.0222,
+      "uniqueColors": 303
+    },
+    {
+      "materialId": "haramaki",
+      "bbox": [
+        255,
+        305,
+        264,
+        335
+      ],
+      "crop": ".img2threejs/cast/zoro/material-crops/haramaki.png",
+      "dominantRgba": [
+        116,
+        173,
+        79,
+        255
+      ],
+      "dominantFraction": 0.2519,
+      "uniqueColors": 17
+    },
+    {
+      "materialId": "hair",
+      "bbox": [
+        266,
+        59,
+        276,
+        68
+      ],
+      "crop": ".img2threejs/cast/zoro/material-crops/hair.png",
+      "dominantRgba": [
+        143,
+        231,
+        171,
+        255
+      ],
+      "dominantFraction": 0.0222,
+      "uniqueColors": 86
+    },
+    {
+      "materialId": "boots",
+      "bbox": [
+        166,
+        943,
+        178,
+        967
+      ],
+      "crop": ".img2threejs/cast/zoro/material-crops/boots.png",
+      "dominantRgba": [
+        15,
+        15,
+        15,
+        255
+      ],
+      "dominantFraction": 0.7361,
+      "uniqueColors": 28
+    },
+    {
+      "materialId": "gold",
+      "bbox": [
+        181,
+        361,
+        193,
+        373
+      ],
+      "crop": ".img2threejs/cast/zoro/material-crops/gold.png",
+      "dominantRgba": [
+        168,
+        162,
+        112,
+        255
+      ],
+      "dominantFraction": 0.0139,
+      "uniqueColors": 141
+    },
+    {
+      "materialId": "steel",
+      "bbox": [
+        561,
+        813,
+        569,
+        825
+      ],
+      "crop": ".img2threejs/cast/zoro/material-crops/steel.png",
+      "dominantRgba": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "dominantFraction": 0.1979,
+      "uniqueColors": 68
+    }
+  ],
+  "decision": "Solid albedo for flat cel fills, geometry for folds/fittings/wrap diamonds; no fabricated pores, grain or photometric PBR. Separate painted shadow boundaries require the later de-lit projection material pass.",
+  "pbrRecovery": "not applicable to flat cel fills; no confidence score is fabricated",
+  "limitation": "This evidence does not approve any material render or final likeness."
+}

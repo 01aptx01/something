@@ -1,0 +1,26 @@
+{
+  "referenceAreaFraction": 0.31446061351369814,
+  "angles": [
+    {
+      "path": "../../docs/model-reviews/img2threejs-cast/zoro-blockout-v2/positive.png",
+      "areaFraction": 0.2793509598961536,
+      "ratio": 0.8883495989362905,
+      "degenerate": false
+    },
+    {
+      "path": "../../docs/model-reviews/img2threejs-cast/zoro-blockout-v2/negative.png",
+      "areaFraction": 0.2849955591992895,
+      "ratio": 0.9062996984418046,
+      "degenerate": false
+    },
+    {
+      "path": "../../docs/model-reviews/img2threejs-cast/zoro-blockout-v2/right.png",
+      "areaFraction": 0.13368996379039422,
+      "ratio": 0.4251405678332132,
+      "degenerate": false
+    }
+  ],
+  "degenerate": false,
+  "collapseRatio": 0.15,
+  "note": "deterministic; zero token; a flat-plane-faking-a-volume collapses in silhouette area when orbited"
+}

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "id": "zoro",
+  "sourceType": "public-reference-mirror",
+  "sourceUrl": "https://github.com/Shreyansh4real/Roronoa-Zoro-Website/blob/44a75f7c480a235685cdd89b26fca0345b9543ff/Images/pngwing.com%20(3).png",
+  "sha256": "9e60f68018d4fb12e695b36291ef78769e31a73935b514a53941578402860a3c",
+  "visualMatch": "Same full-body pose, green robe, purple sash, three swords and raised right arm as the inline reference. Original inline bytes are not mounted, so byte equality is unverified.",
+  "license": "Copyright remains with original owners; reference used for reconstruction study, not a downloadable model asset."
+}

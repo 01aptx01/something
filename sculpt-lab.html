@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#111713" />
+    <title>Character Sculpt Studio · Anime Worlds</title>
+  </head>
+  <body>
+    <main id="sculpt-studio">
+      <header><a class="back" href="/">← Anime Worlds</a><span class="eyebrow">CHARACTER SCULPT STUDIO</span><span class="status">แบบร่างขั้นต้น</span></header>
+      <section class="intro"><div><p class="eyebrow">RORONOA ZORO / 01</p><h1>จากภาพ สู่รูปทรง</h1><p>เทียบภาพอ้างอิงกับโมเดล หมุนดูด้านข้าง และตรวจชิ้นส่วนได้</p></div><p class="notice">โมเดลนี้ยังอยู่ระหว่างเก็บรูปทรงและรายละเอียด<br>ยังไม่ผ่านการตรวจความเหมือนเพื่อแทนโมเดลในฉาก</p></section>
+      <section class="workbench">
+        <figure class="reference"><figcaption><span>01 / ภาพอ้างอิง</span><span>ด้านหน้า</span></figcaption><img id="reference" alt="โซโลในเสื้อคลุมเขียว ผ้าคาดเอวม่วง และดาบสามเล่ม" /></figure>
+        <figure class="model"><figcaption><span>02 / โมเดล Three.js</span><span id="view-label">ด้านหน้า</span></figcaption><div id="stage" aria-label="โมเดลโซโลสามมิติ"><p class="loading" role="status">กำลังสร้างรูปทรง…</p></div></figure>
+      </section>
+      <section class="toolbar" aria-label="ควบคุมการดูโมเดล"><div class="views"><button data-view="0" class="active">ด้านหน้า</button><button data-view="35">มุมเฉียง</button><button data-view="90">ด้านข้าง</button><button data-view="180">ด้านหลัง</button><button data-view="head">ใบหน้า</button></div><div class="options"><label><input id="wireframe" type="checkbox" /> โครงตาข่าย</label><button id="explode" aria-pressed="false">แยกชิ้นส่วน</button><button id="reset">คืนมุมมอง</button></div></section>
+      <footer><span id="selected-part">ลากเพื่อหมุน · เลื่อนเพื่อซูม · แตะเพื่อเลือกชิ้นส่วน</span><a id="reference-source" target="_blank" rel="noopener noreferrer">แหล่งภาพอ้างอิง ↗</a></footer>
+    </main>
+    <script type="module" src="/src/sculpt/studio.ts"></script>
+  </body>
+</html>

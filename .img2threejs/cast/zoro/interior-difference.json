@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "kind": "interior-difference",
+  "baseline": "../../docs/references/user-cast/zoro.png",
+  "render": "../../docs/model-reviews/img2threejs-cast/zoro-blockout/front.png",
+  "band": {
+    "from": 0.0,
+    "to": 1.0
+  },
+  "grid": 192,
+  "cellsCompared": 12487,
+  "warnings": [],
+  "interiorDifference": 0.23295727338567188,
+  "status": "measured"
+}

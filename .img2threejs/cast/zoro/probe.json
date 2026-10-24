@@ -1,0 +1,11 @@
+{
+  "path": "/workspace/something/docs/references/user-cast/zoro.png",
+  "type": "png",
+  "bytes": 463450,
+  "width": 697,
+  "height": 1050,
+  "aspectRatio": 0.6638095238095238,
+  "technicalSuitability": "pass",
+  "warnings": [],
+  "note": "This is only technical image probing. Semantic object suitability still requires visual inspection."
+}

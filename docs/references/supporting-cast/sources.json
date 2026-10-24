@@ -1,0 +1,22 @@
+{
+  "references": [
+    {
+      "file": "nezuko-neutral.png",
+      "sourceUrl": "https://github.com/Novus-Neurons/Demon-slayer/blob/266bcc536e8b26604184135534ab30bdc39820a1/assets/Nezuko.png",
+      "sha256": "65c531eb5669c4983bee8893d53222c1f6abc80c6e90912995f99f80875a93ed",
+      "role": "supplementary full-body style reference",
+      "primaryInlineMatch": false,
+      "notes": "Different pose from the user-supplied inline reference. Not admitted as a replacement primary reference; does not unlock the primary reconstruction.",
+      "rights": "Character artwork remains owned by its respective rights holders; no downloadable 3D model license is implied."
+    },
+    {
+      "file": "tanjiro-sword.png",
+      "sourceUrl": "https://github.com/Novus-Neurons/Demon-slayer/blob/266bcc536e8b26604184135534ab30bdc39820a1/assets/Tanjirou.png",
+      "sha256": "47e47e02fd7d8acbc4284218203f34cf73a30c3a53f496efa870ccfbef22b680",
+      "role": "supplementary full-body style reference",
+      "primaryInlineMatch": false,
+      "notes": "Different pose from the user-supplied inline reference. Not admitted as a replacement primary reference; does not unlock the primary reconstruction.",
+      "rights": "Character artwork remains owned by its respective rights holders; no downloadable 3D model license is implied."
+    }
+  ]
+}

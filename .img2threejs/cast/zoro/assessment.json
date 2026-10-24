@@ -1,0 +1,822 @@
+{
+  "targetName": "Roronoa Zoro",
+  "sourceImage": "../../docs/references/user-cast/zoro.png",
+  "preSpecAssessment": {
+    "objectClass": {
+      "primaryType": "full-body anime swordsman",
+      "primaryDomain": "character",
+      "formLanguage": [
+        "organic",
+        "fabric-like",
+        "hard-surface"
+      ],
+      "structureKind": [
+        "continuous body",
+        "layered cloth shells",
+        "rigid sword assemblies"
+      ],
+      "motionPotential": [
+        "static orbitable sculpture",
+        "clickable detachable accessory groups"
+      ],
+      "materialFamilies": [
+        "skin-like",
+        "short hair",
+        "woven cloth",
+        "steel",
+        "gold",
+        "leather"
+      ],
+      "notes": "Preserve the supplied adult long-limbed anime proportions, not a chibi template."
+    },
+    "complexity": {
+      "tier": "complex",
+      "scores": {
+        "silhouetteComplexity": 3,
+        "componentCount": 3,
+        "hierarchyDepth": 3,
+        "repetitionDensity": 2,
+        "materialLayerCount": 3,
+        "localDetailDensity": 3,
+        "occlusionRisk": 2,
+        "actionReadinessNeed": 2
+      },
+      "estimatedCounts": {
+        "macroComponents": 8,
+        "mesoComponents": 22,
+        "microFeatureGroups": 15,
+        "materialLayers": 9,
+        "repetitionSystems": 3
+      },
+      "reasoning": [
+        "Raised bent arm interrupts silhouette; three differently placed swords.",
+        "Open robe, ribbed wrap, layered sash and asymmetrical long tails.",
+        "Face identity depends on closed left eye, scar, teeth, short green hair and earrings."
+      ]
+    },
+    "specDepthDecision": {
+      "requiredDepth": "complex",
+      "minimumComponentLevels": [
+        "macro",
+        "meso",
+        "micro"
+      ],
+      "needsRepetitionSystems": true,
+      "needsMaterialLocalOverrides": true,
+      "needsMultipleReviewViews": true,
+      "needsActionReadyHierarchy": true,
+      "rationale": "Character silhouette, nested layered garments and repeated fittings require complex depth."
+    },
+    "unknownsToResolveBeforeImplementation": [],
+    "detailInventory": {
+      "scanMethod": "grid-3x3",
+      "targetMinDetails": 10,
+      "details": [
+        {
+          "id": "hair-tips",
+          "kind": "contour",
+          "description": "Irregular short green triangular crown tips",
+          "region": {
+            "x": 0.31,
+            "y": 0.04,
+            "width": 0.16,
+            "height": 0.06,
+            "units": "normalized"
+          },
+          "scale": "object-relative",
+          "affects": [
+            "silhouette"
+          ],
+          "mapsTo": {
+            "type": "component",
+            "ref": "hair"
+          },
+          "evidenceRef": "full-object",
+          "confidence": 0.9,
+          "realization": "geometry"
+        },
+        {
+          "id": "left-eye-scar",
+          "kind": "linework",
+          "description": "Closed left eye crossed by a vertical scar",
+          "region": {
+            "x": 0.41,
+            "y": 0.085,
+            "width": 0.025,
+            "height": 0.055,
+            "units": "normalized"
+          },
+          "scale": "object-relative",
+          "affects": [
+            "surface"
+          ],
+          "mapsTo": {
+            "type": "component",
+            "ref": "scar"
+          },
+          "evidenceRef": "full-object",
+          "confidence": 0.9,
+          "realization": "reference-projection"
+        },
+        {
+          "id": "grin",
+          "kind": "contour",
+          "description": "Broad clenched white teeth with curved lower lip",
+          "region": {
+            "x": 0.355,
+            "y": 0.122,
+            "width": 0.087,
+            "height": 0.026,
+            "units": "normalized"
+          },
+          "scale": "object-relative",
+          "affects": [
+            "silhouette"
+          ],
+          "mapsTo": {
+            "type": "component",
+            "ref": "teeth"
+          },
+          "evidenceRef": "full-object",
+          "confidence": 0.9,
+          "realization": "geometry"
+        },
+        {
+          "id": "earrings",
+          "kind": "gloss",
+          "description": "Three parallel gold drops on left ear",
+          "region": {
+            "x": 0.437,
+            "y": 0.113,
+            "width": 0.025,
+            "height": 0.038,
+            "units": "normalized"
+          },
+          "scale": "object-relative",
+          "affects": [
+            "surface"
+          ],
+          "mapsTo": {
+            "type": "component",
+            "ref": "earrings"
+          },
+          "evidenceRef": "full-object",
+          "confidence": 0.9,
+          "realization": "reference-projection"
+        },
+        {
+          "id": "chest-scar",
+          "kind": "linework",
+          "description": "Diagonal healed scar across bare upper chest",
+          "region": {
+            "x": 0.35,
+            "y": 0.19,
+            "width": 0.12,
+            "height": 0.087,
+            "units": "normalized"
+          },
+          "scale": "object-relative",
+          "affects": [
+            "surface"
+          ],
+          "mapsTo": {
+            "type": "component",
+            "ref": "chest-scar"
+          },
+          "evidenceRef": "full-object",
+          "confidence": 0.9,
+          "realization": "reference-projection"
+        },
+        {
+          "id": "haramaki-ribs",
+          "kind": "seam",
+          "description": "Vertical ribs in bright green waist wrap",
+          "region": {
+            "x": 0.34,
+            "y": 0.27,
+            "width": 0.14,
+            "height": 0.105,
+            "units": "normalized"
+          },
+          "scale": "object-relative",
+          "affects": [
+            "surface"
+          ],
+          "mapsTo": {
+            "type": "component",
+            "ref": "haramaki"
+          },
+          "evidenceRef": "full-object",
+          "confidence": 0.9,
+          "realization": "reference-projection"
+        },
+        {
+          "id": "sash-folds",
+          "kind": "ridge",
+          "description": "Layered purple wrap with strong horizontal creases",
+          "region": {
+            "x": 0.22,
+            "y": 0.367,
+            "width": 0.35,
+            "height": 0.095,
+            "units": "normalized"
+          },
+          "scale": "object-relative",
+          "affects": [
+            "surface"
+          ],
+          "mapsTo": {
+            "type": "component",
+            "ref": "sash"
+          },
+          "evidenceRef": "full-object",
+          "confidence": 0.9,
+          "realization": "geometry"
+        },
+        {
+          "id": "sash-tails",
+          "kind": "contour",
+          "description": "Two long purple fabric tails on left hip",
+          "region": {
+            "x": 0.49,
+            "y": 0.36,
+            "width": 0.105,
+            "height": 0.28,
+            "units": "normalized"
+          },
+          "scale": "object-relative",
+          "affects": [
+            "silhouette"
+          ],
+          "mapsTo": {
+            "type": "component",
+            "ref": "sash-tail"
+          },
+          "evidenceRef": "full-object",
+          "confidence": 0.9,
+          "realization": "geometry"
+        },
+        {
+          "id": "robe-toggles",
+          "kind": "fastener",
+          "description": "Four tan double-lobed toggles down robe front",
+          "region": {
+            "x": 0.25,
+            "y": 0.49,
+            "width": 0.09,
+            "height": 0.21,
+            "units": "normalized"
+          },
+          "scale": "object-relative",
+          "affects": [
+            "surface"
+          ],
+          "mapsTo": {
+            "type": "component",
+            "ref": "robe-toggles"
+          },
+          "evidenceRef": "full-object",
+          "confidence": 0.9,
+          "realization": "geometry"
+        },
+        {
+          "id": "armband",
+          "kind": "seam",
+          "description": "Black band tied on anatomical left upper arm",
+          "region": {
+            "x": 0.52,
+            "y": 0.27,
+            "width": 0.13,
+            "height": 0.075,
+            "units": "normalized"
+          },
+          "scale": "object-relative",
+          "affects": [
+            "surface"
+          ],
+          "mapsTo": {
+            "type": "component",
+            "ref": "armband"
+          },
+          "evidenceRef": "full-object",
+          "confidence": 0.9,
+          "realization": "reference-projection"
+        },
+        {
+          "id": "sword-guards",
+          "kind": "bevel",
+          "description": "Gold multi-lobed guards at three hilts",
+          "region": {
+            "x": 0.16,
+            "y": 0.31,
+            "width": 0.57,
+            "height": 0.28,
+            "units": "normalized"
+          },
+          "scale": "object-relative",
+          "affects": [
+            "surface"
+          ],
+          "mapsTo": {
+            "type": "component",
+            "ref": "sword-guards"
+          },
+          "evidenceRef": "full-object",
+          "confidence": 0.9,
+          "realization": "geometry"
+        },
+        {
+          "id": "sword-wrap",
+          "kind": "linework",
+          "description": "Alternating diamonds on dark and white sword grips",
+          "region": {
+            "x": 0.1,
+            "y": 0.025,
+            "width": 0.23,
+            "height": 0.34,
+            "units": "normalized"
+          },
+          "scale": "object-relative",
+          "affects": [
+            "surface"
+          ],
+          "mapsTo": {
+            "type": "component",
+            "ref": "sword-wrap"
+          },
+          "evidenceRef": "full-object",
+          "confidence": 0.9,
+          "realization": "reference-projection"
+        },
+        {
+          "id": "blade-edge",
+          "kind": "gloss",
+          "description": "Curved steel blade with thin pale cutting edge",
+          "region": {
+            "x": 0.62,
+            "y": 0.55,
+            "width": 0.38,
+            "height": 0.405,
+            "units": "normalized"
+          },
+          "scale": "object-relative",
+          "affects": [
+            "surface"
+          ],
+          "mapsTo": {
+            "type": "component",
+            "ref": "blade"
+          },
+          "evidenceRef": "full-object",
+          "confidence": 0.9,
+          "realization": "reference-projection"
+        },
+        {
+          "id": "robe-hem",
+          "kind": "contour",
+          "description": "Scalloped lower hem and long folded green skirt",
+          "region": {
+            "x": 0.15,
+            "y": 0.73,
+            "width": 0.47,
+            "height": 0.11,
+            "units": "normalized"
+          },
+          "scale": "object-relative",
+          "affects": [
+            "silhouette"
+          ],
+          "mapsTo": {
+            "type": "component",
+            "ref": "robe"
+          },
+          "evidenceRef": "full-object",
+          "confidence": 0.9,
+          "realization": "geometry"
+        },
+        {
+          "id": "boot-toes",
+          "kind": "contour",
+          "description": "Pointed dark boots angled outward from ankles",
+          "region": {
+            "x": 0.1,
+            "y": 0.86,
+            "width": 0.63,
+            "height": 0.14,
+            "units": "normalized"
+          },
+          "scale": "object-relative",
+          "affects": [
+            "silhouette"
+          ],
+          "mapsTo": {
+            "type": "component",
+            "ref": "boots"
+          },
+          "evidenceRef": "full-object",
+          "confidence": 0.9,
+          "realization": "geometry"
+        }
+      ]
+    },
+    "anatomy": {
+      "styleHeads": 8.57,
+      "proportions": {
+        "headUnit": 0.11047619047619048,
+        "torso": 2.456896551724138,
+        "legs": 4.956896551724138,
+        "shoulderWidth": 1.7327586206896552,
+        "hipWidth": 1.6724137931034482
+      },
+      "pose": {
+        "type": "contrapposto; raised right elbow and hand holding sword at shoulder; left arm down",
+        "jointAngles": {
+          "neck": [
+            0,
+            0,
+            0
+          ],
+          "leftShoulder": [
+            0,
+            0,
+            12
+          ],
+          "rightShoulder": [
+            0,
+            0,
+            -125
+          ],
+          "leftElbow": [
+            0,
+            0,
+            -7
+          ],
+          "rightElbow": [
+            0,
+            0,
+            137
+          ],
+          "leftWrist": [
+            0,
+            0,
+            0
+          ],
+          "rightWrist": [
+            0,
+            0,
+            0
+          ],
+          "leftHip": [
+            0,
+            0,
+            4
+          ],
+          "rightHip": [
+            0,
+            0,
+            -4
+          ],
+          "leftKnee": [
+            0,
+            0,
+            0
+          ],
+          "rightKnee": [
+            0,
+            0,
+            0
+          ],
+          "leftAnkle": [
+            0,
+            0,
+            0
+          ],
+          "rightAnkle": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "faceLandmarks": {
+        "hairline": 0.24,
+        "eyeLine": 0.5775862068965517,
+        "eyeSpacing": 0.22,
+        "noseBase": 0.75,
+        "mouthLine": 0.8275862068965517,
+        "earTop": 0.48,
+        "earBottom": 0.77
+      },
+      "features": [
+        "closed anatomical left eye with vertical scar",
+        "narrow open right eye, clenched teeth grin",
+        "three earrings on anatomical left ear",
+        "short green crown with irregular tapered tips"
+      ],
+      "confidence": 0.85,
+      "applies": true,
+      "source": "agent-measured-admitted-image",
+      "evidenceRef": "full-object",
+      "measurementEvidence": {
+        "imageSize": [
+          697,
+          1050
+        ],
+        "crown": [
+          264,
+          44
+        ],
+        "chin": [
+          274,
+          160
+        ],
+        "neckBase": [
+          270,
+          175
+        ],
+        "hip": [
+          284,
+          460
+        ],
+        "floorY": 1035,
+        "headBounds": [
+          217,
+          44,
+          309,
+          160
+        ],
+        "rightEye": [
+          250,
+          110
+        ],
+        "leftEye": [
+          285,
+          112
+        ],
+        "shoulderRight": [
+          159,
+          188
+        ],
+        "elbowRight": [
+          91,
+          233
+        ],
+        "wristRight": [
+          152,
+          116
+        ],
+        "shoulderLeft": [
+          347,
+          190
+        ],
+        "elbowLeft": [
+          386,
+          353
+        ],
+        "wristLeft": [
+          421,
+          501
+        ],
+        "rightKnee": [
+          191,
+          758
+        ],
+        "leftKnee": [
+          354,
+          762
+        ],
+        "rightAnkle": [
+          175,
+          943
+        ],
+        "leftAnkle": [
+          377,
+          945
+        ],
+        "units": "source pixels; joint centres estimated under loose cloth",
+        "torsoDefinition": "neck-base to hip; crown-to-hip is 3.59 HU, not the spine segment length",
+        "depth": {
+          "method": "inference only",
+          "confidence": 0.4,
+          "note": "No profile/back reference. Preserve volume and validate meaningful orbits; do not claim measured depth."
+        }
+      }
+    },
+    "sourceImage": "../../docs/references/user-cast/zoro.png"
+  },
+  "qualityContract": {
+    "qualityBar": "complex",
+    "definitionOfDone": [
+      "Full-height pose matches the raised right hand and low left hand; long-limbed 8.57 HU proportions remain recognizable.",
+      "Green open robe, purple sash/tails, ribbed haramaki and three separate swords match the admitted reference.",
+      "Closed left eye/scar, grin, three earrings and short green scalp silhouette survive a head close-up.",
+      "Front, +/-35, side, rear-three-quarter, rear and both head views show continuous volumes and attached accessories.",
+      "Unobserved side/back are explicitly inferred. No source mesh, Blender model or GLB geometry enters the factory."
+    ],
+    "minimumSpecDepth": {
+      "macroComponents": 3,
+      "mesoComponents": 8,
+      "microFeatureGroups": 5,
+      "materialLayers": 3,
+      "repetitionSystems": 1,
+      "reviewViewpoints": 8
+    },
+    "featureGroups": [
+      {
+        "id": "overall-silhouette",
+        "name": "Overall silhouette and proportions",
+        "required": true,
+        "qualityCriteria": [
+          "Bounding shape, dominant curves, negative spaces, and scale relationships are explicitly described."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "model reads as a generic placeholder instead of the reference object",
+          "major proportions are guessed without evidence"
+        ]
+      },
+      {
+        "id": "primary-structure",
+        "name": "Primary structure and hierarchy",
+        "required": true,
+        "qualityCriteria": [
+          "Major parts, joints, seams, contact points, and parent-child relationships are named before code generation."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "large visible parts are merged into one mesh",
+          "component hierarchy is too shallow for the observed complexity"
+        ]
+      },
+      {
+        "id": "attachment-joint-correctness",
+        "name": "Attachment and joint correctness",
+        "required": true,
+        "qualityCriteria": [
+          "Every visible child appendage, branch, limb, handle, connector, tube, cable, horn, wing, leg, or hinged part has an attachment contract with parent socket, localStart/localEnd, contact type, embed/overlap, and gap tolerance."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "child part root floats away from the parent",
+          "branch/limb/tube is centered in space instead of pivoting from its root",
+          "parent-child transform mixes world and local coordinates"
+        ]
+      },
+      {
+        "id": "surface-material-response",
+        "name": "Surface material response",
+        "required": true,
+        "qualityCriteria": [
+          "Albedo zones, roughness, normal/bump/displacement intent, cavity dirt, edge wear, and local overrides are specified where visible.",
+          "Important materials define independent albedo, roughness, height/normal, and AO responses instead of reusing one texture for unrelated PBR channels.",
+          "Surface response is decomposed into macro, meso, and micro frequency bands with scale and amplitude tied to object scale."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "surface looks like flat plastic",
+          "local material variation is missing or not tied to image evidence"
+        ]
+      },
+      {
+        "id": "reference-lookdev",
+        "name": "Reference color, material, and lighting response",
+        "required": true,
+        "qualityCriteria": [
+          "Material-pass names the reference-derived albedo palette, roughness variation, tactile normal/bump/displacement response, and local masks.",
+          "When a source image is available, run reference PBR extraction and require confidence >= 0.7 before treating maps as implementation-ready.",
+          "Lighting-pass names key/fill/rim or environment light, exposure, tone mapping, background, and contact shadow behavior.",
+          "Neutral, grazing-angle, and reference-matched renders prove that surface relief survives relighting and is not painted into albedo."
+        ],
+        "evidenceRefs": [
+          "full-object"
+        ],
+        "failureModes": [
+          "model has acceptable shape but reads as flat shaded or plastic",
+          "colors are a generic average instead of reference-observed local color zones",
+          "lighting is evenly ambient and cannot reproduce the source value range"
+        ]
+      }
+    ],
+    "visualDeltaChecks": [
+      "silhouette and negative-space delta",
+      "component hierarchy depth delta",
+      "repetition density and distribution delta",
+      "material albedo/roughness/normal response delta",
+      "local feature placement and scale delta"
+    ],
+    "antiShallowSpecRules": [
+      "Do not proceed to code if qualityContract.qualityBar is unassessed.",
+      "Do not proceed to code if the spec only contains a root component for a moderate or complex object.",
+      "Do not proceed to code if required featureGroups are not represented by componentTree, materials, or repetitionSystems.",
+      "Do not proceed to code if visible local features are described only in prose and not attached to components/materials/evidenceRefs.",
+      "Do not proceed past structural-pass if attached child parts lack attachment.parentSocket, localStart, localEnd, embedDepth/overlap, and gapTolerance.",
+      "Do not pass material look-dev when albedo is reused as roughness, height, normal, or AO.",
+      "Do not pass material look-dev without macro, meso, and micro surface frequency bands for close-up materials.",
+      "Do not pass reference-fidelity material look-dev from a source image without usable referencePbr maps or an explicit documented limitation.",
+      "Do not patch a spec with extracted PBR maps when extraction confidence is below the target threshold unless the user explicitly accepts lower fidelity.",
+      "Do not place adjacent separate-geometry parts below 0.02 world-unit seam overlap (source: grimoire/build/geometry_patterns.md).",
+      "Do not satisfy raised or recessed relief, fasteners, or grip structure with a map alone when the feature affects form; use geometry or displacement (source: grimoire/build/geometry_patterns.md)."
+    ]
+  },
+  "authoringInstruction": "Fill observed object class, complexity reasoning, featureGroups, visualDeltaChecks, and unknowns before generating or implementing ObjectSculptSpec.",
+  "localSpecSearch": {
+    "collection": "core_3d",
+    "query": "Roronoa Zoro anatomy head units shoulder width pose skeleton cloth shells bevel blade metal roughness skin hair scalp",
+    "index": {
+      "status": "rebuilt",
+      "reason": "missing",
+      "fingerprint": "62f2831e1d52eeb6dbb94a87c44fa25b1f4926626a7b1f8c2bcadc63e04e9471"
+    },
+    "matches": [
+      {
+        "record_id": "core.coordinate-relative-units",
+        "file_path": "grimoire/glossary/3d_vocabulary.md",
+        "heading": "Geometry And Topology",
+        "key_path": null,
+        "score": 12.14306510021,
+        "snippets": [
+          "A bevel radius is sized in object-relative units."
+        ],
+        "source_refs": [
+          {
+            "path": "grimoire/glossary/3d_vocabulary.md",
+            "heading": "Geometry And Topology",
+            "key_path": null
+          },
+          {
+            "path": "grimoire/intake/image_analysis.md",
+            "heading": "Layer 2 — Overall form & silhouette",
+            "key_path": null
+          }
+        ],
+        "evidence_refs": [
+          {
+            "kind": "source",
+            "ref": "grimoire/glossary/3d_vocabulary.md"
+          },
+          {
+            "kind": "notebooklm-research",
+            "ref": "notebooklm:4b03c2f9-8393-411f-b5b4-039ab9532843",
+            "note": "Validated generic schema vocabulary; numeric claims remain backed by local source_refs."
+          }
+        ]
+      },
+      {
+        "record_id": "core.shader-mapping-extrudegeometry-custom-bladesilhouette-profiles",
+        "file_path": "docs/raw/img2threejs-skill-dataset.json",
+        "heading": null,
+        "key_path": "categories.rendering_shader_mapping[7]",
+        "score": 6.121441902009,
+        "snippets": [
+          "Maps to any part defined by a unique 2D silhouette pushed into 3D depth with a bevel. Ánh xạ tới bất kỳ bộ phận nào được định nghĩa bằng đường viền 2D độc nhất, đẩy vào chiều sâu 3D với cạnh vát. Recognition cues: Blade shape that doesn't match ..."
+        ],
+        "source_refs": [
+          {
+            "path": "docs/raw/img2threejs-skill-dataset.json",
+            "heading": null,
+            "key_path": "categories.rendering_shader_mapping[7]"
+          }
+        ],
+        "evidence_refs": [
+          {
+            "kind": "source",
+            "ref": "docs/raw/img2threejs-skill-dataset.json",
+            "note": "img2threejs NotebookLM research distillation"
+          }
+        ]
+      },
+      {
+        "record_id": "core.pbr-subsurface-scattering-sss",
+        "file_path": "docs/raw/img2threejs-skill-dataset.json",
+        "heading": null,
+        "key_path": "categories.material_pbr[5]",
+        "score": 5.113902492375,
+        "snippets": [
+          "Light transport property for opaque dielectrics where light penetrates and scatters internally before exiting (skin, wax, marble, some polymers). Đặc tính truyền ánh sáng của vật liệu điện môi mờ đục, ánh sáng xuyên vào và tán xạ bên trong trước ..."
+        ],
+        "source_refs": [
+          {
+            "path": "docs/raw/img2threejs-skill-dataset.json",
+            "heading": null,
+            "key_path": "categories.material_pbr[5]"
+          }
+        ],
+        "evidence_refs": [
+          {
+            "kind": "source",
+            "ref": "docs/raw/img2threejs-skill-dataset.json",
+            "note": "img2threejs NotebookLM research distillation"
+          }
+        ]
+      }
+    ]
+  }
+}

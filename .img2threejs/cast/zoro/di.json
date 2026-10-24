@@ -1,0 +1,356 @@
+{
+  "sourceImage": "/workspace/something/docs/references/user-cast/zoro.png",
+  "zonesDir": "/workspace/something/.img2threejs/cast/zoro/detail-inventory",
+  "detailInventory": {
+    "scanMethod": "grid-3x3",
+    "targetMinDetails": 10,
+    "details": [
+      {
+        "id": "hair-tips",
+        "kind": "contour",
+        "description": "Irregular short green triangular crown tips",
+        "region": {
+          "x": 0.31,
+          "y": 0.04,
+          "width": 0.16,
+          "height": 0.06,
+          "units": "normalized"
+        },
+        "scale": "object-relative",
+        "affects": [
+          "silhouette"
+        ],
+        "mapsTo": {
+          "type": "component",
+          "ref": "hair"
+        },
+        "evidenceRef": "full-object",
+        "confidence": 0.9,
+        "realization": "geometry"
+      },
+      {
+        "id": "left-eye-scar",
+        "kind": "linework",
+        "description": "Closed left eye crossed by a vertical scar",
+        "region": {
+          "x": 0.41,
+          "y": 0.085,
+          "width": 0.025,
+          "height": 0.055,
+          "units": "normalized"
+        },
+        "scale": "object-relative",
+        "affects": [
+          "surface"
+        ],
+        "mapsTo": {
+          "type": "component",
+          "ref": "scar"
+        },
+        "evidenceRef": "full-object",
+        "confidence": 0.9,
+        "realization": "reference-projection"
+      },
+      {
+        "id": "grin",
+        "kind": "contour",
+        "description": "Broad clenched white teeth with curved lower lip",
+        "region": {
+          "x": 0.355,
+          "y": 0.122,
+          "width": 0.087,
+          "height": 0.026,
+          "units": "normalized"
+        },
+        "scale": "object-relative",
+        "affects": [
+          "silhouette"
+        ],
+        "mapsTo": {
+          "type": "component",
+          "ref": "teeth"
+        },
+        "evidenceRef": "full-object",
+        "confidence": 0.9,
+        "realization": "geometry"
+      },
+      {
+        "id": "earrings",
+        "kind": "gloss",
+        "description": "Three parallel gold drops on left ear",
+        "region": {
+          "x": 0.437,
+          "y": 0.113,
+          "width": 0.025,
+          "height": 0.038,
+          "units": "normalized"
+        },
+        "scale": "object-relative",
+        "affects": [
+          "surface"
+        ],
+        "mapsTo": {
+          "type": "component",
+          "ref": "earrings"
+        },
+        "evidenceRef": "full-object",
+        "confidence": 0.9,
+        "realization": "reference-projection"
+      },
+      {
+        "id": "chest-scar",
+        "kind": "linework",
+        "description": "Diagonal healed scar across bare upper chest",
+        "region": {
+          "x": 0.35,
+          "y": 0.19,
+          "width": 0.12,
+          "height": 0.087,
+          "units": "normalized"
+        },
+        "scale": "object-relative",
+        "affects": [
+          "surface"
+        ],
+        "mapsTo": {
+          "type": "component",
+          "ref": "chest-scar"
+        },
+        "evidenceRef": "full-object",
+        "confidence": 0.9,
+        "realization": "reference-projection"
+      },
+      {
+        "id": "haramaki-ribs",
+        "kind": "seam",
+        "description": "Vertical ribs in bright green waist wrap",
+        "region": {
+          "x": 0.34,
+          "y": 0.27,
+          "width": 0.14,
+          "height": 0.105,
+          "units": "normalized"
+        },
+        "scale": "object-relative",
+        "affects": [
+          "surface"
+        ],
+        "mapsTo": {
+          "type": "component",
+          "ref": "haramaki"
+        },
+        "evidenceRef": "full-object",
+        "confidence": 0.9,
+        "realization": "reference-projection"
+      },
+      {
+        "id": "sash-folds",
+        "kind": "ridge",
+        "description": "Layered purple wrap with strong horizontal creases",
+        "region": {
+          "x": 0.22,
+          "y": 0.367,
+          "width": 0.35,
+          "height": 0.095,
+          "units": "normalized"
+        },
+        "scale": "object-relative",
+        "affects": [
+          "surface"
+        ],
+        "mapsTo": {
+          "type": "component",
+          "ref": "sash"
+        },
+        "evidenceRef": "full-object",
+        "confidence": 0.9,
+        "realization": "geometry"
+      },
+      {
+        "id": "sash-tails",
+        "kind": "contour",
+        "description": "Two long purple fabric tails on left hip",
+        "region": {
+          "x": 0.49,
+          "y": 0.36,
+          "width": 0.105,
+          "height": 0.28,
+          "units": "normalized"
+        },
+        "scale": "object-relative",
+        "affects": [
+          "silhouette"
+        ],
+        "mapsTo": {
+          "type": "component",
+          "ref": "sash-tail"
+        },
+        "evidenceRef": "full-object",
+        "confidence": 0.9,
+        "realization": "geometry"
+      },
+      {
+        "id": "robe-toggles",
+        "kind": "fastener",
+        "description": "Four tan double-lobed toggles down robe front",
+        "region": {
+          "x": 0.25,
+          "y": 0.49,
+          "width": 0.09,
+          "height": 0.21,
+          "units": "normalized"
+        },
+        "scale": "object-relative",
+        "affects": [
+          "surface"
+        ],
+        "mapsTo": {
+          "type": "component",
+          "ref": "robe-toggles"
+        },
+        "evidenceRef": "full-object",
+        "confidence": 0.9,
+        "realization": "geometry"
+      },
+      {
+        "id": "armband",
+        "kind": "seam",
+        "description": "Black band tied on anatomical left upper arm",
+        "region": {
+          "x": 0.52,
+          "y": 0.27,
+          "width": 0.13,
+          "height": 0.075,
+          "units": "normalized"
+        },
+        "scale": "object-relative",
+        "affects": [
+          "surface"
+        ],
+        "mapsTo": {
+          "type": "component",
+          "ref": "armband"
+        },
+        "evidenceRef": "full-object",
+        "confidence": 0.9,
+        "realization": "reference-projection"
+      },
+      {
+        "id": "sword-guards",
+        "kind": "bevel",
+        "description": "Gold multi-lobed guards at three hilts",
+        "region": {
+          "x": 0.16,
+          "y": 0.31,
+          "width": 0.57,
+          "height": 0.28,
+          "units": "normalized"
+        },
+        "scale": "object-relative",
+        "affects": [
+          "surface"
+        ],
+        "mapsTo": {
+          "type": "component",
+          "ref": "sword-guards"
+        },
+        "evidenceRef": "full-object",
+        "confidence": 0.9,
+        "realization": "geometry"
+      },
+      {
+        "id": "sword-wrap",
+        "kind": "linework",
+        "description": "Alternating diamonds on dark and white sword grips",
+        "region": {
+          "x": 0.1,
+          "y": 0.025,
+          "width": 0.23,
+          "height": 0.34,
+          "units": "normalized"
+        },
+        "scale": "object-relative",
+        "affects": [
+          "surface"
+        ],
+        "mapsTo": {
+          "type": "component",
+          "ref": "sword-wrap"
+        },
+        "evidenceRef": "full-object",
+        "confidence": 0.9,
+        "realization": "reference-projection"
+      },
+      {
+        "id": "blade-edge",
+        "kind": "gloss",
+        "description": "Curved steel blade with thin pale cutting edge",
+        "region": {
+          "x": 0.62,
+          "y": 0.55,
+          "width": 0.38,
+          "height": 0.405,
+          "units": "normalized"
+        },
+        "scale": "object-relative",
+        "affects": [
+          "surface"
+        ],
+        "mapsTo": {
+          "type": "component",
+          "ref": "blade"
+        },
+        "evidenceRef": "full-object",
+        "confidence": 0.9,
+        "realization": "reference-projection"
+      },
+      {
+        "id": "robe-hem",
+        "kind": "contour",
+        "description": "Scalloped lower hem and long folded green skirt",
+        "region": {
+          "x": 0.15,
+          "y": 0.73,
+          "width": 0.47,
+          "height": 0.11,
+          "units": "normalized"
+        },
+        "scale": "object-relative",
+        "affects": [
+          "silhouette"
+        ],
+        "mapsTo": {
+          "type": "component",
+          "ref": "robe"
+        },
+        "evidenceRef": "full-object",
+        "confidence": 0.9,
+        "realization": "geometry"
+      },
+      {
+        "id": "boot-toes",
+        "kind": "contour",
+        "description": "Pointed dark boots angled outward from ankles",
+        "region": {
+          "x": 0.1,
+          "y": 0.86,
+          "width": 0.63,
+          "height": 0.14,
+          "units": "normalized"
+        },
+        "scale": "object-relative",
+        "affects": [
+          "silhouette"
+        ],
+        "mapsTo": {
+          "type": "component",
+          "ref": "boots"
+        },
+        "evidenceRef": "full-object",
+        "confidence": 0.9,
+        "realization": "geometry"
+      }
+    ]
+  },
+  "authoringInstruction": "Open each zone crop under zonesDir and replace every detail stub's kind, description, scale, affects, mapsTo, and confidence with what is actually observed. Add more detail entries per zone if a single zone contains multiple distinct marks; do not leave stubs unfilled or unlinked (mapsTo must reference a real component.localFeatures or material.localOverrides entry)."
+}

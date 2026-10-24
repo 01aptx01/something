@@ -1,0 +1,90 @@
+{
+  "errors": [],
+  "warnings": [],
+  "attachments": [
+    {
+      "component": "raised-grip",
+      "anchor": "hand-raised",
+      "anchorKind": "component",
+      "distance": 0.0551843570543741,
+      "maxOffset": 0.13,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "raised-sheath",
+      "anchor": "hand-raised",
+      "anchorKind": "component",
+      "distance": 0.21808771175550387,
+      "maxOffset": 0.28,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "hip-grip",
+      "anchor": "haramaki",
+      "anchorKind": "component",
+      "distance": 0.369728562245057,
+      "maxOffset": 0.45,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "hip-sheath",
+      "anchor": "haramaki",
+      "anchorKind": "component",
+      "distance": 0.6293692086844065,
+      "maxOffset": 0.75,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "low-grip",
+      "anchor": "hand-down",
+      "anchorKind": "component",
+      "distance": 0.02321233567100385,
+      "maxOffset": 0.14,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "blade",
+      "anchor": "hand-down",
+      "anchorKind": "component",
+      "distance": 0.7161227612384303,
+      "maxOffset": 0.8,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "sword-guards",
+      "anchor": "hand-raised",
+      "anchorKind": "component",
+      "distance": 0.1150271707032734,
+      "maxOffset": 0.18,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "guard-1",
+      "anchor": "haramaki",
+      "anchorKind": "component",
+      "distance": 0.2845918035488311,
+      "maxOffset": 0.36,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "guard-2",
+      "anchor": "hand-down",
+      "anchorKind": "component",
+      "distance": 0.12126932835634896,
+      "maxOffset": 0.2,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    }
+  ],
+  "unmeasuredAttachments": [],
+  "attachmentCount": 9,
+  "passed": true
+}
