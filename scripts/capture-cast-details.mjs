@@ -8,7 +8,7 @@ const s=await session();
 const ready=id=>s.until(`document.querySelector('canvas').dataset.modelState==='ready'&&document.querySelector('canvas').dataset.modelAsset==='${id}'`,30000);
 try{
  await s.navigate();
- for(const [world,cast] of [[0,[['zoro',1]]],[1,[['tanjiro',0],['nezuko',1]]],[2,[['levi',0],['mikasa',1]]]]){
+ for(const [world,cast] of [[0,[['zoro',1]]],[1,[['tanjiro',0],['nezuko',1]]],[2,[['levi',0],['mikasa',1],['eren',2]]]]){
   if(process.env.CAST_CAPTURE_WORLD!==undefined&&world!==Number(process.env.CAST_CAPTURE_WORLD))continue;
   await s.enter(world);
   for(const [index,[id,choice]] of cast.entries()){

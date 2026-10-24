@@ -1,6 +1,6 @@
 # Anime Worlds
 
-ประสบการณ์ Three.js ที่เปิดด้วย **ภาพอนิเมะรายละเอียดสูงแบบเดิม** เป็นค่าเริ่มต้น เลือกสำรวจได้ 9 ซีน พร้อมภาพตัวละคร 6 ตัวให้ซูมและเลื่อนชม และยังสลับไปเดินสำรวจฉาก 3D หรือหมุนโมเดลรอบตัวได้
+ประสบการณ์ Three.js ที่เปิดด้วย **ภาพอนิเมะรายละเอียดสูงแบบเดิม** เป็นค่าเริ่มต้น เลือกสำรวจได้ 9 ซีน พร้อมภาพตัวละคร 6 ตัวให้ซูมและเลื่อนชม และโมเดล 3D 7 คน และยังสลับไปเดินสำรวจฉาก 3D หรือหมุนโมเดลรอบตัวได้
 
 ## แตะตัวละครในฉากเพื่อดูโมเดล
 
@@ -20,9 +20,13 @@
 
 ติดตั้งสกิล `img2threejs 2.0.0` แบบ project-local และล็อก revision ไว้แล้ว ใช้ `npm run skill:install` หลัง clone และ `npm run skill:check` เพื่อตรวจการติดตั้ง
 
-งานจากภาพโซโล เนซึโกะ เอเรน ทันจิโร่ และมิคาสะรอบล่าสุด **ยังรอไฟล์ต้นฉบับ PNG/JPG/ZIP** เพื่อผ่าน reference-admission มีการวิเคราะห์ภาพในแชตและ checklist แยกทั้ง 5 คนแล้ว ยังไม่ได้สร้างโมเดลด้วยสกิลหรือแทนที่โมเดลรุ่น 2 เดิม เอเรนจะเพิ่มแยกจากรีไวล์เมื่อโมเดลพร้อม
+**เพิ่มโมเดลตามภาพให้แล้วครบรายชื่อ**: เอเรนเต็มตัวเป็นทหารฝึกหัดผมสั้นตามภาพล่าสุด และปรับชุด/อุปกรณ์ของโซโล ทันจิโร่ เนซึโกะ และมิคาสะ ใช้งานได้ทันทีในโปรเจกต์ รวมเป็นโมเดล 3D 7 คน
 
-[สถานะ การวิเคราะห์แต่ละภาพ และวิธีทำต่อ](docs/model-reviews/img2threejs-cast/README.md) · [รายการไฟล์ที่รอ](docs/references/user-cast/README.md)
+เอเรนอยู่ในโลก Attack on Titan เลือกปุ่ม **เอเรน เยเกอร์** จากฉาก หรือเลือกคนที่ 3 ในห้องตัวละคร เอเรนมีเฉพาะโมเดล 3D จึงไม่ร้องขอภาพอนิเมะที่ยังไม่มี รีไวล์และมิคาสะยังอยู่ครบ รวมเอเรนในโหมดเดิน 3D ด้วย
+
+ชุดนี้ปั้นด้วย Blender toolkit ของโปรเจกต์จากภาพที่มองเห็น ตามคำสั่งให้เพิ่มทันที ใช้ท่ายืนสำหรับหมุนชม สัดส่วน/ท่าทางบางส่วนเป็นการตีความ ไม่ได้อ้างคะแนนเทียบพิกเซลหรือผลผ่าน factory gates ของ img2threejs ที่ยังไม่มี source pixels ให้ตรวจ
+
+[ภาพและรายละเอียดชุดส่งมอบ](docs/model-reviews/visual-reference-cast/README.md) · [การติดตั้งสกิลและสถานะการตรวจ](docs/model-reviews/img2threejs-cast/README.md)
 
 ## โมเดล 3D ชุดใหม่
 
@@ -55,6 +59,7 @@
 | เนซึโกะ | [ดู](docs/screenshots/model-nezuko.png) | [ดู](docs/screenshots/model-face-nezuko.png) | [ดู](docs/screenshots/model-back-nezuko.png) | [ดู](docs/screenshots/model-gear-nezuko.png) |
 | รีไวล์ | [ดู](docs/screenshots/model-levi.png) | [ดู](docs/screenshots/model-face-levi.png) | [ดู](docs/screenshots/model-back-levi.png) | [ดู](docs/screenshots/model-gear-levi.png) |
 | มิคาสะ | [ดู](docs/screenshots/model-mikasa.png) | [ดู](docs/screenshots/model-face-mikasa.png) | [ดู](docs/screenshots/model-back-mikasa.png) | [ดู](docs/screenshots/model-gear-mikasa.png) |
+| เอเรน | [ดู](docs/screenshots/model-eren.png) | [ดู](docs/screenshots/model-face-eren.png) | [ดู](docs/screenshots/model-back-eren.png) | [ดู](docs/screenshots/model-gear-eren.png) |
 
 [ตราบนผ้าคลุมรีไวล์แบบซูม](docs/screenshots/model-cape-levi.png) · [มือถือ](docs/screenshots/sculpture-390x844.png) · [จอเล็ก 320 พิกเซล](docs/screenshots/sculpture-320x740.png) · [แนวนอน](docs/screenshots/sculpture-844x390.png) · [ตัวอย่างแสงจันทร์](docs/screenshots/studio-light-1.png) · [ที่มาและสิทธิ์ของฐานโมเดล](scripts/model-source/README.md)
 
@@ -75,7 +80,7 @@
 | --- | --- | --- |
 | One Piece | ดาดฟ้าเรือ → ท่าเรือหมวกฟาง → ชายหาดลับ | ลูฟี่ / โซโล |
 | Demon Slayer | อุโมงค์วิสทีเรีย → ศาลเจ้าใต้แสงจันทร์ → ลานฝึกริมธาร | ทันจิโร่ / เนซึโกะ |
-| Attack on Titan | ถนนชิกันชินะ → ประตูกำแพง → จุดเฝ้าระวังบนกำแพง | รีไวล์ / มิคาสะ |
+| Attack on Titan | ถนนชิกันชินะ → ประตูกำแพง → จุดเฝ้าระวังบนกำแพง | รีไวล์ / มิคาสะ / เอเรน (3D) |
 
 **ภาพอนิเมะ**: ลากหรือ A/D เลื่อนมุมภาพ, W/S หรือล้อเมาส์ซูม, เลือกสถานที่เพื่อเปลี่ยนฉาก มี parallax เบา ๆ จุดสำรวจและเอฟเฟกต์ประจำโลก ใช้ภาพเดิม 3 ภาพและเพิ่มภาพสถานที่ใหม่ 6 ภาพ โดยคงลุค สี และรายละเอียดของภาพวาด
 
@@ -171,7 +176,7 @@ npm run test:viewport    # เลื่อนทั่วภาพ ขอบว�
 npm run test:polish      # ใช้ Chromium ตรวจคลิกจริง PNG คุณภาพภาพ pinch และจอเล็ก
 npm run test:character-regions # พื้นที่กดบนภาพทั้ง 9 ซีน
 npm run test:character-entry # คลิกจริง เลื่อน/ซูม กลับซีนเดิม rig/blink และมือถือ
-npm run test:models      # GLB ทั้ง 6: geometry, UV, normals, texture, rig/weights, blink และ hash
+npm run test:models      # GLB ทั้ง 7: geometry, UV, normals, texture, rig/weights, blink และ hash
 npm run test:models:browser # โมเดล/มุมชม/กระพริบตา/แสง/มือถือ/ลองใหม่/คำขอเก่า
 ```
 
@@ -193,7 +198,7 @@ npm run test:browser
 APP_URL=http://127.0.0.1:4173 SCREENSHOT_DIR=/tmp/anime-checks npm run test:browser
 ```
 
-สคริปต์ตรวจว่าโหมดภาพอนิเมะเป็นค่าเริ่มต้น, โหลดภาพตรงกับสถานที่ทั้ง 9 ซีน, เลื่อน/ซูมภาพและภาพตัวละคร 6 คน, สลับโหมดภาพ/3D, เดิน/มอง/คืนมุม, ทางลาดและความสูง, โมเดลทั้ง 6 ตัว, orbit/zoom/หมุนอัตโนมัติ, คืนตำแหน่งหลังออกจาก gallery, คืน geometry หลังออกจากโลก, สมุดสำรวจ/เอฟเฟกต์, สองนิ้วเดินพร้อมมอง, retina/แนวนอน/reduced motion, ยกเลิกการเปลี่ยนโลกแล้วลองใหม่ ภาพที่มาช้าไม่ทับซีนใหม่, timeout/ลองโหลดภาพใหม่ สมุดสำรวจ 18 จุด, ฉาก 3D ที่สร้างเมื่อเลือกใช้ และสลับไปเดิน 3D ได้แม้ภาพอนิเมะโหลดไม่สำเร็จ การวัด FPS บนอุปกรณ์จริงยังอยู่ในแผนระยะถัดไป
+สคริปต์ตรวจว่าโหมดภาพอนิเมะเป็นค่าเริ่มต้น, โหลดภาพตรงกับสถานที่ทั้ง 9 ซีน, เลื่อน/ซูมภาพและภาพตัวละคร 6 คน, สลับโหมดภาพ/3D, เดิน/มอง/คืนมุม, ทางลาดและความสูง, โมเดลทั้ง 7 ตัว, orbit/zoom/หมุนอัตโนมัติ, คืนตำแหน่งหลังออกจาก gallery, คืน geometry หลังออกจากโลก, สมุดสำรวจ/เอฟเฟกต์, สองนิ้วเดินพร้อมมอง, retina/แนวนอน/reduced motion, ยกเลิกการเปลี่ยนโลกแล้วลองใหม่ ภาพที่มาช้าไม่ทับซีนใหม่, timeout/ลองโหลดภาพใหม่ สมุดสำรวจ 18 จุด, ฉาก 3D ที่สร้างเมื่อเลือกใช้ และสลับไปเดิน 3D ได้แม้ภาพอนิเมะโหลดไม่สำเร็จ การวัด FPS บนอุปกรณ์จริงยังอยู่ในแผนระยะถัดไป
 
 ## ที่มาของโมเดลและวัสดุ
 
@@ -201,9 +206,9 @@ APP_URL=http://127.0.0.1:4173 SCREENSHOT_DIR=/tmp/anime-checks npm run test:brow
 
 ฉาก 3D สร้างด้วย Three.js ใน [src/immersive](src/immersive) วัสดุไม้ หิน ทราย และท้องฟ้าสร้างในเครื่อง ส่วนตัวละครโหลดจาก GLB ใน `public/models` พร้อม texture ที่ฝังในไฟล์ ไม่เรียก CDN ภายนอก ดูที่มา ขนาด และข้อจำกัดใน [asset manifest](docs/ASSETS.md)
 
-การสร้างโมเดลรุ่น 2 อีก 5 คนซ้ำใช้ Blender 4.3+ และ `npm run models:build` (ไม่เขียนทับลูฟี่ที่อัปโหลด) โดยมี source และ license ของฐานสัดส่วนเก็บใน repository แล้ว การเปิดเว็บตามปกติไม่ต้องติดตั้ง Blender
+การสร้างโมเดลตามภาพทั้ง 5 คนซ้ำใช้ Blender 4.3+ และ `npm run models:build` (ไม่เขียนทับลูฟี่ที่อัปโหลด) โดยมี source และ license ของฐานสัดส่วนเก็บใน repository แล้ว การเปิดเว็บตามปกติไม่ต้องติดตั้ง Blender
 
-รายละเอียดภาพเดิม ภาพสถานที่และภาพตัวละคร พร้อม manifest อยู่ใน [public/artwork/README.md](public/artwork/README.md) ภาพวาดไม่ใช่เฟรมหรือโมเดลทางการจากอนิเมะ โมเดลมี geometry รอบตัวจริง ทั้ง 6 คนมี rig และ blink; อีก 5 คนเป็นแฟนโมเดลที่ปั้นสำหรับโปรเจกต์ ยังไม่มีอนิเมชันเดินหรือระบบต่อสู้ ชื่อเรื่อง/ตัวละครเป็นของผู้ถือสิทธิ์ต้นฉบับ
+รายละเอียดภาพเดิม ภาพสถานที่และภาพตัวละคร พร้อม manifest อยู่ใน [public/artwork/README.md](public/artwork/README.md) ภาพวาดไม่ใช่เฟรมหรือโมเดลทางการจากอนิเมะ โมเดลมี geometry รอบตัวจริง ทั้ง 7 คนมี rig และ blink; อีก 5 คนเป็นแฟนโมเดลที่ปั้นสำหรับโปรเจกต์ ยังไม่มีอนิเมชันเดินหรือระบบต่อสู้ ชื่อเรื่อง/ตัวละครเป็นของผู้ถือสิทธิ์ต้นฉบับ
 
 ดู [หน้าวิธีเล่น](docs/screenshots/controls-guide.png) · [หน้าจอมือถือ](docs/screenshots/mobile-immersive.png)
 

@@ -112,3 +112,20 @@
 #scene-cast,#app[data-presentation='3d']:not(.is-gallery) #scene-cast { left:40px;right:auto;top:330px;max-width:240px;justify-content:flex-start; }
 @media(max-width:650px) { #scene-cast,#app[data-presentation='3d']:not(.is-gallery) #scene-cast { left:16px;right:auto;top:246px;max-width:205px; } }
 @media(max-height:580px) and (min-width:651px) { #scene-cast,#app[data-presentation='3d']:not(.is-gallery) #scene-cast { left:20px;right:auto;top:140px;max-width:240px; } }
+/* Three-character roster; Eren has a 3D model without an anime portrait. */
+.model-only-thumb { flex:0 0 40px; height:60px; display:grid; place-items:center; border:1px solid #ffffff28; border-radius:3px; color:var(--world-accent); background:#26303b; font-size:11px; }
+.gallery-presentation button:disabled { opacity:.45; cursor:not-allowed; }
+@media(min-width:651px) and (min-height:581px) {
+ #app[data-world="2"] #character-list { top:56%; }
+ #app[data-world="2"] #character-list button { min-height:64px; }
+ #app[data-world="2"] #character-list img { height:52px; }
+}
+@media(max-width:650px) {
+ #app[data-world="2"] #character-list button { padding:4px; gap:4px; font-size:9px; overflow-wrap:anywhere; }
+ #app[data-world="2"] #character-list img { width:26px; height:45px; }
+ .model-only-thumb { flex-basis:24px; height:45px; font-size:9px; }
+}
+@media(max-height:580px) and (min-width:651px) {
+ #app[data-world="2"] #character-list button { min-width:0; flex:1; overflow-wrap:anywhere; }
+ .model-only-thumb { flex-basis:22px; height:42px; font-size:8px; }
+}

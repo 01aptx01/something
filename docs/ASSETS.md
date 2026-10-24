@@ -16,11 +16,11 @@
 | ภาพตัวละคร 6 คน | OpenAI ImageGen, สร้างใหม่สำหรับโปรเจกต์ | Local WebP 1024×1536, quality 93 | ภาพเต็มตัวสำหรับ gallery แบบเลื่อน/ซูม |
 | Three.js และ addons | https://github.com/mrdoob/three.js | npm package, MIT | OrbitControls และ BufferGeometryUtils ใช้ license ของ Three.js |
 
-ตัวละครใหม่เป็น GLB แยก 6 ไฟล์ โหลดตามที่เลือกในห้องแสดง และโหลดสองคนเมื่อเปิดโลก 3D ภาพอนิเมะไม่โหลด GLB ตัวโหลด GLTFLoader แยก chunk และโหลดเมื่อใช้งาน ส่วนฉากยังสร้างด้วย Three.js
+ตัวละครเป็น GLB แยก 7 ไฟล์ โหลดตามที่เลือกในห้องแสดง และโหลดสองคนใน One Piece/Demon Slayer หรือสามคนใน Attack on Titan เมื่อเปิดโลก 3D ภาพอนิเมะไม่โหลด GLB ตัวโหลด GLTFLoader แยก chunk และโหลดเมื่อใช้งาน ส่วนฉากยังสร้างด้วย Three.js
 
 ฐานสัดส่วน `scripts/model-source/base.obj` มาจาก MakeHuman hm08 ที่ระบุ CC0 ไว้ใน header มี source URL, SHA-256, license และคำสั่งสร้างซ้ำใน [model-source/README.md](../scripts/model-source/README.md) โค้ด Blender ปรับรูปทรงและปั้นผม เสื้อผ้า ดวงตา ลายผ้า ดาบและอุปกรณ์ขึ้นใหม่ ไม่มีโมเดล ripped หรือ asset จากเกม
 
-ฐาน CC0 ไม่ได้ให้สิทธิ์ในตัวละครต้นฉบับเพิ่มเติม ทั้ง 6 คนมี rig และ blink; รุ่น 2 ของอีก 5 คนใช้โครงกระดูกพื้นฐานสำหรับการจัดท่าและ morph เปลือกตา ไม่มี combat หรืออนิเมชันเดิน
+ฐาน CC0 ไม่ได้ให้สิทธิ์ในตัวละครต้นฉบับเพิ่มเติม ทั้ง 7 คนมี rig และ blink; รุ่น 2 ของอีก 5 คนใช้โครงกระดูกพื้นฐานสำหรับการจัดท่าและ morph เปลือกตา ไม่มี combat หรืออนิเมชันเดิน
 
 ### ขนาดโมเดลที่ส่งมอบ
 
@@ -29,11 +29,12 @@
 | ไฟล์ | MB | Triangles | Materials |
 | --- | ---: | ---: | ---: |
 | `luffy.glb` | 5.01 | 48,964 | 19 |
-| `zoro.glb` | 5.55 | 161,935 | 16 |
-| `tanjiro.glb` | 4.57 | 131,079 | 17 |
-| `nezuko.glb` | 3.94 | 113,154 | 20 |
+| `zoro.glb` | 5.92 | 172,107 | 21 |
+| `tanjiro.glb` | 5.25 | 145,459 | 24 |
+| `nezuko.glb` | 4.04 | 115,650 | 21 |
 | `levi.glb` | 5.63 | 144,832 | 16 |
-| `mikasa.glb` | 5.33 | 135,364 | 16 |
+| `mikasa.glb` | 5.46 | 139,060 | 18 |
+| `eren.glb` | 4.85 | 135,769 | 19 |
 
 ค่าลูฟี่เป็นไฟล์ที่อัปโหลดก่อนปรับขนาดและจัดท่าใน runtime ส่วนอีก 5 คนมาจาก Blender pipeline ของโปรเจกต์
 
@@ -81,3 +82,8 @@
 - Occasional blink follows elapsed time rather than movement delta; reduced motion restores the resting face. Mixer bindings, skeleton/bone textures, geometry and image bitmaps are released on disposal.
 - Full-body framing considers width and height of the posed model; face framing uses a per-character target.
 - Regenerating the five v2 characters cannot overwrite the uploaded Luffy. The other five are now original v2 project sculpts with 20-joint presentation rigs and blink morphs. See [cast review](model-reviews/anime-cast-v2/README.md).
+
+
+## Visual-reference additions, 24 October 2026
+
+Eren is a seventh character, built with `scripts/sculpt-eren.py`. Zoro, Tanjiro, Nezuko and Mikasa have visual-reference costume updates in `scripts/sculpt-reference-cast.py`. These use agent observations of the inline reference images, not a measured pixel fit or an img2threejs-approved TypeScript factory. The original img2threejs intake states remain unevaluated. All five use a neutral standing pose; details hidden in the single image are inferred. Luffy and Levi were preserved. See [delivery notes](model-reviews/visual-reference-cast/README.md).

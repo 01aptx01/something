@@ -54,4 +54,4 @@ for(const target of request.targets){
  if(!hasReference)blocked=true;
  console.log(`${target.id}: ${current.currentStep}; original reference ${hasReference?'present':'MISSING'}; ${target.expectedReference}`);
 }
-if(blocked){console.error('INPUT REQUIRED: attach the original image files (or a ZIP). No reference gate was bypassed and no new models were generated.');process.exitCode=2;}
+if(blocked){console.error('INPUT REQUIRED: attach the original image files (or a ZIP). This intake command does not generate or replace models; no reference gate was bypassed.');process.exitCode=2;}

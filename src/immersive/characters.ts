@@ -1,10 +1,11 @@
 import * as T from 'three';
 import { disposeGroup } from '../effects';
 
-export const CAST = [
+export type CharacterInfo={id:string;name:string;thai:string;detail:string;portrait?:false};
+export const CAST:CharacterInfo[][] = [
   [{ id: 'luffy', name: 'MONKEY D. LUFFY', thai: 'มังกี้ ดี. ลูฟี่', detail: 'หมวกฟาง · เสื้อกั๊กแดง · กัปตันกลุ่มหมวกฟาง' }, { id: 'zoro', name: 'RORONOA ZORO', thai: 'โรโรโนอา โซโล', detail: 'นักดาบสามดาบ · ผมสีเขียว · ผ้าคาดเอว' }],
   [{ id: 'tanjiro', name: 'TANJIRO KAMADO', thai: 'คามาโดะ ทันจิโร่', detail: 'ฮาโอริลายตาราง · ต่างหูฮานาฟูดะ · ดาบนิจิริน' }, { id: 'nezuko', name: 'NEZUKO KAMADO', thai: 'คามาโดะ เนซึโกะ', detail: 'กิโมโนสีชมพู · กระบอกไม้ไผ่ · ปลายผมสีส้ม' }],
-  [{ id: 'levi', name: 'LEVI ACKERMAN', thai: 'รีไวล์ แอคเคอร์แมน', detail: 'ผ้าคลุมหน่วยสำรวจ · อุปกรณ์ ODM · ผ้าผูกคอสีขาว' }, { id: 'mikasa', name: 'MIKASA ACKERMAN', thai: 'มิคาสะ แอคเคอร์แมน', detail: 'ผ้าพันคอแดง · แจ็กเก็ตสั้น · ดาบคู่และอุปกรณ์ ODM' }],
+  [{ id: 'levi', name: 'LEVI ACKERMAN', thai: 'รีไวล์ แอคเคอร์แมน', detail: 'ผ้าคลุมหน่วยสำรวจ · อุปกรณ์ ODM · ผ้าผูกคอสีขาว' }, { id: 'mikasa', name: 'MIKASA ACKERMAN', thai: 'มิคาสะ แอคเคอร์แมน', detail: 'ผ้าพันคอแดง · แจ็กเก็ตสั้น · ดาบคู่และอุปกรณ์ ODM' }, {id:'eren',name:'EREN YEAGER',thai:'เอเรน เยเกอร์',detail:'ทหารฝึกหัด · ผมสั้นสีน้ำตาล · เสื้อคอผูกเชือก · ชุดสายรัด',portrait:false}],
 ];
 
 export const UPLOADED_LUFFY_CREDIT='KingOfThePirates · Sketchfab Standard';

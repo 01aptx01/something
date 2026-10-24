@@ -1,0 +1,29 @@
+{
+  "subject": "Eren Yeager, young Training Corps cadet",
+  "source": "User inline full-body image accompanying เพิ่มให้เลยสิ",
+  "sourcePixelsAvailable": false,
+  "measuredLandmarks": null,
+  "pixelFidelityScore": null,
+  "supersedes": "Earlier adult/bun/hood portrait design",
+  "visibleFeatures": [
+    "short brown hair with separated central fringe",
+    "large green-grey eyes, angled brows and serious mouth",
+    "brown cropped jacket and shoulder tabs",
+    "Training Corps crossed-sword insignia",
+    "cream shirt with V-neck eyelets and crossed laces",
+    "high chest brace and waist buckles",
+    "brown layered hip wrap",
+    "white trousers with fitted thigh belts and crossed straps",
+    "dark knee-high boots",
+    "relaxed empty hands"
+  ],
+  "inferences": [
+    "back hairstyle and clothing folds",
+    "hidden belt routing",
+    "neutral symmetric presentation pose",
+    "exact dimensions and physical material values"
+  ],
+  "implementation": "scripts/sculpt-eren.py",
+  "integration": "Third Attack on Titan gallery character and world NPC, separate from Levi and Mikasa",
+  "acceptance": "Project GLB/runtime verification; img2threejs image admission and pixel comparison unevaluated"
+}

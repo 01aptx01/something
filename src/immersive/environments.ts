@@ -69,11 +69,11 @@ function particles(root: T.Group, color: string, count: number, random: () => nu
   const points = new T.Points(geo, new T.PointsMaterial({ color, size: .055, transparent: true, opacity: .7, depthWrite: false })); root.add(points); return points;
 }
 function placeCast(root: T.Group, world: number, x: number, z: number) {
-  const names = [['luffy', 'zoro'], ['tanjiro', 'nezuko'], ['levi', 'mikasa']][world];
+  const names = [['luffy', 'zoro'], ['tanjiro', 'nezuko'], ['levi', 'mikasa','eren']][world];
   const controller=new AbortController();root.userData.abortAssets=()=>controller.abort();
   names.forEach((id,i)=>{void loadCharacter(id,controller.signal).then(figure=>{
     if(controller.signal.aborted){disposeCharacter(figure);return;}
-    figure.position.set(x+(i-.5)*1.5,.08,z);figure.rotation.y=i?-.25:.25;root.add(figure);root.userData.onAsset?.();
+    figure.position.set(x+(i-(names.length-1)/2)*1.5,.08,z);figure.rotation.y=i?-.25:.25;root.add(figure);root.userData.onAsset?.();
   }).catch(()=>{/* Decorative figures never block walking. The studio provides retry. */});});
 }
 function seaWorld(): Environment {

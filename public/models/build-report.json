@@ -11,41 +11,47 @@
   {
     "id": "zoro",
     "file": "zoro.glb",
-    "bytes": 5552932,
-    "triangles": 161935,
-    "materials": 16,
+    "bytes": 5915068,
+    "triangles": 172107,
+    "materials": 21,
     "sculptVersion": 2,
     "joints": 20,
     "animations": [
       "blink"
     ],
-    "sha256": "c7ba8bc0489b414497a0fbe8975733777705d6217f9c7f5b7b09b2e330c72749"
+    "sha256": "f283f3ea7b2201df4d1f69ff1f12e123353e52db9574663d55c168df54ad5e9e",
+    "source": "scripts/sculpt-reference-cast.py",
+    "referenceMethod": "visual interpretation of user inline image; no measured pixel-fidelity score"
   },
   {
     "id": "tanjiro",
     "file": "tanjiro.glb",
-    "bytes": 4567308,
-    "triangles": 131079,
-    "materials": 17,
+    "bytes": 5249444,
+    "triangles": 145459,
+    "materials": 24,
     "sculptVersion": 2,
     "joints": 20,
     "animations": [
       "blink"
     ],
-    "sha256": "07cf753b6d160f3656c95870be2564519617327d64cb8e42416d4aaf439c67f1"
+    "sha256": "10e86fd5dc87413b5f4908f494058a06f67ef78093c9c3a8e9fb75d0cf67f95e",
+    "source": "scripts/sculpt-reference-cast.py",
+    "referenceMethod": "visual interpretation of user inline image; no measured pixel-fidelity score"
   },
   {
     "id": "nezuko",
     "file": "nezuko.glb",
-    "bytes": 3941124,
-    "triangles": 113154,
-    "materials": 20,
+    "bytes": 4040316,
+    "triangles": 115650,
+    "materials": 21,
     "sculptVersion": 2,
     "joints": 20,
     "animations": [
       "blink"
     ],
-    "sha256": "f31c94558d60b057e28318743d4812746be766d3571e24eba01d65d68802fb0f"
+    "sha256": "f2ff60bb4846839f6e7bdd30e59e1bb9ac781f06e32f381b7b005e4b79bf53ae",
+    "source": "scripts/sculpt-reference-cast.py",
+    "referenceMethod": "visual interpretation of user inline image; no measured pixel-fidelity score"
   },
   {
     "id": "levi",
@@ -63,14 +69,31 @@
   {
     "id": "mikasa",
     "file": "mikasa.glb",
-    "bytes": 5325292,
-    "triangles": 135364,
-    "materials": 16,
+    "bytes": 5458612,
+    "triangles": 139060,
+    "materials": 18,
     "sculptVersion": 2,
     "joints": 20,
     "animations": [
       "blink"
     ],
-    "sha256": "81677e5cba222c8afebcc1b259aea2460718ab539e4c0396920ffa4a96bfb539"
+    "sha256": "0a1ff87771e3c9264c1040dc1f24ee5e35712cfe3487eae615dca697b483e332",
+    "source": "scripts/sculpt-reference-cast.py",
+    "referenceMethod": "visual interpretation of user inline image; no measured pixel-fidelity score"
+  },
+  {
+    "id": "eren",
+    "file": "eren.glb",
+    "bytes": 4851660,
+    "triangles": 135769,
+    "materials": 19,
+    "sculptVersion": 2,
+    "joints": 20,
+    "animations": [
+      "blink"
+    ],
+    "sha256": "5c3984bc352c58d69b3a9b1ab4b7b23cf6fe2416118c4a12ad97f71e7fc3c4b3",
+    "source": "scripts/sculpt-eren.py",
+    "referenceMethod": "visual interpretation of user inline full-body reference; no pixel-fidelity score"
   }
 ]

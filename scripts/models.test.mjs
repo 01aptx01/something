@@ -6,7 +6,7 @@ import {Matrix4,Vector3,Quaternion} from 'three';
 
 const report=JSON.parse(fs.readFileSync(new URL('../public/models/build-report.json',import.meta.url)));
 const manifest=JSON.parse(fs.readFileSync(new URL('../public/models/manifest.json',import.meta.url)));
-for(const id of ['luffy','zoro','tanjiro','nezuko','levi','mikasa'])test(`${id}: complete local GLB, finite sculpture, embedded PBR textures and bounded geometry`,()=>{
+for(const id of ['luffy','zoro','tanjiro','nezuko','levi','mikasa','eren'])test(`${id}: complete local GLB, finite sculpture, embedded PBR textures and bounded geometry`,()=>{
  const buffer=fs.readFileSync(new URL(`../public/models/${id}.glb`,import.meta.url));
  assert.equal(buffer.toString('ascii',0,4),'glTF');assert.equal(buffer.readUInt32LE(4),2);assert.equal(buffer.readUInt32LE(8),buffer.length);
  const jsonLength=buffer.readUInt32LE(12),gltf=JSON.parse(buffer.toString('utf8',20,20+jsonLength));

@@ -13,12 +13,13 @@ const click=async selector=>{
 try{
  await s.navigate();
  const hub=await s.evaluate('({geometry:Number(document.querySelector("canvas").dataset.geometries),textures:Number(document.querySelector("canvas").dataset.textures)})');
- const cast=[['luffy','zoro'],['tanjiro','nezuko'],['levi','mikasa']];
+ const cast=[['luffy','zoro'],['tanjiro','nezuko'],['levi','mikasa','eren']];
  for(let w=0;w<3;w++){
+  if(process.env.MODELS_TEST_WORLD!==undefined&&w!==Number(process.env.MODELS_TEST_WORLD))continue;
   const before=modelRequests.length;await s.enter(w);await s.click('#gallery-open');
   await s.until('!document.querySelector("#character-art").hidden');assert.equal(modelRequests.length,before,'anime mode does not load GLBs');
   await click('.gallery-presentation [data-presentation="3d"]');
-  for(let c=0;c<2;c++){
+  for(let c=0;c<cast[w].length;c++){
    if(c)await click(`#character-list [data-character="${c}"]`);
    await ready(cast[w][c]);await wait(200);await s.shot(`model-${cast[w][c]}`);
    assert.equal(await s.evaluate('document.querySelector("canvas").dataset.modelKind'),cast[w][c]==='luffy'?'uploaded':'sculpted-v2');

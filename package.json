@@ -12,7 +12,7 @@
     "test:journal": "node --experimental-strip-types --test scripts/journal.test.mjs",
     "test:polish": "node scripts/polish-smoke.mjs",
     "test:viewport": "node --experimental-strip-types --test scripts/viewport.test.mjs",
-    "models:build": "blender -b --python-exit-code 1 --python scripts/sculpt-anime-cast.py",
+    "models:build": "blender -b --python-exit-code 1 --python scripts/sculpt-reference-cast.py -- && blender -b --python-exit-code 1 --python scripts/sculpt-eren.py",
     "test:models": "node --test scripts/models.test.mjs",
     "test:models:browser": "node scripts/models-smoke.mjs",
     "test:character-regions": "node --experimental-strip-types --test scripts/character-regions.test.mjs",
@@ -21,7 +21,9 @@
     "skill:check": "node scripts/setup-img2threejs.mjs --check",
     "skill:cast:init": "node scripts/img2threejs-cast.mjs init",
     "skill:cast:status": "node scripts/img2threejs-cast.mjs status",
-    "skill:cast:admit": "node scripts/img2threejs-cast.mjs admit"
+    "skill:cast:admit": "node scripts/img2threejs-cast.mjs admit",
+    "models:eren": "blender -b --python-exit-code 1 --python scripts/sculpt-eren.py",
+    "test:eren:browser": "node scripts/eren-smoke.mjs"
   },
   "dependencies": {
     "three": "^0.180.0"

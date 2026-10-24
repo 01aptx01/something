@@ -23,7 +23,7 @@ export async function session(width = 1440, height = 900, mobile = false) {
   });
   const send = (method, params = {}) => new Promise((resolve, reject) => {
     const key = ++id;
-    const timer = setTimeout(() => { pending.delete(key); reject(new Error(`CDP timeout: ${method}`)); }, 15000);
+    const timer = setTimeout(() => { pending.delete(key); reject(new Error(`CDP timeout: ${method}`)); }, method==='Page.captureScreenshot'?45000:15000);
     pending.set(key, { resolve, reject, timer });
     ws.send(JSON.stringify({ id: key, method, params }));
   });

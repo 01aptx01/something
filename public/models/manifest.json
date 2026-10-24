@@ -18,39 +18,44 @@
       "file": "/models/zoro.glb",
       "status": "active-project-sculpture-v2",
       "author": "Original project anime fan sculpt",
-      "source": "scripts/sculpt-anime-cast.py",
+      "source": "scripts/sculpt-reference-cast.py",
       "license": "Anatomical base MakeHuman hm08 CC0; character design rights remain with their original owners.",
       "animations": [
         "blink"
       ],
-      "notes": "Original anime head, hair, garments and props; MakeHuman CC0 supplies the body/hand foundation only. 20-joint presentation rig and eyelid morphs; no walk or combat clips. Uploaded Luffy is a visual reference only.",
+      "notes": "Project-authored visual interpretation of inline user reference using Blender. Pixel-fidelity and img2threejs factory gates are not evaluated. Neutral standing pose, basic rig and blink.",
       "sculptVersion": 2,
       "joints": 20,
-      "sha256": "c7ba8bc0489b414497a0fbe8975733777705d6217f9c7f5b7b09b2e330c72749",
+      "sha256": "f283f3ea7b2201df4d1f69ff1f12e123353e52db9574663d55c168df54ad5e9e",
       "features": [
         "custom angular anime head",
         "closed left eye and scar",
         "green layered spikes",
         "three gold earrings",
         "chest scar",
-        "green robe and red sash",
-        "three wrapped swords"
-      ]
+        "green robe and purple-magenta sash",
+        "three wrapped swords",
+        "purple-magenta wrapped sash with hanging tails",
+        "closed lower robe with toggles",
+        "upper-arm band",
+        "toothed grin"
+      ],
+      "referenceMethod": "visual interpretation of user inline image; no measured pixel-fidelity score"
     },
     {
       "id": "tanjiro",
       "file": "/models/tanjiro.glb",
       "status": "active-project-sculpture-v2",
       "author": "Original project anime fan sculpt",
-      "source": "scripts/sculpt-anime-cast.py",
+      "source": "scripts/sculpt-reference-cast.py",
       "license": "Anatomical base MakeHuman hm08 CC0; character design rights remain with their original owners.",
       "animations": [
         "blink"
       ],
-      "notes": "Original anime head, hair, garments and props; MakeHuman CC0 supplies the body/hand foundation only. 20-joint presentation rig and eyelid morphs; no walk or combat clips. Uploaded Luffy is a visual reference only.",
+      "notes": "Project-authored visual interpretation of inline user reference using Blender. Pixel-fidelity and img2threejs factory gates are not evaluated. Neutral standing pose, basic rig and blink.",
       "sculptVersion": 2,
       "joints": 20,
-      "sha256": "07cf753b6d160f3656c95870be2564519617327d64cb8e42416d4aaf439c67f1",
+      "sha256": "10e86fd5dc87413b5f4908f494058a06f67ef78093c9c3a8e9fb75d0cf67f95e",
       "features": [
         "custom anime head and painted iris",
         "forehead scar",
@@ -58,32 +63,40 @@
         "ichimatsu haori",
         "hanafuda earrings with sun and ink rays",
         "uniform buttons and belt",
-        "sheathed Nichirin"
-      ]
+        "sheathed Nichirin",
+        "wooden carrying box with planks, iron bands and rivets",
+        "ivory shoulder straps and adjusters",
+        "burgundy uniform",
+        "open smile with teeth"
+      ],
+      "referenceMethod": "visual interpretation of user inline image; no measured pixel-fidelity score"
     },
     {
       "id": "nezuko",
       "file": "/models/nezuko.glb",
       "status": "active-project-sculpture-v2",
       "author": "Original project anime fan sculpt",
-      "source": "scripts/sculpt-anime-cast.py",
+      "source": "scripts/sculpt-reference-cast.py",
       "license": "Anatomical base MakeHuman hm08 CC0; character design rights remain with their original owners.",
       "animations": [
         "blink"
       ],
-      "notes": "Original anime head, hair, garments and props; MakeHuman CC0 supplies the body/hand foundation only. 20-joint presentation rig and eyelid morphs; no walk or combat clips. Uploaded Luffy is a visual reference only.",
+      "notes": "Project-authored visual interpretation of inline user reference using Blender. Pixel-fidelity and img2threejs factory gates are not evaluated. Neutral standing pose, basic rig and blink.",
       "sculptVersion": 2,
       "joints": 20,
-      "sha256": "f31c94558d60b057e28318743d4812746be766d3571e24eba01d65d68802fb0f",
+      "sha256": "f2ff60bb4846839f6e7bdd30e59e1bb9ac781f06e32f381b7b005e4b79bf53ae",
       "features": [
         "custom anime head and pink slit iris",
         "open centre-part black hair with orange tips",
         "asanoha kimono",
-        "checked obi and red cord",
+        "checked obi and gold-orange cord",
         "pink hair ribbon",
         "bamboo nodes, grain and tie",
-        "zori and calf wraps"
-      ]
+        "zori and calf wraps",
+        "gold-orange obi cord with knot loops",
+        "black haori"
+      ],
+      "referenceMethod": "visual interpretation of user inline image; no measured pixel-fidelity score"
     },
     {
       "id": "levi",
@@ -114,23 +127,51 @@
       "file": "/models/mikasa.glb",
       "status": "active-project-sculpture-v2",
       "author": "Original project anime fan sculpt",
-      "source": "scripts/sculpt-anime-cast.py",
+      "source": "scripts/sculpt-reference-cast.py",
       "license": "Anatomical base MakeHuman hm08 CC0; character design rights remain with their original owners.",
       "animations": [
         "blink"
       ],
-      "notes": "Original anime head, hair, garments and props; MakeHuman CC0 supplies the body/hand foundation only. 20-joint presentation rig and eyelid morphs; no walk or combat clips. Uploaded Luffy is a visual reference only.",
+      "notes": "Project-authored visual interpretation of inline user reference using Blender. Pixel-fidelity and img2threejs factory gates are not evaluated. Neutral standing pose, basic rig and blink.",
       "sculptVersion": 2,
       "joints": 20,
-      "sha256": "81677e5cba222c8afebcc1b259aea2460718ab539e4c0396920ffa4a96bfb539",
+      "sha256": "0a1ff87771e3c9264c1040dc1f24ee5e35712cfe3487eae615dca697b483e332",
       "features": [
         "angled black bob and painted iris",
         "layered red scarf with trailing end",
         "cropped pocketed jacket with wings",
         "harness straps and buckles",
         "fitted boots",
-        "ODM gas cylinders, blade boxes, cartridges, hoses and twin blades"
-      ]
+        "ODM gas cylinders, blade boxes, cartridges, hoses and twin blades",
+        "layered brown hip wrap",
+        "dark ODM housings"
+      ],
+      "referenceMethod": "visual interpretation of user inline image; no measured pixel-fidelity score"
+    },
+    {
+      "id": "eren",
+      "file": "/models/eren.glb",
+      "status": "active-project-sculpture-v2",
+      "author": "Original project fan sculpt",
+      "source": "scripts/sculpt-eren.py",
+      "license": "MakeHuman hm08 anatomical foundation CC0; character design rights remain with original owners.",
+      "animations": [
+        "blink"
+      ],
+      "sculptVersion": 2,
+      "joints": 20,
+      "sha256": "5c3984bc352c58d69b3a9b1ab4b7b23cf6fe2416118c4a12ad97f71e7fc3c4b3",
+      "features": [
+        "young short-haired cadet design",
+        "green irises and continuous face",
+        "lace-up ivory shirt",
+        "cropped brown jacket with crossed-sword Training Corps badges",
+        "chest brace and waist/thigh harness with buckles",
+        "brown hip wrap",
+        "dark knee boots"
+      ],
+      "referenceMethod": "visual interpretation of user inline full-body reference; no pixel-fidelity score",
+      "notes": "Project-authored visual interpretation of inline user reference using Blender. Pixel-fidelity and img2threejs factory gates are not evaluated. Neutral standing pose, basic rig and blink."
     }
   ]
 }

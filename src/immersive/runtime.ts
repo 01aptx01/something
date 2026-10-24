@@ -81,7 +81,8 @@ export class ImmersiveWorld {
     this.setPresentationUI();
     $('#character-list').replaceChildren(...CAST[world].map((c, index) => {
       const b = document.createElement('button'); b.type = 'button'; b.dataset.character = String(index); b.textContent = c.thai;
-      const thumb=document.createElement('img');thumb.src=`/artwork/thumbs/${c.id}.webp`;thumb.alt='';thumb.width=40;thumb.height=60;thumb.loading='lazy';b.prepend(thumb);
+      if(c.portrait===false){const badge=document.createElement('span');badge.className='model-only-thumb';badge.textContent='3D';badge.setAttribute('aria-hidden','true');b.prepend(badge);}
+      else {const thumb=document.createElement('img');thumb.src=`/artwork/thumbs/${c.id}.webp`;thumb.alt='';thumb.width=40;thumb.height=60;thumb.loading='lazy';b.prepend(thumb);}
       b.addEventListener('click', () => this.selectCharacter(index)); return b;
     }));
     $('#scene-cast').replaceChildren(...CAST[world].map((c,i)=>{
@@ -205,6 +206,7 @@ export class ImmersiveWorld {
     $('#journey-progress').textContent=`ค้นพบ ${journal.count(this.world)}/6`;
   }
   private setPresentation(mode: Presentation) {
+    if(this.galleryOpen&&mode==='anime'&&CAST[this.world][this.castIndex].portrait===false)return;
     if (mode === this.presentation) return;
     this.keys.clear(); this.drag=null; this.rotating=false; $('#model-spin').setAttribute('aria-pressed','false');
     if(this.galleryOpen)this.galleryPresentation=mode;else this.worldPresentation=mode;
@@ -227,6 +229,9 @@ export class ImmersiveWorld {
     $('#model-spin').textContent=anime?'เคลื่อนไหวเบา ๆ':'หมุนอัตโนมัติ';
     $('#gallery-help').textContent=anime?'ลากเลื่อน · เลื่อน / จีบเพื่อซูม · + − ซูม · Home คืนมุม · Esc กลับ':'ลากเพื่อหมุน · เลื่อน / จีบเพื่อซูม · ปุ่มลูกศรหมุน · + − ซูม · Home คืนมุม · Esc กลับ';
     this.updateModelCredit();
+    const portraitButton=document.querySelector<HTMLButtonElement>('.gallery-presentation [data-presentation="anime"]')!;
+    portraitButton.disabled=this.galleryOpen&&CAST[this.world][this.castIndex].portrait===false;
+    portraitButton.title=portraitButton.disabled?'ตัวละครนี้มีโมเดล 3D ให้ชม':'ชมภาพตัวละคร';
     const worldAnime=this.worldPresentation==='anime';
     $('#world-tip-text').textContent=worldAnime?'ลากสำรวจภาพ · W/S ซูม · เลือกสถานที่เพื่อเดินทาง':'WASD เดิน · ลากมองรอบตัว · G ชมตัวละคร';
     $('.look-hint').textContent=worldAnime?'แตะตัวละครดูโมเดล · ลากเลื่อน · จีบจอเพื่อซูม':'ลากจอเพื่อมองรอบตัว · กดลูกศรค้างเพื่อเดิน';
@@ -285,6 +290,7 @@ export class ImmersiveWorld {
   }
   openGallery(index=this.castIndex,mode:Presentation=this.worldPresentation,focus:HTMLElement=$('#gallery-open')) {
     if (this.galleryOpen || $('#app').classList.contains('is-cinematic')) return;
+    if(CAST[this.world][index].portrait===false)mode='3d';
     this.keys.clear();this.drag=null;this.tap=null;this.lookPointers.clear();this.pinchDistance=0;this.hideCharacterHover();this.returnFocus=focus;this.anime.holdView();this.galleryPresentation=mode;this.galleryOpen=true;
     this.savedPosition.copy(this.camera.position); this.savedQuaternion.copy(this.camera.quaternion);
     if(this.presentation==='3d')this.buildGallery();
@@ -317,6 +323,7 @@ export class ImmersiveWorld {
     this.invalidateShadows();
     this.castIndex = index; this.cancelModel();disposeCharacter(this.sculpture);
     const info = CAST[this.world][index];
+    if(info.portrait===false&&this.presentation==='anime'){this.setPresentation('3d');return;}
     if (this.presentation === '3d') void this.loadModel(info.id);
     else void this.portrait.load(info.id);
     this.sculpture.rotation.y = 0;
@@ -324,7 +331,7 @@ export class ImmersiveWorld {
     $('#character-name').textContent = info.name; $('#character-thai').textContent = info.thai; $('#character-detail').textContent = info.detail;
     $('#app').dataset.character = info.id;
     document.querySelectorAll<HTMLElement>('#character-list [data-character]').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.character) === index)));
-    this.updateModelCredit();this.resetModel();
+    this.setPresentationUI();this.resetModel();
   }
   private resetModel() {
     if (this.presentation === 'anime') { this.portrait.reset(); return; }
