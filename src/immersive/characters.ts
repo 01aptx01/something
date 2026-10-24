@@ -38,7 +38,8 @@ function prepareCharacter(scene:T.Group,id:string,clips:T.AnimationClip[]){
  scene.traverse(o=>{if(o instanceof T.SkinnedMesh){o.skeleton.update();o.computeBoundingBox();}});
  const bounds=new T.Box3().setFromObject(scene,true),size=bounds.getSize(new T.Vector3()),center=bounds.getCenter(new T.Vector3());
  const scale=2.4/Math.max(.01,size.y),root=new T.Group();scene.scale.multiplyScalar(scale);scene.position.add(new T.Vector3(-center.x*scale,-bounds.min.y*scale,-center.z*scale));root.add(scene);root.updateMatrixWorld(true);
- const fitted=new T.Box3().setFromObject(root,true);root.userData.frame={height:fitted.max.y-fitted.min.y,width:fitted.max.x-fitted.min.x,depth:fitted.max.z-fitted.min.z,head:id==='luffy'?2.10:2.16};
+ const fitted=new T.Box3().setFromObject(root,true),headTarget=scene.getObjectByName('HeadTarget');
+ root.userData.frame={height:fitted.max.y-fitted.min.y,width:fitted.max.x-fitted.min.x,depth:fitted.max.z-fitted.min.z,head:headTarget?headTarget.getWorldPosition(new T.Vector3()).y:id==='luffy'?2.10:2.16};
  root.animations=clips;
  const blink=clips.find(c=>c.name==='blink');
  if(blink){const mixer=new T.AnimationMixer(scene),action=mixer.clipAction(blink);action.setLoop(T.LoopOnce,1);motions.set(root,{mixer,action,next:-1,start:0,active:false});}
@@ -54,7 +55,7 @@ export async function loadCharacter(id: string, signal: AbortSignal): Promise<T.
   const gltf=await new GLTFLoader().parseAsync(data,'/models/');
   if(signal.aborted){disposeCharacter(gltf.scene);signal.throwIfAborted();}
   const root=prepareCharacter(gltf.scene,id,gltf.animations);
-  root.name=`Character model: ${id}`;root.userData.assetKind=id==='luffy'?'uploaded':'procedural';
+  root.name=`Character model: ${id}`;root.userData.assetKind=id==='luffy'?'uploaded':'sculpted-v2';
   root.traverse(object=>{if(object instanceof T.Mesh){object.castShadow=object.receiveShadow=true;for(const m of Array.isArray(object.material)?object.material:[object.material]){if(m instanceof T.MeshStandardMaterial){m.envMapIntensity=.35;for(const value of Object.values(m))if(value instanceof T.Texture)value.anisotropy=4;}}}});
   return root;
 }

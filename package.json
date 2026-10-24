@@ -12,7 +12,7 @@
     "test:journal": "node --experimental-strip-types --test scripts/journal.test.mjs",
     "test:polish": "node scripts/polish-smoke.mjs",
     "test:viewport": "node --experimental-strip-types --test scripts/viewport.test.mjs",
-    "models:build": "blender -b --python scripts/build-characters.py",
+    "models:build": "blender -b --python-exit-code 1 --python scripts/sculpt-anime-cast.py",
     "test:models": "node --test scripts/models.test.mjs",
     "test:models:browser": "node scripts/models-smoke.mjs",
     "test:character-regions": "node --experimental-strip-types --test scripts/character-regions.test.mjs",

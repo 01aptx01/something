@@ -16,52 +16,121 @@
     {
       "id": "zoro",
       "file": "/models/zoro.glb",
-      "status": "existing-project-sculpture",
-      "author": "Project fan sculpture",
-      "source": "scripts/build-characters.py",
+      "status": "active-project-sculpture-v2",
+      "author": "Original project anime fan sculpt",
+      "source": "scripts/sculpt-anime-cast.py",
       "license": "Anatomical base MakeHuman hm08 CC0; character design rights remain with their original owners.",
-      "animations": [],
-      "notes": "No new external replacement model has been obtained for this character."
+      "animations": [
+        "blink"
+      ],
+      "notes": "Original anime head, hair, garments and props; MakeHuman CC0 supplies the body/hand foundation only. 20-joint presentation rig and eyelid morphs; no walk or combat clips. Uploaded Luffy is a visual reference only.",
+      "sculptVersion": 2,
+      "joints": 20,
+      "sha256": "c7ba8bc0489b414497a0fbe8975733777705d6217f9c7f5b7b09b2e330c72749",
+      "features": [
+        "custom angular anime head",
+        "closed left eye and scar",
+        "green layered spikes",
+        "three gold earrings",
+        "chest scar",
+        "green robe and red sash",
+        "three wrapped swords"
+      ]
     },
     {
       "id": "tanjiro",
       "file": "/models/tanjiro.glb",
-      "status": "existing-project-sculpture",
-      "author": "Project fan sculpture",
-      "source": "scripts/build-characters.py",
+      "status": "active-project-sculpture-v2",
+      "author": "Original project anime fan sculpt",
+      "source": "scripts/sculpt-anime-cast.py",
       "license": "Anatomical base MakeHuman hm08 CC0; character design rights remain with their original owners.",
-      "animations": [],
-      "notes": "No new external replacement model has been obtained for this character."
+      "animations": [
+        "blink"
+      ],
+      "notes": "Original anime head, hair, garments and props; MakeHuman CC0 supplies the body/hand foundation only. 20-joint presentation rig and eyelid morphs; no walk or combat clips. Uploaded Luffy is a visual reference only.",
+      "sculptVersion": 2,
+      "joints": 20,
+      "sha256": "07cf753b6d160f3656c95870be2564519617327d64cb8e42416d4aaf439c67f1",
+      "features": [
+        "custom anime head and painted iris",
+        "forehead scar",
+        "swept burgundy-black hair",
+        "ichimatsu haori",
+        "hanafuda earrings with sun and ink rays",
+        "uniform buttons and belt",
+        "sheathed Nichirin"
+      ]
     },
     {
       "id": "nezuko",
       "file": "/models/nezuko.glb",
-      "status": "existing-project-sculpture",
-      "author": "Project fan sculpture",
-      "source": "scripts/build-characters.py",
+      "status": "active-project-sculpture-v2",
+      "author": "Original project anime fan sculpt",
+      "source": "scripts/sculpt-anime-cast.py",
       "license": "Anatomical base MakeHuman hm08 CC0; character design rights remain with their original owners.",
-      "animations": [],
-      "notes": "No new external replacement model has been obtained for this character."
+      "animations": [
+        "blink"
+      ],
+      "notes": "Original anime head, hair, garments and props; MakeHuman CC0 supplies the body/hand foundation only. 20-joint presentation rig and eyelid morphs; no walk or combat clips. Uploaded Luffy is a visual reference only.",
+      "sculptVersion": 2,
+      "joints": 20,
+      "sha256": "f31c94558d60b057e28318743d4812746be766d3571e24eba01d65d68802fb0f",
+      "features": [
+        "custom anime head and pink slit iris",
+        "open centre-part black hair with orange tips",
+        "asanoha kimono",
+        "checked obi and red cord",
+        "pink hair ribbon",
+        "bamboo nodes, grain and tie",
+        "zori and calf wraps"
+      ]
     },
     {
       "id": "levi",
       "file": "/models/levi.glb",
-      "status": "existing-project-sculpture",
-      "author": "Project fan sculpture",
-      "source": "scripts/build-characters.py",
+      "status": "active-project-sculpture-v2",
+      "author": "Original project anime fan sculpt",
+      "source": "scripts/sculpt-anime-cast.py",
       "license": "Anatomical base MakeHuman hm08 CC0; character design rights remain with their original owners.",
-      "animations": [],
-      "notes": "No new external replacement model has been obtained for this character."
+      "animations": [
+        "blink"
+      ],
+      "notes": "Original anime head, hair, garments and props; MakeHuman CC0 supplies the body/hand foundation only. 20-joint presentation rig and eyelid morphs; no walk or combat clips. Uploaded Luffy is a visual reference only.",
+      "sculptVersion": 2,
+      "joints": 20,
+      "sha256": "e777d8bef8f1db1a003ee52fdf8c6f9045978ad4843ffbd12fd5232b7c2b6d47",
+      "features": [
+        "parted black hair and narrow eyes",
+        "white cravat",
+        "cropped pocketed jacket",
+        "embroidered wings",
+        "draped hooded cape with projected back badge",
+        "harness buckles and boots",
+        "ODM gas cylinders, blade boxes, cartridges, hoses and twin blades"
+      ]
     },
     {
       "id": "mikasa",
       "file": "/models/mikasa.glb",
-      "status": "existing-project-sculpture",
-      "author": "Project fan sculpture",
-      "source": "scripts/build-characters.py",
+      "status": "active-project-sculpture-v2",
+      "author": "Original project anime fan sculpt",
+      "source": "scripts/sculpt-anime-cast.py",
       "license": "Anatomical base MakeHuman hm08 CC0; character design rights remain with their original owners.",
-      "animations": [],
-      "notes": "No new external replacement model has been obtained for this character."
+      "animations": [
+        "blink"
+      ],
+      "notes": "Original anime head, hair, garments and props; MakeHuman CC0 supplies the body/hand foundation only. 20-joint presentation rig and eyelid morphs; no walk or combat clips. Uploaded Luffy is a visual reference only.",
+      "sculptVersion": 2,
+      "joints": 20,
+      "sha256": "81677e5cba222c8afebcc1b259aea2460718ab539e4c0396920ffa4a96bfb539",
+      "features": [
+        "angled black bob and painted iris",
+        "layered red scarf with trailing end",
+        "cropped pocketed jacket with wings",
+        "harness straps and buckles",
+        "fitted boots",
+        "ODM gas cylinders, blade boxes, cartridges, hoses and twin blades"
+      ]
     }
   ]
 }

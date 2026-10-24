@@ -239,7 +239,7 @@ export class ImmersiveWorld {
     const id=CAST[this.world][this.castIndex].id;
     if(id==='luffy'){
       credit.append(document.createTextNode(`${UPLOADED_LUFFY_CREDIT} · `));const link=document.createElement('a');link.href='https://sketchfab.com/3d-models/luffy-338ea5a381a34210b13d89cfe049c410';link.target='_blank';link.rel='noopener noreferrer';link.textContent='ที่มา';credit.append(link);
-    }else credit.textContent='แฟนโมเดลเดิมของโปรเจกต์ · ฐานสัดส่วน MakeHuman CC0';
+    }else credit.textContent='แฟนโมเดลปั้นใหม่ · ชุดและอุปกรณ์เฉพาะตัว · กระพริบตาได้';
   }
   private characterAtScreen(x:number,y:number){
     if(this.galleryOpen||this.presentation!=='anime'||!this.anime.settled||this.anime.scene!==this.destination||document.querySelector('dialog[open]')||$('#app').classList.contains('is-cinematic')||$('#app').getAttribute('aria-busy')==='true')return;

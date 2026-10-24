@@ -5,6 +5,7 @@ import {createHash} from 'node:crypto';
 import {Matrix4,Vector3,Quaternion} from 'three';
 
 const report=JSON.parse(fs.readFileSync(new URL('../public/models/build-report.json',import.meta.url)));
+const manifest=JSON.parse(fs.readFileSync(new URL('../public/models/manifest.json',import.meta.url)));
 for(const id of ['luffy','zoro','tanjiro','nezuko','levi','mikasa'])test(`${id}: complete local GLB, finite sculpture, embedded PBR textures and bounded geometry`,()=>{
  const buffer=fs.readFileSync(new URL(`../public/models/${id}.glb`,import.meta.url));
  assert.equal(buffer.toString('ascii',0,4),'glTF');assert.equal(buffer.readUInt32LE(4),2);assert.equal(buffer.readUInt32LE(8),buffer.length);
@@ -29,5 +30,38 @@ for(const id of ['luffy','zoro','tanjiro','nezuko','levi','mikasa'])test(`${id}:
  assert.ok(max[1]-min[1]>(id==='luffy'?1:2)&&max[1]-min[1]<3,'human full-body scale');
  assert.ok(max[2]-min[2]>.25,'real volume from front to back');
  if(id==='luffy'){assert.equal(createHash('sha256').update(buffer).digest('hex'),'70c9516935eca0065f22da082e46405150225215eeb617d2e6ad394d714c85c4');assert.ok(gltf.skins[0].joints.length>0);assert.ok(gltf.animations.some(c=>c.name==='blink'));assert.equal(gltf.asset.extras.license,'SKETCHFAB Standard (https://sketchfab.com/licenses)');}
+ else {
+   assert.equal(gltf.nodes.find(n=>n.name==='CharacterRig')?.extras.sculptVersion,2);
+   assert.ok(gltf.nodes.some(n=>n.name==='HeadTarget'),'face framing follows a sculpt marker');
+   const skin=gltf.skins[0];assert.equal(skin.joints.length,20);
+   assert.ok(skin.inverseBindMatrices!==undefined);
+   const used=new Set();
+   const read=(index,i,c)=>{
+     const a=gltf.accessors[index],v=gltf.bufferViews[a.bufferView],bytes={5121:1,5123:2,5126:4}[a.componentType];
+     const offset=28+jsonLength+v.byteOffset+(a.byteOffset??0)+i*(v.byteStride??4*bytes)+c*bytes;
+     return a.componentType===5126?buffer.readFloatLE(offset):a.componentType===5123?buffer.readUInt16LE(offset):buffer.readUInt8(offset);
+   };
+   for(const mesh of gltf.meshes)for(const p of mesh.primitives){
+     assert.ok(p.attributes.TEXCOORD_0!==undefined,'costume details have UVs');
+     assert.ok(p.attributes.JOINTS_0!==undefined&&p.attributes.WEIGHTS_0!==undefined,'every surface follows the rig');
+     for(let i=0;i<gltf.accessors[p.attributes.POSITION].count;i++){
+       let sum=0;
+       for(let c=0;c<4;c++){
+         const w=read(p.attributes.WEIGHTS_0,i,c),j=read(p.attributes.JOINTS_0,i,c);
+         assert.ok(Number.isFinite(w)&&w>=0&&w<=1);assert.ok(j<skin.joints.length);sum+=w;
+         if(w>0)used.add(gltf.nodes[skin.joints[j]].name);
+       }
+       assert.ok(Math.abs(sum-1)<1e-5,'skin weights sum to one');
+     }
+   }
+   for(const bone of ['Head','Hand.L','Hand.R','Foot.L','Foot.R'])assert.ok(used.has(bone),`anatomy has weights for ${bone}`);
+   const blink=gltf.animations.find(a=>a.name==='blink');assert.ok(blink);
+   assert.ok(blink.channels.length>0&&blink.channels.every(c=>c.target.path==='weights'),'blink animates eyelid morphs without moving the body');
+   for(const c of blink.channels){
+     const node=gltf.nodes[c.target.node],mesh=gltf.meshes[node.mesh];
+     assert.ok(mesh.extras.targetNames.includes('Blink'));assert.ok(mesh.primitives.every(p=>p.targets?.length===1));
+   }
+ }
  const entry=report.find(m=>m.id===id);assert.equal(entry.bytes,buffer.length);assert.equal(entry.triangles,tris);
+ const hash=createHash('sha256').update(buffer).digest('hex');assert.equal(entry.sha256,hash);assert.equal(manifest.assets.find(a=>a.id===id).sha256,hash);
 });

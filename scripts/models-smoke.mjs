@@ -21,6 +21,9 @@ try{
   for(let c=0;c<2;c++){
    if(c)await click(`#character-list [data-character="${c}"]`);
    await ready(cast[w][c]);await wait(200);await s.shot(`model-${cast[w][c]}`);
+   assert.equal(await s.evaluate('document.querySelector("canvas").dataset.modelKind'),cast[w][c]==='luffy'?'uploaded':'sculpted-v2');
+   await s.until('Number(document.querySelector("canvas").dataset.modelBlinkCount)>0',12000);
+   assert.equal(await s.evaluate('document.querySelector("canvas").dataset.modelAnimated'),'true');
    const full=await s.evaluate('document.querySelector("canvas").dataset.modelView');
    await click('[data-model-view="face"]');await s.until(`document.querySelector('canvas').dataset.modelView!==${JSON.stringify(full)}`);await wait(150);await s.shot(`model-face-${cast[w][c]}`);
    await click('[data-model-view="back"]');await wait(150);await s.shot(`model-back-${cast[w][c]}`);

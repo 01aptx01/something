@@ -11,36 +11,66 @@
   {
     "id": "zoro",
     "file": "zoro.glb",
-    "bytes": 2958560,
-    "triangles": 126371,
-    "materials": 10
+    "bytes": 5552932,
+    "triangles": 161935,
+    "materials": 16,
+    "sculptVersion": 2,
+    "joints": 20,
+    "animations": [
+      "blink"
+    ],
+    "sha256": "c7ba8bc0489b414497a0fbe8975733777705d6217f9c7f5b7b09b2e330c72749"
   },
   {
     "id": "tanjiro",
     "file": "tanjiro.glb",
-    "bytes": 3034404,
-    "triangles": 128342,
-    "materials": 15
+    "bytes": 4567308,
+    "triangles": 131079,
+    "materials": 17,
+    "sculptVersion": 2,
+    "joints": 20,
+    "animations": [
+      "blink"
+    ],
+    "sha256": "07cf753b6d160f3656c95870be2564519617327d64cb8e42416d4aaf439c67f1"
   },
   {
     "id": "nezuko",
     "file": "nezuko.glb",
-    "bytes": 2615800,
-    "triangles": 109706,
-    "materials": 13
+    "bytes": 3941124,
+    "triangles": 113154,
+    "materials": 20,
+    "sculptVersion": 2,
+    "joints": 20,
+    "animations": [
+      "blink"
+    ],
+    "sha256": "f31c94558d60b057e28318743d4812746be766d3571e24eba01d65d68802fb0f"
   },
   {
     "id": "levi",
     "file": "levi.glb",
-    "bytes": 3333588,
-    "triangles": 136864,
-    "materials": 11
+    "bytes": 5633772,
+    "triangles": 144832,
+    "materials": 16,
+    "sculptVersion": 2,
+    "joints": 20,
+    "animations": [
+      "blink"
+    ],
+    "sha256": "e777d8bef8f1db1a003ee52fdf8c6f9045978ad4843ffbd12fd5232b7c2b6d47"
   },
   {
     "id": "mikasa",
     "file": "mikasa.glb",
-    "bytes": 3057044,
-    "triangles": 124486,
-    "materials": 11
+    "bytes": 5325292,
+    "triangles": 135364,
+    "materials": 16,
+    "sculptVersion": 2,
+    "joints": 20,
+    "animations": [
+      "blink"
+    ],
+    "sha256": "81677e5cba222c8afebcc1b259aea2460718ab539e4c0396920ffa4a96bfb539"
   }
 ]

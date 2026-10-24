@@ -8,7 +8,7 @@
 
 กำหนดพื้นที่กดตามภาพครบ 9 ซีน รวม 17 ตำแหน่ง เฉพาะตัวละครที่ปรากฏจริงในแต่ละภาพ (เช่น ชายหาดมีลูฟี่คนเดียว) ตัวเลือกชื่อยังเปิดโมเดลของทั้งสองคนในโลกได้
 
-**ลูฟี่ใช้ `luffy.glb` ที่ผู้ใช้อัปโหลดแล้ว** เก็บไฟล์ต้นฉบับโดยไม่แก้ bytes จัดท่ายืนผ่าน rig และปรับขนาดใน runtime ใช้กล้องตามขอบเขตโมเดล พร้อมกระพริบตาเป็นช่วง ๆ และหยุดเมื่อเปิด reduced motion ส่วนโซโล ทันจิโร่ เนซึโกะ รีไวล์ และมิคาสะยังเป็นโมเดลเดิมของโปรเจกต์ ยังไม่ได้รับโมเดลชุดใหม่ของ 5 คนนี้
+**ลูฟี่ใช้ `luffy.glb` ที่ผู้ใช้อัปโหลดแล้ว** เก็บไฟล์ต้นฉบับโดยไม่แก้ bytes จัดท่ายืนผ่าน rig และปรับขนาดใน runtime ใช้กล้องตามขอบเขตโมเดล พร้อมกระพริบตาเป็นช่วง ๆ และหยุดเมื่อเปิด reduced motion ส่วนโซโล ทันจิโร่ เนซึโกะ รีไวล์ และมิคาสะปั้นใหม่เป็นรุ่น 2 แล้ว มีหัวอนิเมะ ชุดและอุปกรณ์เฉพาะตัว พร้อม rig พื้นฐานและกระพริบตาเช่นกัน
 
 ![ลูฟี่จากไฟล์ที่อัปโหลดในแอปจริง](docs/screenshots/luffy-uploaded.png)
 
@@ -18,7 +18,17 @@
 
 ## โมเดล 3D ชุดใหม่
 
-ตัวละครทั้ง 6 คนมีโมเดลหมุนชมได้ ลูฟี่ใช้ไฟล์ที่อัปโหลด ส่วนอีก 5 คนปั้นใน Blender จากฐานสัดส่วนมนุษย์ MakeHuman CC0 เพิ่มใบหน้า หู มือและนิ้ว ผมหลายชั้น เสื้อผ้าโค้งที่มีรอยพับ ลายผ้า ดวงตาที่มีม่านตา และอุปกรณ์เฉพาะตัว ใช้โมเดลเดียวกันทั้งในโลกและห้องแสดง
+**ปั้นใหม่ครบอีก 5 คน โดยใช้ลูฟี่เป็นภาพอ้างอิงด้านสไตล์** หัวอนิเมะและกรามสร้างใหม่ ดวงตาทรงอัลมอนด์มีม่านตา/รูม่านตาและเปลือกตากระพริบ ผมเป็นช่อ geometry รอบหัว เสื้อผ้ามีความหนา รอยพับ ตะเข็บ และลายที่ฝังในไฟล์ ใช้ฐาน MakeHuman CC0 เฉพาะสัดส่วนลำตัวและมือ ไม่คัดลอก geometry จากลูฟี่
+
+| ตัวละคร | รายละเอียดที่ปั้นเพิ่ม |
+| --- | --- |
+| โซโล | ผมเขียวสั้น แผลตาซ้ายปิด ต่างหู 3 ห่วง แผลหน้าอก เสื้อคลุมเขียว ผ้าคาดเอว และดาบ 3 เล่มพร้อมลายด้าม/ฝัก |
+| ทันจิโร่ | ผมดำอมแดง แผลหน้าผาก ฮาโอริลายตาราง ชุดคอปิด กระดุม/เข็มขัด ต่างหูฮานาฟูดะที่แยกดวงอาทิตย์และเส้นรัศมี และดาบนิจิริน |
+| เนซึโกะ | ผมยาวแสกกลางไล่ปลายส้ม ตาสีชมพู กิโมโนลายอาซาโนะฮะ โอบิ/เชือกแดง โบสีชมพู และกระบอกไม้ไผ่ที่มีข้อ/เสี้ยน/สายผูก |
+| รีไวล์ | ผมแสกกลาง ตาเรียว ผ้าผูกคอขาว แจ็กเก็ต/กระเป๋า ตราปีก สายรัด รองเท้า ผ้าคลุมพับพร้อมตราด้านหลัง และ ODM/ดาบคู่ |
+| มิคาสะ | ผมบ๊อบดำ ผ้าพันคอแดงหลายชั้นกับชายผ้า แจ็กเก็ตสั้น/ตราปีก สายรัด/หัวเข็มขัด รองเท้าบูต และ ODM/ดาบคู่ |
+
+ทั้ง 5 ไฟล์มีโครงกระดูก 20 ข้อและ blink morph ใช้โมเดลเดียวกันในโลกและห้องแสดง กล้องใบหน้าอ้างอิง `HeadTarget` ของโมเดลแต่ละตัว รายละเอียดขั้นตอนสร้างและภาพครบทุกมุมอยู่ใน [บันทึกโมเดลรุ่น 2](docs/model-reviews/anime-cast-v2/README.md)
 
 - ห้องแสดงมีแสงสะท้อน วัสดุ PBR เงาใต้เท้า และแสงให้เลือก 3 แบบ
 - เลือกมุมเต็มตัว / ใบหน้า / ด้านหลัง แล้วหมุนและซูมต่อได้ กล้องจัดกรอบตามพื้นที่บนมือถือและแนวนอน
@@ -29,16 +39,16 @@
 
 ![โมเดลทันจิโร่ชุดใหม่ในห้องแสดง](docs/screenshots/model-tanjiro.png)
 
-| ตัวละคร | เต็มตัว | รายละเอียดใบหน้า | ด้านหลัง |
-| --- | --- | --- | --- |
-| ลูฟี่ | [ดู](docs/screenshots/model-luffy.png) | [ดู](docs/screenshots/model-face-luffy.png) | [ดู](docs/screenshots/model-back-luffy.png) |
-| โซโล | [ดู](docs/screenshots/model-zoro.png) | [ดู](docs/screenshots/model-face-zoro.png) | [ดู](docs/screenshots/model-back-zoro.png) |
-| ทันจิโร่ | [ดู](docs/screenshots/model-tanjiro.png) | [ดู](docs/screenshots/model-face-tanjiro.png) | [ดู](docs/screenshots/model-back-tanjiro.png) |
-| เนซึโกะ | [ดู](docs/screenshots/model-nezuko.png) | [ดู](docs/screenshots/model-face-nezuko.png) | [ดู](docs/screenshots/model-back-nezuko.png) |
-| รีไวล์ | [ดู](docs/screenshots/model-levi.png) | [ดู](docs/screenshots/model-face-levi.png) | [ดู](docs/screenshots/model-back-levi.png) |
-| มิคาสะ | [ดู](docs/screenshots/model-mikasa.png) | [ดู](docs/screenshots/model-face-mikasa.png) | [ดู](docs/screenshots/model-back-mikasa.png) |
+| ตัวละคร | เต็มตัว | รายละเอียดใบหน้า | ด้านหลัง | ชุดและอุปกรณ์ |
+| --- | --- | --- | --- | --- |
+| ลูฟี่ | [ดู](docs/screenshots/model-luffy.png) | [ดู](docs/screenshots/model-face-luffy.png) | [ดู](docs/screenshots/model-back-luffy.png) | — |
+| โซโล | [ดู](docs/screenshots/model-zoro.png) | [ดู](docs/screenshots/model-face-zoro.png) | [ดู](docs/screenshots/model-back-zoro.png) | [ดู](docs/screenshots/model-gear-zoro.png) |
+| ทันจิโร่ | [ดู](docs/screenshots/model-tanjiro.png) | [ดู](docs/screenshots/model-face-tanjiro.png) | [ดู](docs/screenshots/model-back-tanjiro.png) | [ดู](docs/screenshots/model-gear-tanjiro.png) |
+| เนซึโกะ | [ดู](docs/screenshots/model-nezuko.png) | [ดู](docs/screenshots/model-face-nezuko.png) | [ดู](docs/screenshots/model-back-nezuko.png) | [ดู](docs/screenshots/model-gear-nezuko.png) |
+| รีไวล์ | [ดู](docs/screenshots/model-levi.png) | [ดู](docs/screenshots/model-face-levi.png) | [ดู](docs/screenshots/model-back-levi.png) | [ดู](docs/screenshots/model-gear-levi.png) |
+| มิคาสะ | [ดู](docs/screenshots/model-mikasa.png) | [ดู](docs/screenshots/model-face-mikasa.png) | [ดู](docs/screenshots/model-back-mikasa.png) | [ดู](docs/screenshots/model-gear-mikasa.png) |
 
-[มือถือ](docs/screenshots/sculpture-390x844.png) · [จอเล็ก 320 พิกเซล](docs/screenshots/sculpture-320x740.png) · [แนวนอน](docs/screenshots/sculpture-844x390.png) · [ตัวอย่างแสงจันทร์](docs/screenshots/studio-light-1.png) · [ที่มาและสิทธิ์ของฐานโมเดล](scripts/model-source/README.md)
+[ตราบนผ้าคลุมรีไวล์แบบซูม](docs/screenshots/model-cape-levi.png) · [มือถือ](docs/screenshots/sculpture-390x844.png) · [จอเล็ก 320 พิกเซล](docs/screenshots/sculpture-320x740.png) · [แนวนอน](docs/screenshots/sculpture-844x390.png) · [ตัวอย่างแสงจันทร์](docs/screenshots/studio-light-1.png) · [ที่มาและสิทธิ์ของฐานโมเดล](scripts/model-source/README.md)
 
 ## เก็บงานทุกโลก
 
@@ -153,8 +163,8 @@ npm run test:viewport    # เลื่อนทั่วภาพ ขอบว�
 npm run test:polish      # ใช้ Chromium ตรวจคลิกจริง PNG คุณภาพภาพ pinch และจอเล็ก
 npm run test:character-regions # พื้นที่กดบนภาพทั้ง 9 ซีน
 npm run test:character-entry # คลิกจริง เลื่อน/ซูม กลับซีนเดิม rig/blink และมือถือ
-npm run test:models      # ตรวจ GLB ทั้ง 6: geometry, normals, ขนาด และ texture
-npm run test:models:browser # โมเดล/มุมชม/แสง/มือถือ/โหลดผิดพลาด/ลองใหม่/คำขอเก่า
+npm run test:models      # GLB ทั้ง 6: geometry, UV, normals, texture, rig/weights, blink และ hash
+npm run test:models:browser # โมเดล/มุมชม/กระพริบตา/แสง/มือถือ/ลองใหม่/คำขอเก่า
 ```
 
 การทดสอบ TypeScript แบบไม่ build ใช้ Node.js 22.18+ หรือ 24
@@ -183,9 +193,9 @@ APP_URL=http://127.0.0.1:4173 SCREENSHOT_DIR=/tmp/anime-checks npm run test:brow
 
 ฉาก 3D สร้างด้วย Three.js ใน [src/immersive](src/immersive) วัสดุไม้ หิน ทราย และท้องฟ้าสร้างในเครื่อง ส่วนตัวละครโหลดจาก GLB ใน `public/models` พร้อม texture ที่ฝังในไฟล์ ไม่เรียก CDN ภายนอก ดูที่มา ขนาด และข้อจำกัดใน [asset manifest](docs/ASSETS.md)
 
-การสร้างโมเดลเดิมอีก 5 คนซ้ำใช้ Blender 4.3+ และ `npm run models:build` (ไม่เขียนทับลูฟี่ที่อัปโหลด) โดยมี source และ license ของฐานสัดส่วนเก็บใน repository แล้ว การเปิดเว็บตามปกติไม่ต้องติดตั้ง Blender
+การสร้างโมเดลรุ่น 2 อีก 5 คนซ้ำใช้ Blender 4.3+ และ `npm run models:build` (ไม่เขียนทับลูฟี่ที่อัปโหลด) โดยมี source และ license ของฐานสัดส่วนเก็บใน repository แล้ว การเปิดเว็บตามปกติไม่ต้องติดตั้ง Blender
 
-รายละเอียดภาพเดิม ภาพสถานที่และภาพตัวละคร พร้อม manifest อยู่ใน [public/artwork/README.md](public/artwork/README.md) ภาพวาดไม่ใช่เฟรมหรือโมเดลทางการจากอนิเมะ โมเดลมี geometry รอบตัวจริง ลูฟี่ที่อัปโหลดมี rig และ blink ส่วนอีก 5 คนยังเป็นประติมากรรมท่าคงที่ ยังไม่มีอนิเมชันเดินหรือระบบต่อสู้ ชื่อเรื่อง/ตัวละครเป็นของผู้ถือสิทธิ์ต้นฉบับ
+รายละเอียดภาพเดิม ภาพสถานที่และภาพตัวละคร พร้อม manifest อยู่ใน [public/artwork/README.md](public/artwork/README.md) ภาพวาดไม่ใช่เฟรมหรือโมเดลทางการจากอนิเมะ โมเดลมี geometry รอบตัวจริง ทั้ง 6 คนมี rig และ blink; อีก 5 คนเป็นแฟนโมเดลที่ปั้นสำหรับโปรเจกต์ ยังไม่มีอนิเมชันเดินหรือระบบต่อสู้ ชื่อเรื่อง/ตัวละครเป็นของผู้ถือสิทธิ์ต้นฉบับ
 
 ดู [หน้าวิธีเล่น](docs/screenshots/controls-guide.png) · [หน้าจอมือถือ](docs/screenshots/mobile-immersive.png)
 

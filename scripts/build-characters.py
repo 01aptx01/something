@@ -1,4 +1,5 @@
-"""Rebuild the five procedural fan sculptures. Blender 4.3+, no add-ons.
+"""Legacy v1 sculptures and shared anatomical/mesh helpers. Blender 4.3+.
+Use sculpt-anime-cast.py (npm run models:build) for the current v2 assets.
 The user-uploaded Luffy is managed separately and is never overwritten.
 
 blender -b --python scripts/build-characters.py
@@ -444,11 +445,12 @@ def build(cid):
     tris=sum(sum(len(p.vertices)-2 for p in o.data.polygons) for o in bpy.context.scene.objects if o.type=='MESH')
     return {'id':cid,'file':cid+'.glb','bytes':(OUT/(cid+'.glb')).stat().st_size,'triangles':tris,'materials':len(bymat)}
 
-ids=sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else ['zoro','tanjiro','nezuko','levi','mikasa']
-if any(cid not in ('zoro','tanjiro','nezuko','levi','mikasa') for cid in ids):raise ValueError('Only the five procedural characters may be rebuilt; the uploaded Luffy asset is preserved.')
-previous=json.loads((OUT/'build-report.json').read_text()) if (OUT/'build-report.json').exists() else []
-entries={entry['id']:entry for entry in previous}
-entries.update({cid:build(cid) for cid in ids})
-report=[entries[cid] for cid in ('luffy','zoro','tanjiro','nezuko','levi','mikasa') if cid in entries]
-(OUT/'build-report.json').write_text(json.dumps(report,indent=2)+'\n')
-print('MODEL_REPORT',json.dumps(report))
+if __name__=='__main__':
+    ids=sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else ['zoro','tanjiro','nezuko','levi','mikasa']
+    if any(cid not in ('zoro','tanjiro','nezuko','levi','mikasa') for cid in ids):raise ValueError('Only the five procedural characters may be rebuilt; the uploaded Luffy asset is preserved.')
+    previous=json.loads((OUT/'build-report.json').read_text()) if (OUT/'build-report.json').exists() else []
+    entries={entry['id']:entry for entry in previous}
+    entries.update({cid:build(cid) for cid in ids})
+    report=[entries[cid] for cid in ('luffy','zoro','tanjiro','nezuko','levi','mikasa') if cid in entries]
+    (OUT/'build-report.json').write_text(json.dumps(report,indent=2)+'\n')
+    print('MODEL_REPORT',json.dumps(report))

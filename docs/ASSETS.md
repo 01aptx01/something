@@ -8,7 +8,7 @@
 | โทริอิ ศาลเจ้า โคมไฟ ดอกวิสทีเรีย ลำธาร | ไฟล์เดียวกัน | Geometry + InstancedMesh | ดอกไม้รวมหลายต้นใน 4 instanced draw calls |
 | อาคาร กำแพง ประตู ทางลาด เงาไททัน | ไฟล์เดียวกัน | Geometry | มีทางลาดจริงจาก y=0 ถึง y=9 |
 | ลูฟี่ที่ผู้ใช้อัปโหลด | KingOfThePirates, แหล่งที่มาและ license ตาม metadata ใน [manifest](../public/models/manifest.json) | Local GLB 5,013,272 bytes, rig + blink | Sketchfab Standard; ไม่จัดเป็น CC0; ต้นฉบับไม่ถูกแก้ bytes |
-| โซโล ทันจิโร่ เนซึโกะ รีไวล์ มิคาสะ | `scripts/build-characters.py` + MakeHuman hm08 CC0, แฟนโมเดลปั้นใหม่สำหรับโปรเจกต์ | Local GLB + embedded PBR textures | ดวงตา ผม หมวก เสื้อผ้า อาวุธ เป็น geometry; ไม่ใช่ billboard |
+| โซโล ทันจิโร่ เนซึโกะ รีไวล์ มิคาสะ | `scripts/sculpt-anime-cast.py` + MakeHuman hm08 CC0, แฟนโมเดลปั้นใหม่สำหรับโปรเจกต์ | Local GLB + embedded PBR textures | หัวอนิเมะใหม่ ช่อผม ชุดและอุปกรณ์เป็น geometry; rig 20 ข้อ + blink morph |
 | ไม้ หิน ทราย | `src/immersive/kit.ts` | Seeded 256×256 CanvasTexture + bump map | สร้างในเครื่อง ไม่ดาวน์โหลดภาพพื้นผิว |
 | ท้องฟ้าและน้ำ | `kit.ts`, `environments.ts` | Gradient dome / animated GLSL water | หยุด animation เมื่อ reduced motion |
 | ภาพเดิม 3 โลก | OpenAI ImageGen; ดู `public/artwork/README.md` | Local WebP 1920×1080 | ใช้ในฮับและซีนแรกของแต่ละโลก |
@@ -20,7 +20,7 @@
 
 ฐานสัดส่วน `scripts/model-source/base.obj` มาจาก MakeHuman hm08 ที่ระบุ CC0 ไว้ใน header มี source URL, SHA-256, license และคำสั่งสร้างซ้ำใน [model-source/README.md](../scripts/model-source/README.md) โค้ด Blender ปรับรูปทรงและปั้นผม เสื้อผ้า ดวงตา ลายผ้า ดาบและอุปกรณ์ขึ้นใหม่ ไม่มีโมเดล ripped หรือ asset จากเกม
 
-ฐาน CC0 ไม่ได้ให้สิทธิ์ในตัวละครต้นฉบับเพิ่มเติม โมเดลเดิม 5 คนเป็นแฟนประติมากรรมท่าคงที่ ลูฟี่ที่อัปโหลดมี rig และ blink ไม่มี combat หรืออนิเมชันเดิน
+ฐาน CC0 ไม่ได้ให้สิทธิ์ในตัวละครต้นฉบับเพิ่มเติม ทั้ง 6 คนมี rig และ blink; รุ่น 2 ของอีก 5 คนใช้โครงกระดูกพื้นฐานสำหรับการจัดท่าและ morph เปลือกตา ไม่มี combat หรืออนิเมชันเดิน
 
 ### ขนาดโมเดลที่ส่งมอบ
 
@@ -29,11 +29,11 @@
 | ไฟล์ | MB | Triangles | Materials |
 | --- | ---: | ---: | ---: |
 | `luffy.glb` | 5.01 | 48,964 | 19 |
-| `zoro.glb` | 2.96 | 126,371 | 10 |
-| `tanjiro.glb` | 3.03 | 128,342 | 15 |
-| `nezuko.glb` | 2.62 | 109,706 | 13 |
-| `levi.glb` | 3.33 | 136,864 | 11 |
-| `mikasa.glb` | 3.06 | 124,486 | 11 |
+| `zoro.glb` | 5.55 | 161,935 | 16 |
+| `tanjiro.glb` | 4.57 | 131,079 | 17 |
+| `nezuko.glb` | 3.94 | 113,154 | 20 |
+| `levi.glb` | 5.63 | 144,832 | 16 |
+| `mikasa.glb` | 5.33 | 135,364 | 16 |
 
 ค่าลูฟี่เป็นไฟล์ที่อัปโหลดก่อนปรับขนาดและจัดท่าใน runtime ส่วนอีก 5 คนมาจาก Blender pipeline ของโปรเจกต์
 
@@ -80,4 +80,4 @@
 - `luffy.glb` is the original user upload (SHA-256 in manifest). Runtime normalizes scale, transforms the complete arm/control hierarchy coherently into a relaxed pose and retains the blink clip.
 - Occasional blink follows elapsed time rather than movement delta; reduced motion restores the resting face. Mixer bindings, skeleton/bone textures, geometry and image bitmaps are released on disposal.
 - Full-body framing considers width and height of the posed model; face framing uses a per-character target.
-- Regenerating the five procedural characters cannot overwrite the uploaded Luffy. No new matching external assets have yet been supplied for the other five.
+- Regenerating the five v2 characters cannot overwrite the uploaded Luffy. The other five are now original v2 project sculpts with 20-joint presentation rigs and blink morphs. See [cast review](model-reviews/anime-cast-v2/README.md).
