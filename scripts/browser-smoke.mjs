@@ -18,6 +18,7 @@ try {
   await s.evaluate('localStorage.removeItem("anime-worlds-discoveries-v1")'); await s.navigate();
   await s.shot('hub');
   const hubGeometry = Number(await s.evaluate('document.querySelector("canvas").dataset.geometries'));
+  const hubTextures = Number(await s.evaluate('document.querySelector("canvas").dataset.textures'));
   for (const [index, name, models] of [[0, 'one-piece', ['luffy','zoro']], [1, 'demon-slayer', ['tanjiro','nezuko']], [2, 'attack-on-titan', ['levi','mikasa']]]) {
     await s.enter(index);
     assert.equal(await s.evaluate('document.querySelector("#world-picker").inert'), true);
@@ -56,6 +57,8 @@ try {
     await s.click('.gallery-presentation [data-presentation="3d"]');
     await s.until('document.querySelector("canvas").dataset.modelState==="ready"',25000);
     await s.key('Escape');
+    assert.equal(await s.evaluate('document.querySelector("#app").dataset.presentation'),'anime','closing a 3D gallery restores the painted world');
+    await s.click('#world-presentation [data-presentation="3d"]');
     await s.until('Number(document.querySelector("canvas").dataset.triangles) > 15000');
     await s.shot('3d-'+name);
     const start = await position();
@@ -80,7 +83,11 @@ try {
       await hold('w', 'KeyW', 'Number(document.querySelector("canvas").dataset.position.split(",")[1]) < 10.6');
     }
     await s.click('[data-scene="0"]');
-    await s.key(' ', 'Space'); await s.until('document.querySelector("#world-action").disabled');
+    await s.until('!document.querySelector("#world-action").disabled',15000);
+    await s.evaluate('window.effectKeyState=null;window.addEventListener("keydown",function record(e){if(e.code==="Space"){window.effectKeyState={target:e.target.id,prevented:e.defaultPrevented,disabled:document.querySelector("#world-action").disabled};window.removeEventListener("keydown",record)}})');
+    await s.key(' ', 'Space');
+    // Capture the synchronous effect activation: a slow GPU frame may outlast its cooldown.
+    assert.deepEqual(await s.evaluate('window.effectKeyState'),{target:'world-canvas',prevented:true,disabled:true});
     await wait(400); await s.shot('3d-' + name + '-action');
     await s.click('#explore-toggle'); await s.until('document.querySelector("#explore-dialog").open');
     for (let i = 0; i < 6; i++) await s.evaluate(`document.querySelectorAll('.note-choice')[${i}].click()`);
@@ -111,7 +118,7 @@ try {
     await s.until('!document.querySelector("#world-action").disabled', 15000);
     await s.back();
     assert.equal(await s.evaluate('document.activeElement.dataset.world'), String(index));
-    await s.until(`Number(document.querySelector('canvas').dataset.geometries) <= ${hubGeometry + 2}`, 15000);
+    await s.until(`Number(document.querySelector('canvas').dataset.geometries) <= ${hubGeometry + 2} && Number(document.querySelector('canvas').dataset.textures) <= ${hubTextures + 1}`, 15000);
     console.log(`PASS ${name}: anime default, 3 painted scenes, pan/zoom, 2 portraits, optional 3D scenes, walk/look/reset, elevation, effects, notes, cinematic, 2 volumetric models, orbit/zoom/spin, restore, disposal`);
   }
   await s.metrics(390, 844, true); await s.navigate(); await s.shot('mobile-hub');

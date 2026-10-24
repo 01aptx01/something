@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {createHash} from 'node:crypto';
 import {Matrix4,Vector3,Quaternion} from 'three';
 
 const report=JSON.parse(fs.readFileSync(new URL('../public/models/build-report.json',import.meta.url)));
@@ -24,8 +25,9 @@ for(const id of ['luffy','zoro','tanjiro','nezuko','levi','mikasa'])test(`${id}:
    for(let i=0;i<a.count;i++){const co=[];for(let c=0;c<3;c++){const value=buffer.readFloatLE(start+i*stride+c*4);assert.ok(Number.isFinite(value),'no NaN/Infinity positions');co.push(value);}const v=new Vector3().fromArray(co).applyMatrix4(transforms.get(mi)).toArray();for(let c=0;c<3;c++){min[c]=Math.min(min[c],v[c]);max[c]=Math.max(max[c],v[c]);}}
    tris+=(p.indices===undefined?a.count:gltf.accessors[p.indices].count)/3;
  }
- assert.ok(tris>50000&&tris<180000,`sized for one detailed exhibit: ${tris}`);
- assert.ok(max[1]-min[1]>2&&max[1]-min[1]<3,'human full-body scale');
+ assert.ok(tris>(id==='luffy'?40000:50000)&&tris<180000,`sized for one detailed exhibit: ${tris}`);
+ assert.ok(max[1]-min[1]>(id==='luffy'?1:2)&&max[1]-min[1]<3,'human full-body scale');
  assert.ok(max[2]-min[2]>.25,'real volume from front to back');
+ if(id==='luffy'){assert.equal(createHash('sha256').update(buffer).digest('hex'),'70c9516935eca0065f22da082e46405150225215eeb617d2e6ad394d714c85c4');assert.ok(gltf.skins[0].joints.length>0);assert.ok(gltf.animations.some(c=>c.name==='blink'));assert.equal(gltf.asset.extras.license,'SKETCHFAB Standard (https://sketchfab.com/licenses)');}
  const entry=report.find(m=>m.id===id);assert.equal(entry.bytes,buffer.length);assert.equal(entry.triangles,tris);
 });

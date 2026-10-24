@@ -98,6 +98,7 @@ export class AnimeScene {
       this.retry.hidden = false; document.querySelector<HTMLElement>('#app')!.dataset.artworkState = 'error'; return false;
     }
   }
+  holdView() { this.targetPan.copy(this.pan); }
   toggleZoom() { if(this.zoom>1.05)this.reset();else this.zoomBy(1.45); }
   reset() { this.pan.set(0,0); this.targetPan.set(0,0); this.zoom=1; this.fit(); }
   move(x: number, y: number) { this.targetPan.x = T.MathUtils.clamp(this.targetPan.x+x,-1,1); this.targetPan.y=T.MathUtils.clamp(this.targetPan.y+y,-1,1); }
@@ -115,9 +116,18 @@ export class AnimeScene {
     crop.set(Math.min(1,viewport/aspect)/this.zoom/1.07,Math.min(1,aspect/viewport)/this.zoom/1.07);
     (this.material.uniforms.offset.value as T.Vector2).set(boundedOffset(1-crop.x,this.focus(),this.pan.x),boundedOffset(1-crop.y,.5,this.pan.y));
   }
+  private shifted(u:number,v:number):[number,number] {
+    const foreground=T.MathUtils.smoothstep(u,.52,.85)*(1-T.MathUtils.smoothstep(1-v,.75,1));
+    const amount=.002+foreground*.002;return [u+this.pan.x*amount,v-this.pan.y*amount];
+  }
+  imagePoint(x:number,y:number):[number,number] {
+    const crop=this.material.uniforms.crop.value as T.Vector2,offset=this.material.uniforms.offset.value as T.Vector2;
+    return this.shifted(x/innerWidth*crop.x+offset.x,1-((1-y/innerHeight)*crop.y+offset.y));
+  }
   project(u:number,v:number):[number,number] {
     const crop=this.material.uniforms.crop.value as T.Vector2,offset=this.material.uniforms.offset.value as T.Vector2;
-    return [(u-offset.x)/crop.x*innerWidth,(1-(1-v-offset.y)/crop.y)*innerHeight];
+    let x=u,y=v;for(let i=0;i<3;i++){const [a,b]=this.shifted(x,y);x+=u-a;y+=v-b;}
+    return [(x-offset.x)/crop.x*innerWidth,(1-(1-y-offset.y)/crop.y)*innerHeight];
   }
   update(delta: number, reducedMotion: boolean) {
     this.pan.lerp(this.targetPan, reducedMotion ? 1 : 1-Math.exp(-delta*10)); this.fit();
@@ -126,7 +136,7 @@ export class AnimeScene {
     this.ambience.points.visible=!reducedMotion;this.ambience.material.uniforms.time.value=this.time;
     this.material.uniforms.time.value=this.time; (this.material.uniforms.pan.value as T.Vector2).copy(this.pan);
     const readout=document.querySelector('#zoom-readout')!;const label=`${Math.round(this.zoom*100)}%`;if(readout.textContent!==label)readout.textContent=label;
-    const canvas = document.querySelector<HTMLElement>('#world-canvas')!; canvas.dataset.artBlend=Number(this.material.uniforms.blend.value).toFixed(2); canvas.dataset.artView = `${this.pan.x.toFixed(3)},${this.pan.y.toFixed(3)},${this.zoom.toFixed(3)}`;
+    const canvas = document.querySelector<HTMLElement>('#world-canvas')!; canvas.dataset.artTransform=JSON.stringify({crop:this.material.uniforms.crop.value.toArray(),offset:this.material.uniforms.offset.value.toArray()}); canvas.dataset.artBlend=Number(this.material.uniforms.blend.value).toFixed(2); canvas.dataset.artView = `${this.pan.x.toFixed(3)},${this.pan.y.toFixed(3)},${this.zoom.toFixed(3)}`;
   }
   dispose() {
     this.disposed=true; this.token++; this.signal.abort(); this.textures.forEach(texture=>texture.dispose()); this.textures.clear();
@@ -134,7 +144,7 @@ export class AnimeScene {
     this.timers.forEach(timer=>clearTimeout(timer)); this.timers.clear();
     this.ambience.points.geometry.dispose();this.ambience.material.dispose();
     this.root.traverse(o=>{if(o instanceof T.Mesh)o.geometry.dispose();}); this.material.dispose(); this.root.removeFromParent(); this.root.clear(); this.status.hidden=true;
-    const app=document.querySelector<HTMLElement>('#app')!; delete app.dataset.artScene; delete app.dataset.artworkState; delete document.querySelector<HTMLElement>('#world-canvas')!.dataset.artView;delete document.querySelector<HTMLElement>('#world-canvas')!.dataset.artBlend;
+    const app=document.querySelector<HTMLElement>('#app')!; delete app.dataset.artScene; delete app.dataset.artworkState; delete document.querySelector<HTMLElement>('#world-canvas')!.dataset.artView;delete document.querySelector<HTMLElement>('#world-canvas')!.dataset.artBlend;delete document.querySelector<HTMLElement>('#world-canvas')!.dataset.artTransform;
   }
 }
 

@@ -100,3 +100,15 @@
 @media(max-height:580px) and (min-width:651px) {
  .sculpture-tools { left:auto; right:20px; top:125px; bottom:auto; transform:none; flex-direction:column; align-items:flex-end; gap:6px; }.sculpture-tools button { font-size:9px; padding:6px 8px; min-height:32px; }#app[data-presentation='3d'] .model-tools { left:auto; }#model-status { left:54%; top:50%; }
 }
+#scene-cast { position:absolute; top:270px; right:40px; display:flex; gap:6px; pointer-events:auto; max-width:320px; flex-wrap:wrap; justify-content:flex-end; }
+#scene-cast button { color:#e1eaf5; background:#101b2bd9; border:1px solid #ffffff35; border-radius:5px; padding:8px 10px; min-height:40px; font-size:10px; }
+#scene-cast button:hover,#scene-cast button:focus-visible { color:var(--world-accent);border-color:var(--world-accent); }
+#character-hover { position:absolute; transform:translate(-50%,-100%); pointer-events:none; padding:8px 12px; border:1px solid var(--world-accent); background:#0d1829ee; border-radius:5px; font-size:11px; color:#fff; z-index:5; white-space:nowrap; }
+#character-hover[hidden] { display:none; }.model-credit a { color:inherit;pointer-events:auto;text-decoration:underline; }
+#app[data-presentation='3d']:not(.is-gallery) #scene-cast { top:270px; right:230px; }
+@media(max-width:650px) { #scene-cast { top:252px;right:16px;max-width:210px;gap:4px; }#scene-cast button { font-size:9px;padding:6px 8px;min-height:36px; }#app[data-presentation='3d']:not(.is-gallery) #scene-cast { right:16px;top:380px;max-width:150px; }#character-hover { font-size:9px; } }
+@media(max-height:580px) and (min-width:651px) { #scene-cast,#app[data-presentation='3d']:not(.is-gallery) #scene-cast { top:220px;right:20px;max-width:200px; } }
+/* Keep direct-entry names away from the painted characters on the right. */
+#scene-cast,#app[data-presentation='3d']:not(.is-gallery) #scene-cast { left:40px;right:auto;top:330px;max-width:240px;justify-content:flex-start; }
+@media(max-width:650px) { #scene-cast,#app[data-presentation='3d']:not(.is-gallery) #scene-cast { left:16px;right:auto;top:246px;max-width:205px; } }
+@media(max-height:580px) and (min-width:651px) { #scene-cast,#app[data-presentation='3d']:not(.is-gallery) #scene-cast { left:20px;right:auto;top:140px;max-width:240px; } }

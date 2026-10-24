@@ -1,6 +1,6 @@
 # Uploaded Luffy asset review — 24 October 2026
 
-This is a read-only review of the user-uploaded `luffy.glb`. The application's models and source code have not been changed.
+Historical inspection before integration. The uploaded `luffy.glb` is now used in the application; see the main README and public/models/manifest.json for current implementation and provenance. The source-file metrics and original T-pose renders below remain unchanged.
 
 ## Verified from the file and a local Three.js render
 

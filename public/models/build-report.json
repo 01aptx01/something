@@ -2,9 +2,11 @@
   {
     "id": "luffy",
     "file": "luffy.glb",
-    "bytes": 3322220,
-    "triangles": 140468,
-    "materials": 14
+    "bytes": 5013272,
+    "triangles": 48964,
+    "materials": 19,
+    "source": "user-uploaded Sketchfab GLB",
+    "sha256": "70c9516935eca0065f22da082e46405150225215eeb617d2e6ad394d714c85c4"
   },
   {
     "id": "zoro",

@@ -14,7 +14,9 @@
     "test:viewport": "node --experimental-strip-types --test scripts/viewport.test.mjs",
     "models:build": "blender -b --python scripts/build-characters.py",
     "test:models": "node --test scripts/models.test.mjs",
-    "test:models:browser": "node scripts/models-smoke.mjs"
+    "test:models:browser": "node scripts/models-smoke.mjs",
+    "test:character-regions": "node --experimental-strip-types --test scripts/character-regions.test.mjs",
+    "test:character-entry": "node scripts/character-entry-smoke.mjs"
   },
   "dependencies": {
     "three": "^0.180.0"

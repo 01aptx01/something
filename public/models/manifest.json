@@ -1,0 +1,67 @@
+{
+  "assets": [
+    {
+      "id": "luffy",
+      "file": "/models/luffy.glb",
+      "status": "active-uploaded",
+      "author": "ᗰOᑎKEY ᗪ. ᒪᑌᖴᖴY (@KingOfThePirates)",
+      "source": "https://sketchfab.com/3d-models/luffy-338ea5a381a34210b13d89cfe049c410",
+      "license": "SKETCHFAB Standard (as embedded in uploaded asset)",
+      "sha256": "70c9516935eca0065f22da082e46405150225215eeb617d2e6ad394d714c85c4",
+      "animations": [
+        "blink"
+      ],
+      "notes": "Original upload preserved byte-for-byte. Presentation pose and normalization are applied at runtime; no walking animation is supplied."
+    },
+    {
+      "id": "zoro",
+      "file": "/models/zoro.glb",
+      "status": "existing-project-sculpture",
+      "author": "Project fan sculpture",
+      "source": "scripts/build-characters.py",
+      "license": "Anatomical base MakeHuman hm08 CC0; character design rights remain with their original owners.",
+      "animations": [],
+      "notes": "No new external replacement model has been obtained for this character."
+    },
+    {
+      "id": "tanjiro",
+      "file": "/models/tanjiro.glb",
+      "status": "existing-project-sculpture",
+      "author": "Project fan sculpture",
+      "source": "scripts/build-characters.py",
+      "license": "Anatomical base MakeHuman hm08 CC0; character design rights remain with their original owners.",
+      "animations": [],
+      "notes": "No new external replacement model has been obtained for this character."
+    },
+    {
+      "id": "nezuko",
+      "file": "/models/nezuko.glb",
+      "status": "existing-project-sculpture",
+      "author": "Project fan sculpture",
+      "source": "scripts/build-characters.py",
+      "license": "Anatomical base MakeHuman hm08 CC0; character design rights remain with their original owners.",
+      "animations": [],
+      "notes": "No new external replacement model has been obtained for this character."
+    },
+    {
+      "id": "levi",
+      "file": "/models/levi.glb",
+      "status": "existing-project-sculpture",
+      "author": "Project fan sculpture",
+      "source": "scripts/build-characters.py",
+      "license": "Anatomical base MakeHuman hm08 CC0; character design rights remain with their original owners.",
+      "animations": [],
+      "notes": "No new external replacement model has been obtained for this character."
+    },
+    {
+      "id": "mikasa",
+      "file": "/models/mikasa.glb",
+      "status": "existing-project-sculpture",
+      "author": "Project fan sculpture",
+      "source": "scripts/build-characters.py",
+      "license": "Anatomical base MakeHuman hm08 CC0; character design rights remain with their original owners.",
+      "animations": [],
+      "notes": "No new external replacement model has been obtained for this character."
+    }
+  ]
+}

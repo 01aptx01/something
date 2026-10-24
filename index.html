@@ -68,6 +68,7 @@
           <div id="scene-caption"><div><span id="scene-mood"></span><span id="scene-current">01 / 03</span></div><p id="scene-description"></p></div>
           <div class="view-tools" role="group" aria-label="ปรับมุมมอง"><button id="view-zoom-out" type="button" aria-label="ซูมภาพออก">−</button><span id="zoom-readout">100%</span><button id="view-zoom-in" type="button" aria-label="ซูมภาพเข้า">＋</button><button id="view-reset" type="button" title="คืนมุมเริ่มต้น · R" aria-label="คืนมุมเริ่มต้น">↺</button></div>
           <button id="gallery-open" class="gallery-open" type="button"><span>◈</span> ชมตัวละคร <small>G</small></button>
+          <nav id="scene-cast" aria-label="ดูโมเดลตัวละครในโลกนี้"></nav>
           <div class="map-panel"><span>EXPLORER / N ↑</span><canvas id="mini-map" width="128" height="128" aria-label="แผนที่ตำแหน่งและทิศทาง"></canvas></div>
           <nav class="movement-pad" aria-label="ปุ่มเดินสำหรับจอสัมผัส">
             <button class="move-key forward" data-key="KeyW" aria-label="เดินไปข้างหน้า" type="button">↑</button>
@@ -77,6 +78,7 @@
           </nav>
           <span class="look-hint">ลากจอเพื่อมองรอบตัว · กดลูกศรค้างเพื่อเดิน</span>
         </section>
+        <div id="character-hover" hidden aria-hidden="true"></div>
         <section id="character-gallery" class="character-gallery" aria-label="ห้องชมตัวละคร" hidden>
           <div id="character-art-stage" hidden><img id="character-art" alt="" draggable="false" hidden /><div id="portrait-status" role="status"><span></span><button id="portrait-retry" type="button" hidden>ลองอีกครั้ง</button></div></div>
           <div id="model-status" role="status" hidden><span></span><button id="model-retry" type="button" hidden>ลองอีกครั้ง</button></div>

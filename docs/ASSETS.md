@@ -7,7 +7,8 @@
 | เรือ ใบเรือ เชือก หัวสิงโต ท่าเรือ เกาะ | `src/immersive/environments.ts`, สร้างสำหรับโปรเจกต์ | Procedural Three.js geometry | ฉากตีความธีม One Piece |
 | โทริอิ ศาลเจ้า โคมไฟ ดอกวิสทีเรีย ลำธาร | ไฟล์เดียวกัน | Geometry + InstancedMesh | ดอกไม้รวมหลายต้นใน 4 instanced draw calls |
 | อาคาร กำแพง ประตู ทางลาด เงาไททัน | ไฟล์เดียวกัน | Geometry | มีทางลาดจริงจาก y=0 ถึง y=9 |
-| ลูฟี่ โซโล ทันจิโร่ เนซึโกะ รีไวล์ มิคาสะ | `scripts/build-characters.py` + MakeHuman hm08 CC0, แฟนโมเดลปั้นใหม่สำหรับโปรเจกต์ | Local GLB + embedded PBR textures | ดวงตา ผม หมวก เสื้อผ้า อาวุธ เป็น geometry; ไม่ใช่ billboard |
+| ลูฟี่ที่ผู้ใช้อัปโหลด | KingOfThePirates, แหล่งที่มาและ license ตาม metadata ใน [manifest](../public/models/manifest.json) | Local GLB 5,013,272 bytes, rig + blink | Sketchfab Standard; ไม่จัดเป็น CC0; ต้นฉบับไม่ถูกแก้ bytes |
+| โซโล ทันจิโร่ เนซึโกะ รีไวล์ มิคาสะ | `scripts/build-characters.py` + MakeHuman hm08 CC0, แฟนโมเดลปั้นใหม่สำหรับโปรเจกต์ | Local GLB + embedded PBR textures | ดวงตา ผม หมวก เสื้อผ้า อาวุธ เป็น geometry; ไม่ใช่ billboard |
 | ไม้ หิน ทราย | `src/immersive/kit.ts` | Seeded 256×256 CanvasTexture + bump map | สร้างในเครื่อง ไม่ดาวน์โหลดภาพพื้นผิว |
 | ท้องฟ้าและน้ำ | `kit.ts`, `environments.ts` | Gradient dome / animated GLSL water | หยุด animation เมื่อ reduced motion |
 | ภาพเดิม 3 โลก | OpenAI ImageGen; ดู `public/artwork/README.md` | Local WebP 1920×1080 | ใช้ในฮับและซีนแรกของแต่ละโลก |
@@ -19,22 +20,22 @@
 
 ฐานสัดส่วน `scripts/model-source/base.obj` มาจาก MakeHuman hm08 ที่ระบุ CC0 ไว้ใน header มี source URL, SHA-256, license และคำสั่งสร้างซ้ำใน [model-source/README.md](../scripts/model-source/README.md) โค้ด Blender ปรับรูปทรงและปั้นผม เสื้อผ้า ดวงตา ลายผ้า ดาบและอุปกรณ์ขึ้นใหม่ ไม่มีโมเดล ripped หรือ asset จากเกม
 
-ฐาน CC0 ไม่ได้ให้สิทธิ์ในตัวละครต้นฉบับเพิ่มเติม โมเดลเป็นแฟนประติมากรรมท่าคงที่ ไม่มี rig, facial animation, combat หรืออนิเมชันเดิน
+ฐาน CC0 ไม่ได้ให้สิทธิ์ในตัวละครต้นฉบับเพิ่มเติม โมเดลเดิม 5 คนเป็นแฟนประติมากรรมท่าคงที่ ลูฟี่ที่อัปโหลดมี rig และ blink ไม่มี combat หรืออนิเมชันเดิน
 
 ### ขนาดโมเดลที่ส่งมอบ
 
 ดูค่าจริงที่เครื่องสร้างบันทึกใน [build-report.json](../public/models/build-report.json) แต่ละไฟล์ฝัง texture ทั้งหมดไว้ภายในและรวม geometry ตาม material เพื่อลด draw calls
 
-| ไฟล์ | ขนาด MB | สามเหลี่ยม | Materials |
+| ไฟล์ | MB | Triangles | Materials |
 | --- | ---: | ---: | ---: |
-| `luffy.glb` | 3.32 | 140,468 | 14 |
+| `luffy.glb` | 5.01 | 48,964 | 19 |
 | `zoro.glb` | 2.96 | 126,371 | 10 |
 | `tanjiro.glb` | 3.03 | 128,342 | 15 |
 | `nezuko.glb` | 2.62 | 109,706 | 13 |
 | `levi.glb` | 3.33 | 136,864 | 11 |
 | `mikasa.glb` | 3.06 | 124,486 | 11 |
 
-รวม 18.32 MB สำหรับทั้ง 6 คน ไม่ได้โหลดทุกคนพร้อมกันเมื่อเปิดเว็บ App entry ประมาณ 121 kB, GLTFLoader chunk ประมาณ 44 kB และ Three.js พร้อม PMREM ประมาณ 553 kB ก่อน gzip ณรอบนี้
+ค่าลูฟี่เป็นไฟล์ที่อัปโหลดก่อนปรับขนาดและจัดท่าใน runtime ส่วนอีก 5 คนมาจาก Blender pipeline ของโปรเจกต์
 
 ## Rendering decisions
 
@@ -71,3 +72,12 @@
 - ภาพดวงตา เส้นผม ลายตาราง ลายอาซาโนะฮะ ฟาง และ normal ของเนื้อผ้าสร้างจากโค้ด Blender แล้วฝังใน GLB
 - โหลดมี timeout 15 วินาที, retry, AbortController และ token ป้องกันคำตอบเก่าทับตัวละครใหม่
 - เมื่อเปลี่ยนตัวละคร/ออกจากโลก คืน geometry/material/texture ของโมเดล รวม environment map และ shadow target ของห้องแสดง
+
+## Direct character entry and uploaded Luffy
+
+- `character-regions.ts`: 17 source-image polygon regions across 9 scenes; canvas tap testing follows crop, pan, zoom and subtle parallax. Drags and multi-touch gestures never activate a model.
+- World presentation and gallery presentation are independent. Closing restores world mode, scene, image view and entry focus.
+- `luffy.glb` is the original user upload (SHA-256 in manifest). Runtime normalizes scale, transforms the complete arm/control hierarchy coherently into a relaxed pose and retains the blink clip.
+- Occasional blink follows elapsed time rather than movement delta; reduced motion restores the resting face. Mixer bindings, skeleton/bone textures, geometry and image bitmaps are released on disposal.
+- Full-body framing considers width and height of the posed model; face framing uses a per-character target.
+- Regenerating the five procedural characters cannot overwrite the uploaded Luffy. No new matching external assets have yet been supplied for the other five.

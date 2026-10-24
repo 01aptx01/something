@@ -1,3 +1,18 @@
+# นำเข้าไฟล์ลูฟี่และเปิดโมเดลจากภาพ — 24 ตุลาคม 2026
+
+- [x] ใช้ไฟล์ `luffy.glb` ที่อัปโหลดจริง เก็บต้นฉบับ byte-for-byte พร้อม hash, source, ผู้สร้าง และ Sketchfab Standard ตาม metadata
+- [x] จัดท่าแขนผ่าน rig ทั้งชุด และปรับขนาด/กล้องตามขอบเขตโมเดล โดยไม่แก้ไฟล์ต้นฉบับ
+- [x] กระพริบตาเป็นช่วง ๆ ด้วย clip เดิมตาม elapsed time; หยุดเมื่อ reduced motion
+- [x] พื้นที่กดตัวละคร 17 จุดใน 9 ภาพ รองรับ crop/pan/zoom/parallax และไม่ทำงานหลัง drag/pinch
+- [x] ปุ่มชื่อสำหรับคีย์บอร์ดและตัวละครที่อยู่นอกจอ เปิดตรงคนในโหมด 3D
+- [x] แยกสถานะฉาก/ห้องโมเดล ปิดแล้วคืนภาพ ซีน มุมเลื่อน ซูม และ focus เดิม
+- [x] คืน animation mixer, skeleton/bone texture และทรัพยากร geometry/material/image เมื่อเลิกใช้
+- [x] ป้องกัน generator เขียนทับลูฟี่ที่อัปโหลด
+
+ผลตรวจชุดส่งมอบ: production build ผ่าน; unit tests 21 ชุดผ่าน; browser clicks ครบ 17 ตำแหน่ง/9 ซีนผ่าน; การลาก/จีบไม่เปิดโมเดล, zoom/pan restoration, คีย์บอร์ด/focus, blink/reduced motion, จอ 320px/มือถือ/แนวนอน และ load error/retry ผ่าน ตรวจภาพและ interaction เป็นสองช่วงหลังแก้การจำลอง Enter ของ CDP จากนั้น regression ครบทั้งสามโลกผ่าน รวม GPU texture หลังออกจากโลก, touch สองนิ้ว, retina, ภาพโหลดช้า/เสีย/timeout และ retry ไม่พบ runtime exception หรือ console/resource error ที่ไม่ใช่คำขอที่จงใจยกเลิก
+
+โซโล ทันจิโร่ เนซึโกะ รีไวล์ และมิคาสะยังเป็นโมเดลเดิมของโปรเจกต์ ยังไม่ได้รับไฟล์ชุดใหม่ของอีก 5 คน ระบบเปิดโมเดลจากภาพรองรับครบทั้ง 6 คนแล้ว
+
 # โมเดล 3D ชุดใหม่ — 24 ตุลาคม 2026
 
 - [x] หา anatomical base ที่ตรวจสิทธิ์ได้: MakeHuman hm08 CC0 พร้อม source, hash และ license ใน repository
