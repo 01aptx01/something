@@ -1,0 +1,14 @@
+[
+  {
+    "id": "layered-garment",
+    "score": 0.78,
+    "visible": true,
+    "notes": "Curved lapels and a back shell are visible; garment edges remain coarse."
+  },
+  {
+    "id": "held-sword-assembly",
+    "score": 0.76,
+    "visible": true,
+    "notes": "Five fingers wrap both handles in the front view. One sampled normal vertex on each index-finger tube points slightly inward; ray parity remains blocked."
+  }
+]

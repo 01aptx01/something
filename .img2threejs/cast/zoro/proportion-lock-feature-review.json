@@ -1,0 +1,14 @@
+[
+  {
+    "id": "anatomy-proportion",
+    "score": 0.88,
+    "visible": true,
+    "notes": "Proportion-lock only: emitted head-unit ratio 8.5857 vs source 8.57 (0.18% relative delta); full fixed pair confirms robe length and separated boot stance. Surface anatomy and facial likeness remain unfinished."
+  },
+  {
+    "id": "pose-silhouette",
+    "score": 0.84,
+    "visible": true,
+    "notes": "Fixed full-body pair and meaningful orbit confirm raised elbow and drawn sword pose at macro scale. Gripping fingers and fitted garment structure remain the next pass."
+  }
+]

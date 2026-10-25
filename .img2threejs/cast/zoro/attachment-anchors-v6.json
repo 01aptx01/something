@@ -1,0 +1,135 @@
+{
+  "errors": [],
+  "warnings": [],
+  "attachments": [
+    {
+      "component": "raised-grip",
+      "anchor": "hand-raised",
+      "anchorKind": "component",
+      "distance": 0.0551843570543741,
+      "maxOffset": 0.13,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "raised-sheath",
+      "anchor": "hand-raised",
+      "anchorKind": "component",
+      "distance": 0.21808771175550387,
+      "maxOffset": 0.28,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "hip-grip",
+      "anchor": "haramaki",
+      "anchorKind": "component",
+      "distance": 0.369728562245057,
+      "maxOffset": 0.45,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "hip-sheath",
+      "anchor": "haramaki",
+      "anchorKind": "component",
+      "distance": 0.6317259923176899,
+      "maxOffset": 0.75,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "low-grip",
+      "anchor": "hand-down",
+      "anchorKind": "component",
+      "distance": 0.0337462965135065,
+      "maxOffset": 0.14,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "blade",
+      "anchor": "hand-down",
+      "anchorKind": "component",
+      "distance": 0.7059479593044206,
+      "maxOffset": 0.8,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "sword-guards",
+      "anchor": "hand-raised",
+      "anchorKind": "component",
+      "distance": 0.1150271707032734,
+      "maxOffset": 0.18,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "guard-1",
+      "anchor": "haramaki",
+      "anchorKind": "component",
+      "distance": 0.2845918035488311,
+      "maxOffset": 0.36,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "guard-2",
+      "anchor": "hand-down",
+      "anchorKind": "component",
+      "distance": 0.11845357740482128,
+      "maxOffset": 0.2,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "ivory-sheath",
+      "anchor": "haramaki",
+      "anchorKind": "component",
+      "distance": 0.5670123701967223,
+      "maxOffset": 0.75,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "red-sheath",
+      "anchor": "haramaki",
+      "anchorKind": "component",
+      "distance": 0.665901212264112,
+      "maxOffset": 0.85,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "ivory-sheath-cap",
+      "anchor": "haramaki",
+      "anchorKind": "component",
+      "distance": 1.1271773965283376,
+      "maxOffset": 1.3,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "dark-sheath-cap",
+      "anchor": "haramaki",
+      "anchorKind": "component",
+      "distance": 1.219954073969231,
+      "maxOffset": 1.3,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    },
+    {
+      "component": "red-sheath-cap",
+      "anchor": "haramaki",
+      "anchorKind": "component",
+      "distance": 1.268515082041971,
+      "maxOffset": 1.4,
+      "offsetRule": "declared attachment.maxOffset",
+      "withinLimit": true
+    }
+  ],
+  "unmeasuredAttachments": [],
+  "attachmentCount": 14,
+  "passed": true
+}

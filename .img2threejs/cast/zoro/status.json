@@ -1,27 +1,55 @@
 {
-  "status": "stopped",
-  "reason": "max-correction-loops-reached:blockout:3/3",
-  "stage": "blockout",
+  "status": "in-progress",
+  "reason": "structural-pass visual review is below the 0.8 acceptance threshold; next action is refine-code",
+  "stage": "structural-pass",
   "accepted": false,
+  "currentStep": "build-current-pass",
+  "iterationAction": "refine-code",
+  "loops": {
+    "currentPass": "7/9",
+    "total": "13/18"
+  },
   "strictSpecValidation": "pass",
-  "silhouetteIoU": [
-    0.7681,
-    0.804,
-    0.8035
-  ],
-  "silhouetteThreshold": 0.85,
-  "scalpCoverage": "pass; 640 samples, upper scalp band v=0.73..1",
-  "attachmentAnchors": "pass; all nine measured",
-  "selfIntersection": "not passed; five flagged sampled vertices, 507 undecided of 89606 sampled",
-  "aiLikenessReview": "not run; Tier 1 not passed",
+  "blockout": {
+    "acceptedForPass": true,
+    "silhouetteIoU": 0.8977,
+    "silhouetteThreshold": 0.85,
+    "agentVisionScore": 0.84,
+    "scope": "blockout only; not full-character likeness"
+  },
+  "proportionLock": {
+    "acceptedForPass": true,
+    "headUnitsFromGeometry": 8.5857,
+    "headUnitsFromReference": 8.57,
+    "relativeDelta": 0.0018,
+    "scope": "head proportion only; not full-character likeness"
+  },
+  "latestStructural": {
+    "artifact": "docs/model-reviews/img2threejs-cast/zoro-structural-v10/",
+    "silhouetteIoU": 0.8964,
+    "tier1Diagnostics": "pass",
+    "agentVisionScore": 0.6,
+    "visualAcceptanceThreshold": 0.8,
+    "criticalFeatures": {
+      "layered-garment": 0.58,
+      "held-sword-assembly": 0.55
+    },
+    "parts": 96,
+    "triangles": 307228,
+    "drawCalls": 96
+  },
+  "scalpCoverage": "pass; 640 samples, upper scalp band v=0.73..1, exposed fraction 0",
+  "attachmentAnchors": "pass; 14 measured, no errors or warnings",
+  "selfIntersection": "no self-intersection or inside vertices among 106544 samples; 674 samples undecided",
+  "multiAngle": "pass; non-degenerate orbit silhouettes at positive, negative and side views",
+  "aiLikenessReview": "structural v10 remains below threshold: crown-like hair, generic face, smooth blocky garments, unfinished fingers and sword fittings",
   "materialProjection": "descriptor and de-lit source only; no runtime bake or material acceptance",
   "movingRig": "not built or tested",
-  "unobservedRegions": "sides/back inferred; depth confidence 0.4",
+  "unobservedRegions": "sides/back inferred from one reference image; depth confidence 0.4",
   "productionIntegration": false,
   "existingGLBsChanged": false,
   "hashes": {
     "docs/references/user-cast/zoro.png": "9e60f68018d4fb12e695b36291ef78769e31a73935b514a53941578402860a3c",
-    "src/sculpt/createZoroModel.ts": "f7ce63a46633edf39ecb66ffcdbbca7d3dcf03b5dea215107a54266f49468fe5",
     "public/models/luffy.glb": "70c9516935eca0065f22da082e46405150225215eeb617d2e6ad394d714c85c4"
   },
   "upstreamSkill": "https://github.com/img2threejs/img2threejs/blob/954cd5845e90efd045694bab725d68a9863c20e0/SKILL.md"

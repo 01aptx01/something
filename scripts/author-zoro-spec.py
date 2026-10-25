@@ -56,6 +56,7 @@ PALETTE={
  'gold':('#b3a05c',.28,.75,'metal'), 'steel':('#b4c0c7',.23,.85,'metal'),
  'dark':('#20232c',.74,0,'fabric'), 'white':('#eeeade',.48,0,'unknown'),
  'scar':('#865541',.7,0,'skin'), 'hidden':('#000000',1,0,'unknown')}
+PALETTE.update(scabbardRed=('#8b3b34',.7,0,'fabric'),scabbardIvory=('#bdc2a9',.63,0,'unknown'))
 base=copy.deepcopy(spec['materials'][0])
 spec['materials']=[]
 for mid,(color,rough,metal,kind) in PALETTE.items():
@@ -299,13 +300,170 @@ hair['geometryDescriptor']['sdf']={
  'bounds':{'min':[-.13,.055,-.13],'max':[.13,.165,.13]},'resolution':50}
 hair['topologyRationale']='Finite scalp shell is cut from an outer crown by subtracting a slightly expanded cranium; roots overlap the shell.'
 
+# Resume correction: fit continuous volumes to measured front cross-sections.
+# The loft is volumetric, with a separate inferred depth profile; not a cutout.
+def loft(cid,sections,thickness=None,features=None):
+ c=by_id[cid];c['primitive']='ellipsoid' if cid=='head' else 'lathe'
+ c['topologyClass']='continuous-sculpt' if cid=='head' else 'conforming-shell'
+ c['topologyRationale']='Continuous parameterized cross-sections fit the observed frontal outline; depth and hidden sides remain inferred.'
+ c['geometryDescriptor'].pop('sdf',None)
+ c['geometryDescriptor']['parametricLoft']={'sections':sections,'radialSegments':72,'verticalSegments':64,
+     **({'thickness':thickness} if thickness else {}),**({'frontFeatures':features} if features else {})}
+ c['geometryDescriptor']['topologyIntent']='Monotone cubic section loft, closed volume or rounded cloth shell; see refineZoroGeometry.ts.'
+ c['transform']['scale']=[1,1,1]
+ if cid!='head':
+  c['transform']['position']=[0,0,0]
+  c['geometryDescriptor']['latheProfile']={'points':[[s[2],s[0]] for s in sections],'segments':64}
+loft('robe',[[.45,-.045,.34,.19,0],[.485,-.045,.382,.205,0],[.6,-.045,.397,.21,0],
+    [.85,-.022,.365,.2,0],[1.1,-.0175,.317,.18,0],[1.3,-.015,.277,.16,0],[1.435,-.015,.255,.15,0]],.012)
+loft('sash',[[1.405,-.005,.245,.15,.015],[1.48,-.02,.27,.16,.015],[1.56,-.04,.278,.163,.015],[1.62,-.04,.273,.16,.015]],.01)
+head['transform']['position']=xyz(269,108)
+head_rows=[(163,273,1,1),(159,273,11,9),(149,273,25,20),(136,270,36,27),
+    (114,267,40,31),(92,263,40,32),(73,262,34,30),(60,262,24,23),(54,262,1,1)]
+head_sections=[[(108-y)/400,(cx-269)/400,rx/400,rz/400,0] for y,cx,rx,rz in head_rows]
+loft('head',head_sections,features=[
+    {'x':-.047,'y':-.002,'width':.027,'height':.018,'depth':-.013},
+    {'x':.044,'y':.002,'width':.027,'height':.018,'depth':-.009},
+    {'x':0,'y':-.04,'width':.013,'height':.038,'depth':.025}])
+head['geometryDescriptor']['ringStack']={'rings':[[s[0],s[2]+abs(s[1]),s[3],s[4]] for s in head_sections],
+    'source':'Observed loft sections; conservative lateral bound for the shifted head axis.'}
+for primitive in hair['geometryDescriptor']['sdf']['primitives']:
+ if primitive['id'] in ('outer','inner'):primitive['center'][0]-=.015
+for c in tree:
+ if c['id'].startswith('hair-tip-'):
+  for station in c['geometryDescriptor']['taperedSweep']['stations']:station['position'][0]-=.015
+
+# The hair shell follows the fitted scalp; a front/back hem warp preserves the
+# forehead opening and the longer nape without pushing inner surfaces through it.
+loft('hair',[[.055,-.014,.116,.094,0],[.075,-.017,.11,.087,0],[.1,-.017,.092,.076,0],
+    [.125,-.017,.06,.05,0],[.142,-.017,.032,.027,0],[.15,-.017,.010,.010,0]],.008)
+hair['geometryDescriptor']['parametricLoft']['hemWarp']={'frontLift':.02,'backDrop':.04,'decay':.04}
+hair['geometryDescriptor']['parametricLoft']['scalpOffset']={'component':'head','clearance':.012,
+    'evidence':'Offset the inner/outer shell coherently around the fitted scalp; keep positive wall thickness before standProud.'}
+for c in tree:
+ if not c['id'].startswith('hair-tip-'):continue
+ i=int(c['id'].split('-')[-1]);angle=i*math.pi*2/18;co,si=math.cos(angle),math.sin(angle)
+ c['geometryDescriptor']['taperedSweep']['stations']=[
+    {'position':[-.017+co*.112,.07,si*.094],'rx':.011,'rz':.007},
+    {'position':[-.017+co*.122,.112+(i%3)*.005,si*.102],'rx':.008,'rz':.005},
+    {'position':[-.017+co*.133,.143+(i%3)*.006,si*.112],'rx':0,'rz':0}]
+for ident,profile in json.loads((OUT/'boot-contours.json').read_text())['profiles'].items():
+ sections=[]
+ for row in reversed(profile):
+  y,cx,rx=row['y'],(row['left']+row['right'])/2,(row['right']-row['left'])/2
+  rz=.032+.06*max(0,min(1,(y-950)/75))
+  sections.append([(1040-y)/400,(cx-280)/400,max(.001,rx/400),rz,0])
+ low=sections[0];high=sections[-1]
+ sections.insert(0,[low[0]-.002,low[1],.001,.001,0])
+ sections.append([high[0]+.004,high[1],high[2]*.95,high[3],0])
+ loft(ident,sections)
+ by_id[ident]['topologyClass']='continuous-sculpt'
+ by_id[ident]['topologyRationale']='Closed curved boot volume fitted to isolated source alpha contours, with separately inferred ankle and toe depth.'
+
+# Align the head-local origin with the crown axis used by the scalp field.
+# Preserve every surface's world position; only the previously biased field changes.
+basis_shift=7/400
+head['transform']['position']=xyz(262,108)
+for section in head['geometryDescriptor']['parametricLoft']['sections']:section[1]+=basis_shift
+for feature in head['geometryDescriptor']['parametricLoft']['frontFeatures']:feature['x']+=basis_shift
+head['geometryDescriptor']['ringStack']['rings']=[[s[0],s[2]+abs(s[1]),s[3],s[4]] for s in head['geometryDescriptor']['parametricLoft']['sections']]
+for c in tree:
+ if c['parent']=='head':c['transform']['position'][0]+=basis_shift
+blade_rows=json.loads((OUT/'blade-contours.json').read_text())['rows']
+blade_rows=[{'y':582,'left':438,'right':458},{'y':594,'left':441,'right':462},{'y':606,'left':445,'right':468}]+[row for row in blade_rows if row['y']>606]
+blade_part=by_id['blade'];blade_part['geometryDescriptor']['bladeRibbon']={'rows':blade_rows,'thickness':.011,
+    'source':'blade-contours.json; front outline measured, spine/edge section inferred'}
+blade_part['geometryDescriptor']['profile2D']={'points':[[*xyz(row['left'],row['y'])[:2]] for row in blade_rows]+[[*xyz(row['right'],row['y'])[:2]] for row in reversed(blade_rows)],'depth':.011}
+blade_part['transform']={'position':[0,0,0],'rotation':[0,0,0],'scale':[1,1,1]}
+by_id['hand-raised']['transform']['scale']=[.10,.14,.075]
+by_id['hand-down']['transform']['position']=xyz(440,528)
+by_id['hand-down']['transform']['scale']=[.105,.125,.075]
+capsule_field('sleeve-raised',[(180,223),(68,241),(107,171)],[29,31])
+for ident in ('pants-left','pants-right'):
+ for seed in by_id[ident]['geometryDescriptor']['sdf']['primitives']:
+  seed['radii'][0]+=.015
+  if ident=='pants-left':seed['center'][0]+=.018
+
+def scabbard(cid,start,end,width,depth,mat):
+ if cid not in by_id:
+  c=blade(cid,start,end,width,depth,mat);by_id[cid]=c
+ else:c=by_id[cid]
+ p0,p1=xyz(*start),xyz(*end);length=math.dist(p0,p1)
+ c['material']=mat;c['materialLayers']=[mat]
+ c['transform']={'position':p0,'rotation':[0,0,math.atan2(-(p1[0]-p0[0]),p1[1]-p0[1])],'scale':[1,1,1]}
+ c['geometryDescriptor']['profile2D']={'points':[[-width/2,0],[width/2,0],[width*.47,length],[-width*.47,length]],'depth':depth}
+ c['geometryDescriptor']['topologyIntent']='Blunt-ended closed scabbard with a rectangular-to-oval section; observed endpoint.'
+ return c
+scabbard('hip-sheath',(174,373),(480,789),.064,.038,'dark')
+scabbard('ivory-sheath',(169,366),(489,742),.063,.038,'scabbardIvory')
+scabbard('red-sheath',(165,379),(459,816),.048,.034,'scabbardRed')
+for ident,start,end,width in [('ivory-sheath-cap',(476,726),(489,742),.072),
+    ('dark-sheath-cap',(467,770),(480,789),.074),('red-sheath-cap',(449,801),(459,816),.06)]:
+ scabbard(ident,start,end,width,.043,'gold')
+
+# Structural pass: panels wrap a continuous torso/back shell, and hands carry
+# five articulated gripping digits. Source XY is observed; depth is inferred.
+stage_order=['blockout','proportion-lock','structural-pass','feature-placement','material-pass','lighting-pass','interaction-pass','optimization-pass']
+stage=spec['sculptPipeline']['currentPass']
+if stage_order.index(stage)>=stage_order.index('structural-pass'):
+ loft('chest',[[1.78,-.014,.09,.072,.0],[1.88,-.014,.123,.085,0],[2.02,-.015,.13,.09,0],
+      [2.14,-.02,.095,.074,-.01],[2.2,-.02,.055,.051,-.018]])
+ by_id['chest']['topologyClass']='continuous-sculpt';by_id['chest']['geometryLayer']='L0'
+ capsule_field('neck',[(273,183,-.018),(272,150,-.018)],[20],.9)
+ # A jacket has a back. Its open front remains open, with physical cut edges.
+ back=add('coat-back','Continuous open-front jacket back','lathe',[0,0,0],[1,1,1],level='macro',parent='chest')
+ by_id['coat-back']=back
+ loft('coat-back',[[1.6,-.025,.265,.15,0],[1.72,-.025,.247,.155,0],[1.9,-.02,.235,.16,0],
+      [2.1,-.03,.25,.15,0],[2.16,-.03,.19,.12,0]],.015)
+ back['geometryDescriptor']['parametricLoft']['angularRange']=[math.pi,math.pi*2]
+ back['geometryDescriptor']['topologyIntent']='Back half of a rounded cloth shell, with triangulated closed cut edges; hidden depth inferred at confidence 0.4.'
+ for ident in ('robe-left','robe-right'):
+  c=by_id[ident];c['parent']='coat-back'
+  c['geometryDescriptor']['fittedPanel']={'points':c['geometryDescriptor']['profile2D']['points'],
+      'depth':.018,'centreX':-.025,'radiusX':.285,'radiusZ':.16,'standOff':.014,'subdivisions':3}
+  c['transform']['position']=[0,0,0]
+  c['topologyRationale']='Subdivided finite-thickness lapel bends around the torso ellipse, joining the open jacket back; not a flat card.'
+ by_id['neck']['parent']='chest';head['parent']='neck'
+ # Keep node rotations identity: sword children retain their authored world pose.
+ for ident,angle in [('hand-raised',.78),('hand-down',.36)]:
+  hand_id=ident
+  c=by_id[ident];c['transform']['scale']=[1,1,1];c['geometryLayer']='L0';c['topologyClass']='implicit'
+  c['primitive']='ellipsoid';prims=[]
+  def rotate(p):return [p[0]*math.cos(angle)-p[1]*math.sin(angle),p[0]*math.sin(angle)+p[1]*math.cos(angle),p[2]+.025]
+  prims.append({'id':'palm','type':'ellipsoid','center':rotate([0,0,-.002]),'radii':[.029,.039,.020],
+      'transform':{'position':rotate([0,0,-.002]),'rotation':[0,0,angle]}})
+  # Keep the palm a single continuous field. Each curled finger is a real capped,
+  # round tube under the palm node, so narrow gaps do not collapse into SDF aliases.
+  c['geometryDescriptor']={'sdf':{'primitives':prims,'operations':[],'bounds':{'min':[-.05,-.05,-.035],'max':[.05,.05,.035]},'resolution':36},
+      'topologyIntent':'Continuous palm plus four three-joint curled fingers and opposing thumb; no imported mesh; hidden depth inferred.',
+      'deformationStack':[],'uvStrategy':'generated procedural coordinates','normalStrategy':'smooth vertex normals'}
+  for index,(name,stations,radius) in enumerate([
+   ('index',[[.012,.030,-.002],[.024,.027,.000],[.035,.025,.002],[.047,.022,.002]],.0050),
+   ('middle',[[.011,.010,0],[.023,.009,.017],[.044,.007,.020],[.050,.005,.001]],.0058),
+   ('ring',[[.011,-.010,0],[.021,-.011,.016],[.040,-.013,.016],[.045,-.015,0]],.0055),
+   ('little',[[.009,-.030,-.001],[.018,-.030,.012],[.033,-.032,.011],[.036,-.033,-.002]],.0050),
+   ('thumb',[[-.025,-.018,-.002],[-.039,.001,.012],[-.021,.024,.026],[.002,.027,.022]],.0064)]):
+   finger=add(f'{hand_id}-{name}',f'{name.title()} curled finger','tube',[0,0,0],[1,1,1],'skin','micro','root','detail','assembled-solid')
+   finger['parent']=hand_id;finger['transform']={'position':[0,0,0],'rotation':[0,0,0],'scale':[1,1,1]}
+   finger['geometryDescriptor']={'fingerTube':{'stations':[[*rotate(p),radius] for p in stations],
+      'radialSegments':12 if name=='index' else 10,'steps':40 if name=='index' else 24},
+      'topologyIntent':'Single curved solid tube with a round capped fingertip, joined visually into the palm; hidden phalanx depth inferred.',
+      'deformationStack':[],'uvStrategy':'generated procedural coordinates','normalStrategy':'smooth vertex normals'}
+   finger['geometryLayer']='L3';finger['topologyClass']='assembled-solid';finger['localFeatures']=[f'{hand_id}-{name}-grip-curve']
+   finger['colorMaterialRecipe']=copy.deepcopy(c['colorMaterialRecipe'])
+   finger['attachment']={'parentSocket':f'{hand_id}-palm','localStart':[0,0,0],'localEnd':[0,0,0],
+      'contactType':'surface-overlap','embedDepth':.004,'gapTolerance':.003,'evidenceRefs':['full-object'],
+      'notes':'Curved digit root is embedded into the palm volume; finger bend is static and depth is inferred.'}
+
 # Held parts now inherit their actual hand, and hip fittings inherit the waist.
 # Limits are reference-derived centroid-to-anchor distances plus contact slack.
 for cid,anchor,limit in [
  ('raised-grip','hand-raised',.13),('raised-sheath','hand-raised',.28),
  ('sword-guards','hand-raised',.18),('hip-grip','haramaki',.45),
  ('hip-sheath','haramaki',.75),('guard-1','haramaki',.36),
- ('low-grip','hand-down',.14),('guard-2','hand-down',.20),('blade','hand-down',.80)]:
+ ('low-grip','hand-down',.14),('guard-2','hand-down',.20),('blade','hand-down',.80),
+ ('ivory-sheath','haramaki',.75),('red-sheath','haramaki',.85),
+ ('ivory-sheath-cap','haramaki',1.3),('dark-sheath-cap','haramaki',1.3),('red-sheath-cap','haramaki',1.4)]:
  c=by_id[cid];parent=by_id[anchor]
  c['parent']=anchor
  c['transform']['position']=[c['transform']['position'][j]-parent['transform']['position'][j] for j in range(3)]
@@ -314,6 +472,7 @@ for cid,anchor,limit in [
 
 spec['componentTree']=tree
 spec['repetitionSystems']=[{'id':'fitting-repeats','componentRefs':['robe-toggles','sword-wrap','earrings'],
+    'elementComponentIds':['robe-toggles','toggle-1','toggle-2','toggle-3','sword-wrap']+[f'grip-diamond-{i}' for i in range(1,8)]+['earrings','earring-1','earring-2'],
     'distribution':'authored-observed-positions','buildsGeometry':True,'count':15,
     'notes':'Named fitting meshes retain individual click/explode identity; instance optimization deferred to optimization pass.'}]
 for d in spec['preSpecAssessment']['detailInventory']['details']:
@@ -336,6 +495,8 @@ spec['lightingFromPhoto'].append({'type':'render-settings','exposure':1,
 spec['featureReviewTargets']=[
  {'id':'anatomy-proportion','name':'Source head units and long robe proportions','tier':'critical','passIds':['blockout','proportion-lock'],'minimumScore':.8,'mustPass':True,'componentRefs':['head','robe','boots'],'evidenceRefs':['full-object']},
  {'id':'pose-silhouette','name':'Bent raised right arm and three sword placements','tier':'critical','passIds':['blockout','proportion-lock'],'minimumScore':.8,'mustPass':True,'componentRefs':['sleeve-raised','forearm-raised','blade'],'evidenceRefs':['full-object']},
+ {'id':'layered-garment','name':'Curved lapels join a continuous back, neck and torso','tier':'critical','passIds':['structural-pass'],'minimumScore':.8,'mustPass':True,'componentRefs':['robe-left','robe-right','chest','neck'],'evidenceRefs':['full-object']},
+ {'id':'held-sword-assembly','name':'Five-digit grips and separate sword assemblies retain contact','tier':'critical','passIds':['structural-pass'],'minimumScore':.8,'mustPass':True,'componentRefs':['hand-raised','hand-down','raised-grip','low-grip'],'evidenceRefs':['full-object']},
  {'id':'face-landmark-placement','name':'Closed left eye/scar, narrow open eye and grin','tier':'critical','passIds':['feature-placement'],'minimumScore':.8,'mustPass':True,'componentRefs':['head','scar','eye-r','teeth'],'evidenceRefs':['full-object']},
  {'id':'outfit-and-palette','name':'Green robe/haramaki and purple sash','tier':'critical','passIds':['material-pass'],'minimumScore':.8,'mustPass':True,'componentRefs':['robe','haramaki','sash'],'evidenceRefs':['full-object']}]
 path.write_text(json.dumps(spec,indent=2)+'\n')

@@ -60,5 +60,5 @@ fs.writeFileSync(path.join(out,'head-rings.json'),JSON.stringify(rings));
 fs.writeFileSync(path.join(out,'hair-points.json'),JSON.stringify(hair));
 fs.writeFileSync(path.join(out,'measured-anchors.json'),JSON.stringify(measured,null,2)+'\n');
 fs.writeFileSync('/tmp/img2threejs-zoro-meshes.json',JSON.stringify({meshes}));
-fs.writeFileSync(path.join(out,'geometry-preflight.json'),JSON.stringify({source:'actual emitted Three.js BufferGeometry',parts:meshes.length,triangles,headRingCount:rings.length,hairPointCount:hair.length,unmeasuredAttachments:['all: anchor gate not yet run'],staticOnly:true},null,2)+'\n');
+fs.writeFileSync(path.join(out,'geometry-preflight.json'),JSON.stringify({source:'actual emitted Three.js BufferGeometry',pass:root.userData.sculptBuildPass??'blockout',parts:meshes.length,triangles,headRingCount:rings.length,hairPointCount:hair.length,unmeasuredAttachments:['anchor gate must be evaluated separately using measured-anchors.json'],staticOnly:true},null,2)+'\n');
 console.log(JSON.stringify({parts:meshes.length,triangles,headRingCount:rings.length,hairPointCount:hair.length}));

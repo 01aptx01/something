@@ -1,0 +1,262 @@
+{
+  "sourceImage": "docs/references/user-cast/zoro.png",
+  "sha256": "9e60f68018d4fb12e695b36291ef78769e31a73935b514a53941578402860a3c",
+  "method": "rightmost connected alpha span in isolated blade ROI, y>=606; outline observed, wedge thickness inferred",
+  "rows": [
+    {
+      "y": 606,
+      "left": 430,
+      "right": 468
+    },
+    {
+      "y": 614,
+      "left": 450,
+      "right": 471
+    },
+    {
+      "y": 622,
+      "left": 453,
+      "right": 474
+    },
+    {
+      "y": 630,
+      "left": 456,
+      "right": 478
+    },
+    {
+      "y": 638,
+      "left": 459,
+      "right": 481
+    },
+    {
+      "y": 646,
+      "left": 462,
+      "right": 485
+    },
+    {
+      "y": 654,
+      "left": 466,
+      "right": 488
+    },
+    {
+      "y": 662,
+      "left": 469,
+      "right": 492
+    },
+    {
+      "y": 670,
+      "left": 473,
+      "right": 495
+    },
+    {
+      "y": 678,
+      "left": 476,
+      "right": 499
+    },
+    {
+      "y": 686,
+      "left": 480,
+      "right": 502
+    },
+    {
+      "y": 694,
+      "left": 483,
+      "right": 506
+    },
+    {
+      "y": 702,
+      "left": 487,
+      "right": 509
+    },
+    {
+      "y": 710,
+      "left": 492,
+      "right": 513
+    },
+    {
+      "y": 718,
+      "left": 496,
+      "right": 517
+    },
+    {
+      "y": 726,
+      "left": 499,
+      "right": 520
+    },
+    {
+      "y": 734,
+      "left": 503,
+      "right": 524
+    },
+    {
+      "y": 742,
+      "left": 505,
+      "right": 527
+    },
+    {
+      "y": 750,
+      "left": 509,
+      "right": 531
+    },
+    {
+      "y": 758,
+      "left": 513,
+      "right": 535
+    },
+    {
+      "y": 766,
+      "left": 516,
+      "right": 539
+    },
+    {
+      "y": 774,
+      "left": 520,
+      "right": 543
+    },
+    {
+      "y": 782,
+      "left": 524,
+      "right": 547
+    },
+    {
+      "y": 790,
+      "left": 527,
+      "right": 551
+    },
+    {
+      "y": 798,
+      "left": 531,
+      "right": 555
+    },
+    {
+      "y": 806,
+      "left": 535,
+      "right": 560
+    },
+    {
+      "y": 814,
+      "left": 539,
+      "right": 564
+    },
+    {
+      "y": 822,
+      "left": 544,
+      "right": 569
+    },
+    {
+      "y": 830,
+      "left": 548,
+      "right": 573
+    },
+    {
+      "y": 838,
+      "left": 553,
+      "right": 577
+    },
+    {
+      "y": 846,
+      "left": 557,
+      "right": 581
+    },
+    {
+      "y": 854,
+      "left": 562,
+      "right": 586
+    },
+    {
+      "y": 862,
+      "left": 566,
+      "right": 590
+    },
+    {
+      "y": 870,
+      "left": 571,
+      "right": 594
+    },
+    {
+      "y": 878,
+      "left": 577,
+      "right": 599
+    },
+    {
+      "y": 886,
+      "left": 582,
+      "right": 604
+    },
+    {
+      "y": 894,
+      "left": 587,
+      "right": 609
+    },
+    {
+      "y": 902,
+      "left": 591,
+      "right": 614
+    },
+    {
+      "y": 910,
+      "left": 596,
+      "right": 619
+    },
+    {
+      "y": 918,
+      "left": 600,
+      "right": 623
+    },
+    {
+      "y": 926,
+      "left": 605,
+      "right": 629
+    },
+    {
+      "y": 934,
+      "left": 610,
+      "right": 635
+    },
+    {
+      "y": 942,
+      "left": 615,
+      "right": 641
+    },
+    {
+      "y": 950,
+      "left": 621,
+      "right": 648
+    },
+    {
+      "y": 958,
+      "left": 627,
+      "right": 654
+    },
+    {
+      "y": 966,
+      "left": 634,
+      "right": 660
+    },
+    {
+      "y": 974,
+      "left": 645,
+      "right": 666
+    },
+    {
+      "y": 982,
+      "left": 660,
+      "right": 672
+    },
+    {
+      "y": 984,
+      "left": 664,
+      "right": 674
+    },
+    {
+      "y": 986,
+      "left": 669,
+      "right": 676
+    },
+    {
+      "y": 988,
+      "left": 673,
+      "right": 675
+    }
+  ]
+}

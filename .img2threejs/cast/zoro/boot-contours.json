@@ -1,0 +1,136 @@
+{
+  "sourceImage": "docs/references/user-cast/zoro.png",
+  "sha256": "9e60f68018d4fb12e695b36291ef78769e31a73935b514a53941578402860a3c",
+  "method": "alpha-contour intervals in isolated foot ROIs; inferred depth is authored separately",
+  "profiles": {
+    "boot-right": [
+      {
+        "y": 895,
+        "left": 142,
+        "right": 199
+      },
+      {
+        "y": 905,
+        "left": 150,
+        "right": 190
+      },
+      {
+        "y": 920,
+        "left": 152,
+        "right": 185
+      },
+      {
+        "y": 940,
+        "left": 149,
+        "right": 180
+      },
+      {
+        "y": 955,
+        "left": 146,
+        "right": 179
+      },
+      {
+        "y": 970,
+        "left": 132,
+        "right": 177
+      },
+      {
+        "y": 985,
+        "left": 119,
+        "right": 177
+      },
+      {
+        "y": 1000,
+        "left": 105,
+        "right": 176
+      },
+      {
+        "y": 1012,
+        "left": 88,
+        "right": 161
+      },
+      {
+        "y": 1022,
+        "left": 72,
+        "right": 147
+      },
+      {
+        "y": 1028,
+        "left": 72,
+        "right": 137
+      },
+      {
+        "y": 1033,
+        "left": 78,
+        "right": 124
+      }
+    ],
+    "boots": [
+      {
+        "y": 895,
+        "left": 343,
+        "right": 392
+      },
+      {
+        "y": 905,
+        "left": 352,
+        "right": 392
+      },
+      {
+        "y": 920,
+        "left": 359,
+        "right": 390
+      },
+      {
+        "y": 940,
+        "left": 359,
+        "right": 391
+      },
+      {
+        "y": 955,
+        "left": 357,
+        "right": 393
+      },
+      {
+        "y": 970,
+        "left": 357,
+        "right": 405
+      },
+      {
+        "y": 985,
+        "left": 356,
+        "right": 420
+      },
+      {
+        "y": 1000,
+        "left": 358,
+        "right": 434
+      },
+      {
+        "y": 1012,
+        "left": 373,
+        "right": 453
+      },
+      {
+        "y": 1022,
+        "left": 389,
+        "right": 469
+      },
+      {
+        "y": 1028,
+        "left": 396,
+        "right": 472
+      },
+      {
+        "y": 1033,
+        "left": 406,
+        "right": 471
+      },
+      {
+        "y": 1038,
+        "left": 424,
+        "right": 448
+      }
+    ]
+  }
+}

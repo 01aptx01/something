@@ -11,9 +11,10 @@ try{
  const metadata=await s.evaluate('window.__sculpt.metadata');
  assert.equal(metadata.source,'img2threejs-procedural');
  assert.equal(metadata.accepted,false);
- assert.equal(metadata.parts,80);
+ if(process.env.EXPECTED_SCULPT_PASS)assert.equal(metadata.stage,process.env.EXPECTED_SCULPT_PASS);
+ assert.ok(metadata.parts>=80);
  await fs.mkdir(out,{recursive:true});
- for(const [name,view] of [['front',0],['positive',35],['negative',-35],['right',90],['rear-three-quarter',135],['rear',180],['left',270],['head','head'],['head-positive','head35']]){
+ for(const [name,view] of [['front',0],['positive',35],['negative',-35],['right',90],['rear-three-quarter',135],['rear',180],['left',270],['top','top'],['bottom','bottom'],['head','head'],['head-positive','head35']]){
   await s.evaluate(`window.__sculpt.view(${JSON.stringify(view)})`);await wait(350);
   const {data}=await s.send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
   await fs.writeFile(`${out}/${name}.png`,Buffer.from(data,'base64'));console.log(name);

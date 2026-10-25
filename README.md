@@ -18,15 +18,15 @@
 
 ## img2threejs: ตัวอย่างโมเดลที่สร้างด้วย Three.js
 
-ใช้สกิล `img2threejs 2.0.0` ที่ล็อก revision ไว้ สร้าง **factory โซโลด้วยโค้ด Three.js จริง** ผ่าน reference admission, landmark/spec authoring, strict validation และตัวสร้าง factory ของสกิล โดยไม่ได้อ่าน geometry จาก Blender หรือ GLB เดิม
+ใช้สกิล `img2threejs 2.0.0` ที่ล็อก revision ไว้ สร้าง **factory โซโลด้วยโค้ด Three.js จริง** ผ่าน pipeline แบบแบ่ง pass โดยไม่ได้อ่าน geometry จาก Blender หรือ GLB เดิม รอบแก้เพิ่มได้รับอนุมัติและบันทึกไว้ โดยคงประวัติเดิมและเกณฑ์ของสกิล
 
-เปิด **`/sculpt-lab.html`** บนเซิร์ฟเวอร์เดียวกับเว็บหลัก เพื่อเทียบภาพอ้างอิง หมุนดูหน้า/ข้าง/หลัง ซูมใบหน้า ดูโครงตาข่าย แตะเลือกและแยกชิ้นส่วน มีภาพเรนเดอร์จาก Chromium จริงครบ 9 มุม พร้อมภาพปิด material maps
+เปิด **`/sculpt-lab.html`** บนเซิร์ฟเวอร์เดียวกับเว็บหลัก เพื่อเทียบภาพอ้างอิง หมุนดูหน้า/ข้าง/หลัง ซูมใบหน้า ดูโครงตาข่าย แตะเลือกและแยกชิ้นส่วน มีภาพตรวจจาก Chromium/WebGL รวมมุมด้านบนและด้านล่าง
 
-**สถานะ: แบบร่าง blockout ยังไม่ผ่านคุณภาพ และยังไม่ได้แทนโมเดลในฉาก** มี 80 ชิ้นส่วน คะแนนเงาร่าง IoU จากสามรอบคือ `0.7681 → 0.8040 → 0.8035` ต่ำกว่าเกณฑ์ `0.85` สกิลหยุดที่ขีดจำกัดรอบแก้ `3/3` การตรวจ scalp และจุดยึดดาบ 9 จุดผ่าน แต่การตรวจผิวยังระบุ 5 vertices ที่ต้องแก้ และยังไม่มีผลผ่าน AI likeness, material projection หรือ animation readiness
+**สถานะ: prototype โซโลยังไม่ผ่าน likeness และไม่ได้ใช้ในฉากหลัก.** blockout ได้ silhouette IoU `0.8977`; สัดส่วนหัวต่างจากค่าที่วัด `0.18%` ใน pass ที่วัดสัดส่วนเท่านั้น. structural v10 ได้ visual score `0.60/0.80`; geometry checks ผ่านและมี 96 meshes แต่ภาพยังหยาบ (ผมเป็นทรงมงกุฎ ใบหน้าทั่วไป ชุดเรียบ และอุปกรณ์ดาบยังไม่ครบ) จึงยังไม่ผ่าน structural quality gate, material, rig หรือ production integration รอบถัดไปถูกบันทึกไว้ที่ `7/9`
 
-[ภาพด้านหน้า](docs/model-reviews/img2threejs-cast/zoro-blockout-v2/front.png) · [มุมเฉียง](docs/model-reviews/img2threejs-cast/zoro-blockout-v2/positive.png) · [ด้านข้าง](docs/model-reviews/img2threejs-cast/zoro-blockout-v2/right.png) · [ด้านหลัง](docs/model-reviews/img2threejs-cast/zoro-blockout-v2/rear.png) · [ใบหน้า](docs/model-reviews/img2threejs-cast/zoro-blockout-v2/head.png) · [รายงานและขั้นตอนทำต่อ](docs/model-reviews/img2threejs-cast/README.md)
+[ด้านหน้า blockout](docs/model-reviews/img2threejs-cast/zoro-blockout-v6-fixed/front.png) · [ด้านหน้า structural ล่าสุด](docs/model-reviews/img2threejs-cast/zoro-structural-v10/front.png) · [ด้านข้าง](docs/model-reviews/img2threejs-cast/zoro-structural-v10/right.png) · [ด้านหลัง](docs/model-reviews/img2threejs-cast/zoro-structural-v10/rear.png) · [รายงานและสถานะปัจจุบัน](docs/model-reviews/img2threejs-cast/README.md)
 
-หลัง clone ใช้ `npm run skill:install` และ `npm run skill:check` คำสั่ง `npm run sculpt:zoro:build` ตรวจ local state ก่อนสร้างเสมอ และคืน exit `3` เมื่อสกิลหยุด โดยไม่รีเซ็ต gate หรือเพิ่มจำนวนรอบเอง
+หลัง clone ใช้ `npm run skill:install` และ `npm run skill:check` คำสั่ง `npm run sculpt:zoro:build` ตรวจ local state ก่อนแก้หรือสร้างเสมอ รอบแก้ Zoro ที่อนุมัติถูกจำกัดไว้ที่ 9 ครั้งต่อ pass และ 18 ครั้งรวม; ล่าสุด 13/18 โดยไม่ปรับเกณฑ์คุณภาพ
 
 โมเดล GLB 7 คนที่เปิดจากฉากยังเป็นชุดเดิม: ลูฟี่ที่อัปโหลด และงาน Blender ของโซโล ทันจิโร่ เนซึโกะ รีไวล์ มิคาสะ และเอเรน เอเรนใช้ชุดทหารฝึกตามภาพเต็มตัวล่าสุด โมเดลเหล่านี้ไม่ได้เป็นผลจาก img2threejs และไม่ได้ใช้ผลตรวจของ prototype นี้รับรองคุณภาพ
 

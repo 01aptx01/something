@@ -25,7 +25,7 @@ const rim=new THREE.DirectionalLight('#d9edff',1.4);rim.position.set(2,4,-3);
 scene.add(key,fill,rim,new THREE.HemisphereLight('#e8f3ff','#65605a',1));
 const camera=new THREE.OrthographicCamera(-1,1,1,-1,.01,30);
 const controls=new OrbitControls(camera,renderer.domElement);
-controls.enableDamping=true;controls.minZoom=.5;controls.maxZoom=6;
+controls.enabled=!capture;controls.enableDamping=!capture;controls.minZoom=.5;controls.maxZoom=6;
 let disposed=false;
 const model=createRoronoaZoroModel();scene.add(model);
 const runtime=model.userData.sculptRuntime as {meshes:Record<string,THREE.Mesh>;nodes:Record<string,THREE.Object3D>};
@@ -41,7 +41,12 @@ function view(value:number|string=0){
  headView=String(value).startsWith('head');
  const az=(headView?(value==='head35'?35:0):Number(value))*Math.PI/180;
  const target=headView?new THREE.Vector3(-.015,2.33,0):center;
+ camera.up.set(0,1,0);
  camera.position.copy(target).add(new THREE.Vector3(Math.sin(az)*6,0,Math.cos(az)*6));
+ if(value==='top'||value==='bottom'){
+  camera.up.set(0,0,value==='top'?-1:1);
+  camera.position.copy(target).add(new THREE.Vector3(0,value==='top'?6:-6,0));
+ }
  controls.target.copy(target);camera.zoom=1;controls.update();resize();
  document.querySelector('#view-label')!.textContent=headView?'ใบหน้า':`${value}°`;
  document.querySelectorAll<HTMLButtonElement>('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===String(value)));
@@ -96,7 +101,7 @@ document.querySelector<HTMLInputElement>('#wireframe')!.addEventListener('change
 });
 const observer=new ResizeObserver(resize);observer.observe(stage);
 stage.querySelector('.loading')?.remove();stage.append(renderer.domElement);view(0);
-renderer.setAnimationLoop(()=>{if(!disposed){controls.update();renderer.render(scene,camera);}});
+renderer.setAnimationLoop(()=>{if(!disposed){if(!capture)controls.update();renderer.render(scene,camera);}});
 function dispose(){
  if(disposed)return;disposed=true;observer.disconnect();controls.dispose();renderer.setAnimationLoop(null);
  const geometries=new Set<THREE.BufferGeometry>(),materials=new Set<THREE.Material>();
@@ -105,4 +110,4 @@ function dispose(){
 }
 window.addEventListener('pagehide',dispose,{once:true});
 Object.assign(window,{__sculpt:{ready:true,model,renderer,scene,camera,view,explode,stripped,dispose,
- metadata:{character:'zoro',stage:'blockout',accepted:false,source:'img2threejs-procedural',parts:Object.keys(runtime.meshes).length}}});
+ metadata:{character:'zoro',stage:model.userData.sculptBuildPass??'blockout',accepted:false,source:'img2threejs-procedural',parts:Object.keys(runtime.meshes).length,cameraMode:capture?'fixed-review; controls disabled':'interactive'}}});

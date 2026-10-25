@@ -1,0 +1,14 @@
+[
+  {
+    "id": "layered-garment",
+    "score": 0.78,
+    "visible": true,
+    "notes": "The fitted jacket now has a real back half and curved front panels, but the shoulder silhouette and edge shaping remain crude."
+  },
+  {
+    "id": "held-sword-assembly",
+    "score": 0.76,
+    "visible": true,
+    "notes": "Raised and lowered hands now show several curled skin digits around the handles from front view. Contact remains rough and the structural pass ray-parity has two flagged index-finger samples."
+  }
+]

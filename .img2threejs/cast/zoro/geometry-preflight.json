@@ -1,11 +1,12 @@
 {
   "source": "actual emitted Three.js BufferGeometry",
-  "parts": 80,
-  "triangles": 228072,
+  "pass": "structural-pass",
+  "parts": 96,
+  "triangles": 307228,
   "headRingCount": 33,
-  "hairPointCount": 13622,
+  "hairPointCount": 10656,
   "unmeasuredAttachments": [
-    "all: anchor gate not yet run"
+    "anchor gate must be evaluated separately using measured-anchors.json"
   ],
   "staticOnly": true
 }

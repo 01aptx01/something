@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "requestDate": "2026-10-24",
   "skillRevision": "954cd5845e90efd045694bab725d68a9863c20e0",
-  "status": "stopped-at-zoro-blockout",
+  "status": "zoro-resumed-with-user-authorization",
   "pipelineProfile": "character",
   "existingModels": "Existing Blender models are retained while independently reconstructed Three.js factories pass img2threejs review.",
   "productionIntegration": "Eren is a separate third Attack on Titan character, model-only in gallery, with name-button entry and a world NPC.",
@@ -56,7 +56,7 @@
   "executionRoute": {
     "implementation": "Official img2threejs v2 forge pipeline and independently authored procedural Three.js factories",
     "userInstruction": "ไม่สิ ใช้สกิลนั้นอะ; ทำต่อ",
-    "img2threejsAcceptance": "Zoro factory generated, strict spec passed; Tier 1 and self-intersection not passed. Official state hard-stopped at 3/3 corrections; no production replacement.",
+    "img2threejsAcceptance": "Active blockout refinement; user explicitly authorized additional Zoro iterations. All previous reviews retained; thresholds unchanged.",
     "measuredPixelFidelity": {
       "metric": "silhouette IoU only; not likeness",
       "zoro": [
@@ -66,5 +66,6 @@
       ]
     }
   },
-  "unresolvedInputs": "Primary reference bytes for Nezuko, young full-body Eren, Tanjiro and Mikasa are not mounted. Supporting neutral/alternate artwork is labeled separately and does not replace those primary inputs."
+  "unresolvedInputs": "Primary reference bytes for Nezuko, young full-body Eren, Tanjiro and Mikasa are not mounted. Supporting neutral/alternate artwork is labeled separately and does not replace those primary inputs.",
+  "resumeAuthorization": ".img2threejs/cast/zoro/resume-approval-2026-10-24.json"
 }

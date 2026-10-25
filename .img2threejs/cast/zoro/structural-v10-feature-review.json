@@ -1,0 +1,14 @@
+[
+  {
+    "id": "layered-garment",
+    "score": 0.58,
+    "visible": true,
+    "notes": "Open jacket and curved lapels are present, but the broad faceted panels, missing folds, and unfinished edges do not match the reference garment."
+  },
+  {
+    "id": "held-sword-assembly",
+    "score": 0.55,
+    "visible": true,
+    "notes": "Three sword placements are recognizable and the hands touch the grips, but the fingers are crude, guards and wraps are simplified, and the blade/scabbard details are incomplete."
+  }
+]

@@ -1,0 +1,98 @@
+{
+  "angles": [
+    {
+      "azimuth": 0.0,
+      "path": "../../docs/model-reviews/img2threejs-cast/zoro-structural-v10/front.png",
+      "isReference": true,
+      "segmented": true,
+      "holed": true,
+      "interiorHolePixelCount": 3683,
+      "interiorHoleFraction": 0.014989763981424577,
+      "largestHolePixelCount": 2925,
+      "largestHoleBBox": {
+        "x": 130,
+        "y": 128,
+        "width": 87,
+        "height": 72
+      },
+      "areaFraction": 0.335725900116144,
+      "ratio": 1.0,
+      "degenerate": false
+    },
+    {
+      "azimuth": 90.0,
+      "path": "../../docs/model-reviews/img2threejs-cast/zoro-structural-v10/right.png",
+      "isReference": false,
+      "segmented": true,
+      "holed": false,
+      "interiorHolePixelCount": 757,
+      "interiorHoleFraction": 0.00654001330465058,
+      "largestHolePixelCount": 714,
+      "largestHoleBBox": {
+        "x": 277,
+        "y": 436,
+        "width": 10,
+        "height": 149
+      },
+      "areaFraction": 0.15815945890551342,
+      "ratio": 0.47109698373225994,
+      "degenerate": false
+    },
+    {
+      "azimuth": 180.0,
+      "path": "../../docs/model-reviews/img2threejs-cast/zoro-structural-v10/rear.png",
+      "isReference": false,
+      "segmented": true,
+      "holed": true,
+      "interiorHolePixelCount": 3266,
+      "interiorHoleFraction": 0.013267955004326508,
+      "largestHolePixelCount": 2929,
+      "largestHoleBBox": {
+        "x": 480,
+        "y": 128,
+        "width": 87,
+        "height": 72
+      },
+      "areaFraction": 0.33634897861583657,
+      "ratio": 1.001855914302343,
+      "degenerate": false
+    },
+    {
+      "azimuth": 270.0,
+      "path": "../../docs/model-reviews/img2threejs-cast/zoro-structural-v10/left.png",
+      "isReference": false,
+      "segmented": true,
+      "holed": false,
+      "interiorHolePixelCount": 725,
+      "interiorHoleFraction": 0.00626463548462356,
+      "largestHolePixelCount": 714,
+      "largestHoleBBox": {
+        "x": 410,
+        "y": 436,
+        "width": 10,
+        "height": 150
+      },
+      "areaFraction": 0.15813213090114095,
+      "ratio": 0.4710155839821572,
+      "degenerate": false
+    }
+  ],
+  "referenceAzimuth": 0.0,
+  "requiredAzimuths": [
+    0.0,
+    90.0,
+    180.0,
+    270.0
+  ],
+  "azimuthTolerance": 5.0,
+  "missingAzimuths": [],
+  "covered": true,
+  "collapseRatio": 0.15,
+  "degenerate": false,
+  "allowHoles": true,
+  "holed": true,
+  "unsegmentedAzimuths": [],
+  "segmentationReliable": true,
+  "passed": true,
+  "note": "deterministic; zero token; mandatory azimuth coverage catches off-axis-only defects, interior-hole flood fill catches silhouette-enclosed background that an area-only check misses"
+}

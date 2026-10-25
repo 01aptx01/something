@@ -1,0 +1,9 @@
+{
+  "comparisonImage": "/workspace/something/docs/model-reviews/img2threejs-cast/zoro-structural-v10/comparison.png",
+  "referenceImage": "/workspace/something/docs/references/user-cast/zoro.png",
+  "renderScreenshot": "/workspace/something/docs/model-reviews/img2threejs-cast/zoro-structural-v10/front.png",
+  "layout": "left=reference,right=render",
+  "panelWidth": 697,
+  "panelHeight": 1050,
+  "note": "Send this image to AI vision for global, layer, and semantic feature scores; this script does not score."
+}

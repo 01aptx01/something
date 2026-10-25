@@ -1,0 +1,14 @@
+[
+  {
+    "id": "anatomy-proportion",
+    "score": 0.86,
+    "visible": true,
+    "notes": "For blockout: long-limbed head-unit scale, robe height and separated boot stance closely follow the fixed full-body pair. Neck-to-head connection and garment structure need the structural pass."
+  },
+  {
+    "id": "pose-silhouette",
+    "score": 0.84,
+    "visible": true,
+    "notes": "Raised bent right arm, lowered left grip, curved drawn blade and three distinct scabbard endpoints now follow the reference. Hand shape, hilt details and folds remain coarse."
+  }
+]

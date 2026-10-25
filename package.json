@@ -27,7 +27,8 @@
     "sculpt:zoro:build": "node scripts/sculpt-zoro.mjs",
     "sculpt:zoro:capture": "node scripts/capture-sculpt.mjs",
     "sculpt:zoro:geometry": "node --experimental-strip-types scripts/inspect-sculpt-geometry.mjs",
-    "test:sculpt:browser": "node scripts/sculpt-studio-smoke.mjs"
+    "test:sculpt:browser": "node scripts/sculpt-studio-smoke.mjs",
+    "sculpt:zoro:check-pass": "node scripts/check-sculpt-pass.mjs"
   },
   "dependencies": {
     "three": "^0.180.0"

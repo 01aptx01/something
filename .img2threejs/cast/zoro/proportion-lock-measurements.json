@@ -1,0 +1,10 @@
+{
+  "method": "World-space emitted geometry bounds; head unit includes visible hair as in the source drawing",
+  "sourceHeadUnits": 8.57,
+  "modelHeadUnits": 8.585717774062003,
+  "relativeDelta": 0.0018340459815638828,
+  "headHeight": 0.29318326711654663,
+  "totalHeight": 2.5171887875401024,
+  "source": "admitted zoro.png; crown y44, chin y160, floor y1035",
+  "unobservedDepthConfidence": 0.4
+}

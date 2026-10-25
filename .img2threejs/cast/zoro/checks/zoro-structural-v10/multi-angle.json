@@ -1,0 +1,26 @@
+{
+  "referenceAreaFraction": 0.335725900116144,
+  "angles": [
+    {
+      "path": "../../docs/model-reviews/img2threejs-cast/zoro-structural-v10/positive.png",
+      "areaFraction": 0.2955947256951561,
+      "ratio": 0.8804644669740864,
+      "degenerate": false
+    },
+    {
+      "path": "../../docs/model-reviews/img2threejs-cast/zoro-structural-v10/negative.png",
+      "areaFraction": 0.30282844845255175,
+      "ratio": 0.9020109808262888,
+      "degenerate": false
+    },
+    {
+      "path": "../../docs/model-reviews/img2threejs-cast/zoro-structural-v10/right.png",
+      "areaFraction": 0.15815945890551342,
+      "ratio": 0.47109698373225994,
+      "degenerate": false
+    }
+  ],
+  "degenerate": false,
+  "collapseRatio": 0.15,
+  "note": "deterministic; zero token; a flat-plane-faking-a-volume collapses in silhouette area when orbited"
+}

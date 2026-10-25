@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "kind": "scalp-exposure",
+  "exposedFraction": 0.0,
+  "exposedSamples": [],
+  "sampleCount": 640,
+  "hairPointCount": 10656,
+  "hairPointsInsideSkull": 50,
+  "reach": 0.059906,
+  "lateral": 0.020423,
+  "vRange": [
+    0.73,
+    1.0
+  ],
+  "hardMax": 0.05,
+  "hardMaxUncalibrated": true,
+  "verdict": "pass",
+  "note": "Area-weighted fraction of scalp with no hair standing outside the skull above it. Hair points inside the skull are excluded from coverage by design: the recorded failure was a mass that slid off the skull while staying nearby.",
+  "largestExposedRun": 0
+}

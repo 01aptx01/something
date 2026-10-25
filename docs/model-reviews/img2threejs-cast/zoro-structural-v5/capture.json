@@ -1,0 +1,22 @@
+{
+  "metadata": {
+    "character": "zoro",
+    "stage": "structural-pass",
+    "accepted": false,
+    "source": "img2threejs-procedural",
+    "parts": 96,
+    "cameraMode": "fixed-review; controls disabled"
+  },
+  "info": {
+    "triangles": 306260,
+    "drawCalls": 96,
+    "geometries": 97
+  },
+  "errors": [],
+  "renderer": "Chromium WebGL / plain renderer; no bloom or depth of field",
+  "viewports": [
+    697,
+    1050
+  ],
+  "sourceUrl": "http://127.0.0.1:5173/sculpt-lab.html?capture=1"
+}
